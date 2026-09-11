@@ -9,7 +9,6 @@ import { useRegional } from '../providers/RegionalProvider';
 export function Header() {
   const { currency, setCurrency, language, setLanguage, region, setRegion } = useRegional();
   const [isRegionOpen, setIsRegionOpen] = useState(false);
-  const [network, setNetwork] = useState('Ethereum');
 
   return (
     <header className="flex flex-col sm:flex-row items-center justify-between p-3 sm:px-6 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 gap-4">
@@ -80,21 +79,6 @@ export function Header() {
           <button className="p-2 text-zinc-500 hover:text-black dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors">
             <Settings className="w-5 h-5" />
           </button>
-        </div>
-
-        {/* Network Selector */}
-        <div className="hidden md:flex items-center gap-2 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2 py-1">
-          <div className="w-2 h-2 rounded-full bg-green-500 ml-1"></div>
-          <select 
-            value={network}
-            onChange={(e) => setNetwork(e.target.value)}
-            className="bg-transparent border-none text-xs font-semibold text-zinc-700 dark:text-zinc-300 outline-none cursor-pointer py-1 pr-4"
-          >
-            <option value="Ethereum">Ethereum</option>
-            <option value="Arbitrum">Arbitrum</option>
-            <option value="Base">Base</option>
-            <option value="Polygon">Polygon</option>
-          </select>
         </div>
 
         <ConnectButton showBalance={true} />
