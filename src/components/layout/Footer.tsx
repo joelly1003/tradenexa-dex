@@ -7,7 +7,7 @@ export function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
         <div className="col-span-2">
           <div className="mb-4">
-            <Image src="/logo.png" alt="TradeNexa" width={220} height={60} className="h-14 w-auto object-contain" />
+            <Image src="/logo.png" alt="TradeNexa" width={280} height={80} className="h-20 w-auto object-contain" />
           </div>
           <p className="max-w-xs mb-6 leading-relaxed">
             TradeNexa is a globally localized decentralized exchange providing seamless cryptocurrency trading with deep liquidity, native fiat support, and region-specific optimizations.

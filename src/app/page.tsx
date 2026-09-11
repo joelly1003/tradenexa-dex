@@ -24,11 +24,11 @@ export default function Home() {
           Live on Mainnet
         </div>
         
-        <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-tight">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
           Trade Crypto in Your <span className="text-blue-600 dark:text-blue-500">Local Currency</span>
         </h1>
         
-        <p className="text-2xl text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl">
+        <p className="text-xl text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
           Experience lightning-fast swaps and optimal routing—all priced natively in your preferred local fiat currency ({currency}).
         </p>
 

@@ -12,12 +12,12 @@ export function Header() {
       {/* Left section: Logo */}
       <div className="flex-1 flex items-center justify-start">
         <Link href="/" className="flex items-center">
-          <Image src="/logo.png" alt="TradeNexa" width={220} height={60} className="h-14 w-auto object-contain" />
+          <Image src="/logo.png" alt="TradeNexa" width={280} height={80} className="h-20 w-auto object-contain" />
         </Link>
       </div>
 
       {/* Center section: Navigation */}
-      <nav className="hidden md:flex flex-shrink-0 items-center justify-center gap-8 text-sm font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+      <nav className="hidden md:flex flex-shrink-0 items-center justify-center gap-8 text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
         <Link href="/" className="hover:text-black dark:hover:text-white transition-colors">Dashboard</Link>
         <Link href="/trade" className="hover:text-black dark:hover:text-white transition-colors">Trade</Link>
         <Link href="/market" className="hover:text-black dark:hover:text-white transition-colors">Market</Link>
