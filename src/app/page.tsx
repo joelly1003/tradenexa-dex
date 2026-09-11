@@ -18,7 +18,7 @@ export default function Home() {
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] bg-blue-500/10 dark:bg-blue-500/5 blur-[100px] rounded-full pointer-events-none -z-10" />
 
       {/* Top Section: Hero */}
-      <div className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto space-y-6 min-h-[75vh]">
+      <div className="flex flex-col items-center justify-start text-center max-w-3xl mx-auto space-y-6 min-h-[75vh] pt-32 pb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-sm font-semibold">
           <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
           Live on Mainnet
