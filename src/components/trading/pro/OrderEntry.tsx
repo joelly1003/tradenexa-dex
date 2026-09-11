@@ -1,6 +1,31 @@
 'use client';
 
+import { useState } from 'react';
+import { useAccount } from 'wagmi';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+
 export function OrderEntry() {
+  const { isConnected } = useAccount();
+  const { openConnectModal } = useConnectModal();
+  const [amount, setAmount] = useState('');
+
+  // Determine button text and action
+  let buttonText = 'Connect Wallet to Trade';
+  let buttonAction = () => openConnectModal?.();
+  let buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white'; // Default un-connected style
+
+  if (isConnected) {
+    if (!amount || parseFloat(amount) === 0) {
+      buttonText = 'Review Trade';
+      buttonAction = () => {};
+      buttonStyle = 'bg-zinc-800 text-zinc-500 cursor-not-allowed'; // Disabled style when empty
+    } else {
+      buttonText = 'Place Order';
+      buttonAction = () => { console.log('Placing order for', amount) };
+      buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20'; // Active style
+    }
+  }
+
   return (
     <div className="flex flex-col h-full bg-[#0a0a0c] p-4 text-white shrink-0">
       {/* Margin / Leverage row */}
@@ -31,7 +56,13 @@ export function OrderEntry() {
       <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-4 border border-zinc-800 focus-within:border-blue-500 transition-colors">
         <span className="text-zinc-500 text-sm pl-2">Size</span>
         <div className="flex items-center gap-2">
-          <input type="text" placeholder="0.00000" className="bg-transparent text-right text-white font-mono outline-none w-24 text-sm placeholder:text-zinc-700" />
+          <input 
+            type="number" 
+            placeholder="0.00000" 
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="bg-transparent text-right text-white font-mono outline-none w-24 text-sm placeholder:text-zinc-700" 
+          />
           <span className="text-zinc-500 text-sm">BTC ⇌</span>
         </div>
       </div>
@@ -60,8 +91,11 @@ export function OrderEntry() {
         </label>
       </div>
 
-      <button className="w-full bg-zinc-200 hover:bg-white text-black font-bold py-3 rounded mb-6 transition-colors shadow-lg shadow-white/5">
-        Sign In
+      <button 
+        onClick={buttonAction}
+        className={`w-full font-bold py-3 rounded mb-6 transition-colors ${buttonStyle}`}
+      >
+        {buttonText}
       </button>
 
       <div className="space-y-2 text-xs text-zinc-500 mt-auto font-sans">
