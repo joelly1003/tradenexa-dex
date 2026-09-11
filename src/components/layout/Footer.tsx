@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Activity, Globe, Code, Send, MessageSquare } from 'lucide-react';
 
 export function Footer() {
@@ -5,9 +6,8 @@ export function Footer() {
     <footer className="mt-auto border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-6 py-12 text-sm text-zinc-500">
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
         <div className="col-span-2">
-          <div className="flex items-center gap-2 text-xl font-black text-black dark:text-white tracking-tighter mb-4">
-            <Activity className="w-5 h-5 text-blue-500" />
-            TradeNexa
+          <div className="mb-4">
+            <Image src="/logo.png" alt="TradeNexa" width={180} height={45} className="h-10 w-auto object-contain" />
           </div>
           <p className="max-w-xs mb-6 leading-relaxed">
             TradeNexa is a globally localized decentralized exchange providing seamless cryptocurrency trading with deep liquidity, native fiat support, and region-specific optimizations.

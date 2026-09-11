@@ -4,30 +4,12 @@ import Link from 'next/link';
 import { ArrowRight, Wallet, ArrowDownUp, TrendingUp, ShieldCheck, Banknote, LineChart, PieChart, Globe, CheckCircle2, Zap, Activity } from 'lucide-react';
 import { useRegional } from '../components/providers/RegionalProvider';
 import { useAccount } from 'wagmi';
-import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { region, getSymbol, currency } = useRegional();
   const symbol = getSymbol();
   const { isConnected } = useAccount();
 
-  // Mock live ticker data
-  const [ticker, setTicker] = useState([
-    { pair: 'BTC/USD', price: '92,500.00', change: '+1.2%' },
-    { pair: 'ETH/USD', price: '4,150.20', change: '+2.8%' },
-    { pair: 'SOL/USD', price: '215.80', change: '-1.5%' },
-  ]);
-
-  useEffect(() => {
-    // Simulate live ticker updates
-    const interval = setInterval(() => {
-      setTicker(prev => prev.map(t => ({
-        ...t,
-        price: (parseFloat(t.price.replace(/,/g, '')) * (1 + (Math.random() * 0.002 - 0.001))).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-      })));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <div className="relative flex flex-col gap-10 max-w-7xl mx-auto py-4 px-4 sm:px-6">
@@ -69,30 +51,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Dynamic Live Ticker Section */}
-      <div className="w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <Activity className="w-5 h-5 text-blue-500" /> Trending Markets
-          </h2>
-          <Link href="/market" className="text-sm text-blue-600 font-semibold hover:underline flex items-center gap-1">
-            View All <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {ticker.map((item, i) => (
-            <div key={i} className="flex justify-between items-center p-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-800">
-              <div className="font-bold">{item.pair}</div>
-              <div className="text-right">
-                <div className="font-mono font-semibold">{symbol}{item.price}</div>
-                <div className={`text-xs font-bold ${item.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
-                  {item.change}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+
 
       {/* Why TradeNexa is Different Section with Trust Badges */}
       <div className="pt-16 pb-8 border-t border-zinc-200 dark:border-zinc-800 mt-8">

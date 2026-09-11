@@ -2,6 +2,7 @@
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Settings, Activity } from 'lucide-react';
 
 export function Header() {
@@ -10,9 +11,8 @@ export function Header() {
     <header className="flex items-center justify-between p-3 sm:px-6 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 relative">
       {/* Left section: Logo */}
       <div className="flex-1 flex items-center justify-start">
-        <Link href="/" className="flex items-center gap-2 text-2xl font-black text-blue-600 dark:text-blue-500 tracking-tighter">
-          <Activity className="w-6 h-6" />
-          TradeNexa
+        <Link href="/" className="flex items-center">
+          <Image src="/logo.png" alt="TradeNexa" width={180} height={45} className="h-10 w-auto object-contain" />
         </Link>
       </div>
 
