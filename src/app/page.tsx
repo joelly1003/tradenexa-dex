@@ -13,9 +13,9 @@ export default function Home() {
 
   // Mock live ticker data
   const [ticker, setTicker] = useState([
-    { pair: 'BTC/USD', price: '64,230.00', change: '+2.4%' },
-    { pair: 'ETH/USD', price: '3,450.20', change: '+1.8%' },
-    { pair: 'SOL/USD', price: '145.80', change: '-0.5%' },
+    { pair: 'BTC/USD', price: '92,500.00', change: '+1.2%' },
+    { pair: 'ETH/USD', price: '4,150.20', change: '+2.8%' },
+    { pair: 'SOL/USD', price: '215.80', change: '-1.5%' },
   ]);
 
   useEffect(() => {
