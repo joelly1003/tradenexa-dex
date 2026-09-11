@@ -1,4 +1,4 @@
-import { Activity, Send, Code, MessageCircle } from 'lucide-react';
+import { Activity, Twitter, Github, Send, MessageSquare } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -13,9 +13,10 @@ export function Footer() {
             TradeNexa is a globally localized decentralized exchange providing seamless cryptocurrency trading with deep liquidity, native fiat support, and region-specific optimizations.
           </p>
           <div className="flex items-center gap-4">
+            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Twitter className="w-5 h-5" /></a>
             <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Send className="w-5 h-5" /></a>
-            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Code className="w-5 h-5" /></a>
-            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><MessageCircle className="w-5 h-5" /></a>
+            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><MessageSquare className="w-5 h-5" /></a>
+            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Github className="w-5 h-5" /></a>
           </div>
         </div>
         
@@ -43,10 +44,10 @@ export function Footer() {
           <h4 className="font-bold text-black dark:text-white mb-4 uppercase tracking-wider text-xs">Network</h4>
           <div className="flex items-center gap-2 mb-4 p-2 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-lg border border-green-200 dark:border-green-500/20 font-medium w-fit">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            All Systems Operational
+            RPC & Aggregator: Operational
           </div>
           <ul className="space-y-3 font-medium">
-            <li><a href="#" className="hover:text-blue-500 transition-colors">Smart Contracts</a></li>
+            <li><a href="https://etherscan.io/" className="hover:text-blue-500 transition-colors">Verified Contracts ↗</a></li>
             <li><a href="#" className="hover:text-blue-500 transition-colors">Bug Bounty</a></li>
           </ul>
         </div>
