@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Wallet, ArrowDownUp, TrendingUp, ShieldCheck, Banknote, LineChart, PieChart, Globe, CheckCircle2, Zap } from 'lucide-react';
+import { ArrowRight, Wallet, ArrowDownUp, TrendingUp, ShieldCheck, Banknote, LineChart, PieChart, Globe, CheckCircle2, Zap, Activity } from 'lucide-react';
 import { useRegional } from '../components/providers/RegionalProvider';
 import { useAccount } from 'wagmi';
 import { TradeInterface } from '../components/trading/TradeInterface';

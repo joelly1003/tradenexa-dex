@@ -1,4 +1,4 @@
-import { Activity, Twitter, Github, Send, MessageSquare } from 'lucide-react';
+import { Activity, Globe, Code, Send, MessageSquare } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -13,10 +13,10 @@ export function Footer() {
             TradeNexa is a globally localized decentralized exchange providing seamless cryptocurrency trading with deep liquidity, native fiat support, and region-specific optimizations.
           </p>
           <div className="flex items-center gap-4">
-            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Twitter className="w-5 h-5" /></a>
+            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Globe className="w-5 h-5" /></a>
             <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Send className="w-5 h-5" /></a>
             <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><MessageSquare className="w-5 h-5" /></a>
-            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Github className="w-5 h-5" /></a>
+            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Code className="w-5 h-5" /></a>
           </div>
         </div>
         
