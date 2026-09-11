@@ -23,29 +23,7 @@ export function RegionalProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('EN');
   const [region, setRegion] = useState<Region>('US');
 
-  // Client-side Geo-Detection Default
-  React.useEffect(() => {
-    try {
-      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-      
-      if (timeZone.includes('Europe/London')) {
-        setRegion('UK');
-        setCurrency('GBP');
-        setLanguage('EN');
-      } else if (timeZone.includes('Europe')) {
-        setRegion('EU');
-        setCurrency('EUR');
-        setLanguage('EN'); // Fallback, could be FR/ES/DE depending on exact locale if we used navigator.language
-      } else if (timeZone.includes('Africa/Lagos') || timeZone.includes('Africa')) {
-        setRegion('NG');
-        setCurrency('NGN');
-        setLanguage('EN');
-      }
-      // Defaults remain US/USD/EN
-    } catch (error) {
-      // Ignore if Intl is not supported
-    }
-  }, []);
+
 
   const getSymbol = () => {
     switch (currency) {
