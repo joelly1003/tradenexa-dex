@@ -6,13 +6,7 @@ import {
   getDefaultConfig,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-} from 'wagmi/chains';
+import { ink } from 'wagmi/chains';
 import {
   QueryClientProvider,
   QueryClient,
@@ -20,9 +14,9 @@ import {
 import '@rainbow-me/rainbowkit/styles.css';
 
 const config = getDefaultConfig({
-  appName: 'local-dex',
-  projectId: 'YOUR_PROJECT_ID', // Replaced with WalletConnect project ID in production
-  chains: [mainnet, polygon, optimism, arbitrum, base],
+  appName: 'TradeNexa',
+  projectId: 'YOUR_PROJECT_ID',
+  chains: [ink],
   ssr: true,
 });
 
