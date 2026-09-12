@@ -2,10 +2,10 @@
 
 export function PortfolioInterface() {
   return (
-    <div className="flex flex-col h-[calc(100vh-81px)] bg-[#0a0a0c] text-white overflow-hidden p-6 mx-auto w-full">
+    <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] text-white lg:overflow-hidden overflow-y-auto p-6 mx-auto w-full">
       
       {/* Top Header */}
-      <div className="flex justify-between items-center mb-6 shrink-0">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6 shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-red-500/10 text-red-500 flex items-center justify-center rounded">
             <span className="font-black text-xl">∷</span>
@@ -18,18 +18,18 @@ export function PortfolioInterface() {
           </div>
         </div>
         
-        <div className="flex gap-3">
-          <button className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800/50 px-6 py-2 rounded text-sm font-semibold transition-colors">Transfer</button>
-          <button className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800/50 px-6 py-2 rounded text-sm font-semibold transition-colors">Withdraw</button>
-          <button className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800/50 px-6 py-2 rounded text-sm font-semibold transition-colors">Deposit</button>
+        <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 md:pb-0 shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <button className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800/50 px-4 sm:px-6 py-2 rounded text-sm font-semibold transition-colors whitespace-nowrap">Transfer</button>
+          <button className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800/50 px-4 sm:px-6 py-2 rounded text-sm font-semibold transition-colors whitespace-nowrap">Withdraw</button>
+          <button className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800/50 px-4 sm:px-6 py-2 rounded text-sm font-semibold transition-colors whitespace-nowrap">Deposit</button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 border-b border-zinc-900 mb-6 shrink-0">
-        <button className="text-white border-b-2 border-white pb-3 font-semibold text-sm -mb-[1px]">Overview</button>
-        <button className="text-zinc-500 hover:text-white pb-3 font-semibold text-sm transition-colors -mb-[1px]">Margin Manager</button>
-        <button className="text-zinc-500 hover:text-white pb-3 font-semibold text-sm transition-colors -mb-[1px]">History</button>
+      <div className="flex gap-6 border-b border-zinc-900 mb-6 shrink-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <button className="text-white border-b-2 border-white pb-3 font-semibold text-sm -mb-[1px] whitespace-nowrap">Overview</button>
+        <button className="text-zinc-500 hover:text-white pb-3 font-semibold text-sm transition-colors -mb-[1px] whitespace-nowrap">Margin Manager</button>
+        <button className="text-zinc-500 hover:text-white pb-3 font-semibold text-sm transition-colors -mb-[1px] whitespace-nowrap">History</button>
       </div>
 
       {/* 3 Summary Boxes */}
@@ -60,7 +60,7 @@ export function PortfolioInterface() {
       </div>
 
       {/* Main Bottom Section */}
-      <div className="flex flex-1 min-h-0 border border-zinc-900 rounded-lg overflow-hidden bg-[#0a0a0c] flex-col md:flex-row">
+      <div className="flex flex-1 lg:min-h-0 min-h-[500px] border border-zinc-900 rounded-lg overflow-hidden bg-[#0a0a0c] flex-col md:flex-row">
         {/* Left Side Stats */}
         <div className="w-full md:w-[350px] border-b md:border-b-0 md:border-r border-zinc-900 flex flex-col bg-[#0a0a0c]">
           <div className="flex gap-4 p-4 border-b border-zinc-900 text-xs font-semibold">

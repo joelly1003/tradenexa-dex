@@ -7,18 +7,25 @@ import { OrderEntry } from './pro/OrderEntry';
 
 export function TradeInterface() {
   return (
-    <div className="flex flex-col h-[calc(100vh-81px)] bg-[#0a0a0c] overflow-hidden">
+    <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] lg:overflow-hidden overflow-y-auto">
       <TopTickerBar />
-      <div className="flex flex-1 overflow-hidden">
-        <div className="flex-1 h-full min-w-0 border-r border-zinc-900">
+      <div className="flex flex-col lg:flex-row flex-1 lg:overflow-hidden">
+        
+        {/* Chart Area */}
+        <div className="w-full lg:flex-1 h-[400px] lg:h-full min-w-0 border-b lg:border-b-0 lg:border-r border-zinc-900 shrink-0">
           <TradingViewChart />
         </div>
-        <div className="w-[300px] shrink-0 h-full hidden lg:block">
+        
+        {/* Orderbook */}
+        <div className="w-full lg:w-[300px] shrink-0 h-[400px] lg:h-full border-b lg:border-b-0 border-zinc-900">
           <Orderbook />
         </div>
-        <div className="w-[320px] shrink-0 h-full hidden md:block border-l border-zinc-900">
+        
+        {/* Order Entry */}
+        <div className="w-full lg:w-[320px] shrink-0 h-auto lg:h-full lg:border-l border-zinc-900 pb-12 lg:pb-0">
           <OrderEntry />
         </div>
+        
       </div>
     </div>
   );

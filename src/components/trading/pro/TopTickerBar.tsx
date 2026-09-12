@@ -2,8 +2,8 @@
 
 export function TopTickerBar() {
   return (
-    <div className="flex items-center gap-6 p-3 bg-zinc-950 border-b border-zinc-800 text-sm overflow-x-auto whitespace-nowrap shrink-0">
-      <div className="flex items-center gap-3 pr-6 border-r border-zinc-800">
+    <div className="flex items-center gap-6 p-3 bg-zinc-950 border-b border-zinc-800 text-sm overflow-x-auto whitespace-nowrap shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="flex items-center gap-3 pr-6 border-r border-zinc-800 shrink-0">
         <div className="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-[10px] font-black text-black">₿</div>
         <h1 className="font-bold text-lg text-white flex items-center gap-2">
           BTC <span className="text-xs font-semibold bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">Perp</span>
