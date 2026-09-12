@@ -1,5 +1,5 @@
-import { TradeInterface } from '../../components/trading/TradeInterface';
+import { MarketInterface } from '../../components/market/MarketInterface';
 
 export default function MarketPage() {
-  return <TradeInterface />;
+  return <MarketInterface />;
 }
