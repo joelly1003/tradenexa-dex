@@ -1,19 +1,22 @@
 'use client';
 
+import { useState } from 'react';
 import { TopTickerBar } from './pro/TopTickerBar';
 import { TradingViewChart } from './pro/TradingViewChart';
 import { Orderbook } from './pro/Orderbook';
 import { OrderEntry } from './pro/OrderEntry';
 
 export function TradeInterface() {
+  const [selectedSymbol, setSelectedSymbol] = useState('BTC');
+
   return (
     <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] lg:overflow-hidden overflow-y-auto">
-      <TopTickerBar />
+      <TopTickerBar selectedSymbol={selectedSymbol} onSelectSymbol={setSelectedSymbol} />
       <div className="flex flex-col lg:flex-row flex-1 lg:overflow-hidden">
         
         {/* Chart Area */}
         <div className="w-full lg:flex-1 h-[400px] lg:h-full min-w-0 border-b lg:border-b-0 lg:border-r border-zinc-900 shrink-0">
-          <TradingViewChart />
+          <TradingViewChart symbol={`BINANCE:${selectedSymbol}USDT`} />
         </div>
         
         {/* Orderbook */}

@@ -8,7 +8,9 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
   useEffect(() => {
     if (!container.current) return;
     
-    // Clean up previous widget
+    // Create a unique ID for the container so TradingView doesn't get confused on symbol change
+    const containerId = `tv_chart_${Math.random().toString(36).substring(7)}`;
+    container.current.id = containerId;
     container.current.innerHTML = '';
 
     const script = document.createElement('script');
@@ -30,7 +32,7 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
           hide_top_toolbar: false,
           hide_legend: false,
           save_image: false,
-          container_id: container.current?.id,
+          container_id: containerId,
           toolbar_bg: '#0a0a0c',
         });
       }
@@ -40,16 +42,15 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
     return () => {
       // Clean up script
       const scripts = document.head.getElementsByTagName('script');
-      for (let i = 0; i < scripts.length; i++) {
+      for (let i = scripts.length - 1; i >= 0; i--) {
         if (scripts[i].src.includes('tv.js')) {
           document.head.removeChild(scripts[i]);
-          break;
         }
       }
     };
   }, [symbol]);
 
   return (
-    <div className="w-full h-full relative bg-[#0a0a0c]" id="tv_chart_container" ref={container} />
+    <div className="w-full h-full relative bg-[#0a0a0c]" ref={container} />
   );
 }
