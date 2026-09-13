@@ -21,7 +21,7 @@ export function TradeInterface() {
         
         {/* Orderbook */}
         <div className="w-full lg:w-[300px] shrink-0 h-[400px] lg:h-full border-b lg:border-b-0 border-zinc-900">
-          <Orderbook />
+          <Orderbook symbol={selectedSymbol} />
         </div>
         
         {/* Order Entry */}
