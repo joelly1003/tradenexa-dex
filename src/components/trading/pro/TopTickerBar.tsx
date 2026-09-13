@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 interface TopTickerBarProps {
   selectedSymbol: string;
@@ -11,6 +12,18 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
   const [priceData, setPriceData] = useState<{ price: string, change: string, vol: string }>({
     price: '--', change: '--', vol: '--'
   });
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     // Fetch live price for the selected symbol to replace mock data
@@ -48,26 +61,60 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
 
   const isPositive = parseFloat(priceData.change) >= 0;
 
+  const coins = [
+    { symbol: 'BTC', name: 'Bitcoin', color: 'bg-[#F7931A] text-white' },
+    { symbol: 'ETH', name: 'Ethereum', color: 'bg-[#627EEA] text-white' },
+    { symbol: 'SOL', name: 'Solana', color: 'bg-[#14F195] text-black' },
+    { symbol: 'AVAX', name: 'Avalanche', color: 'bg-[#E84142] text-white' },
+    { symbol: 'LINK', name: 'Chainlink', color: 'bg-[#2A5ADA] text-white' }
+  ];
+
+  const currentCoin = coins.find(c => c.symbol === selectedSymbol) || coins[0];
+
   return (
-    <div className="flex items-center gap-6 p-3 bg-zinc-950 border-b border-zinc-800 text-sm overflow-x-auto whitespace-nowrap shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-      <div className="flex items-center gap-3 pr-6 border-r border-zinc-800 shrink-0">
-        <div className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] font-black text-white">
-          {selectedSymbol.charAt(0)}
-        </div>
-        <div className="flex items-center gap-2">
-          <select 
-            value={selectedSymbol}
-            onChange={(e) => onSelectSymbol(e.target.value)}
-            className="bg-transparent font-bold text-lg text-white outline-none cursor-pointer hover:text-blue-400 transition-colors appearance-none"
-          >
-            <option value="BTC" className="bg-zinc-900 text-white">BTC</option>
-            <option value="ETH" className="bg-zinc-900 text-white">ETH</option>
-            <option value="SOL" className="bg-zinc-900 text-white">SOL</option>
-            <option value="AVAX" className="bg-zinc-900 text-white">AVAX</option>
-            <option value="LINK" className="bg-zinc-900 text-white">LINK</option>
-          </select>
-          <span className="text-xs font-semibold bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded pointer-events-none">▼ Perp</span>
-        </div>
+    <div className="flex items-center gap-6 p-3 bg-zinc-950 border-b border-zinc-800 text-sm overflow-x-visible whitespace-nowrap shrink-0">
+      <div className="flex items-center pr-6 border-r border-zinc-800 shrink-0 relative" ref={dropdownRef}>
+        
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-3 hover:bg-zinc-900 px-2 py-1 -ml-2 rounded-lg transition-colors"
+        >
+          <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-black ${currentCoin.color}`}>
+            {selectedSymbol.charAt(0)}
+          </div>
+          <div className="flex items-center gap-2">
+            <h1 className="font-bold text-lg text-white flex items-center gap-2">
+              {selectedSymbol} <span className="text-xs font-semibold bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">Perp</span>
+            </h1>
+            <ChevronDown className={`w-4 h-4 text-zinc-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          </div>
+        </button>
+
+        {isOpen && (
+          <div className="absolute top-full left-0 mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl shadow-black/50 overflow-hidden z-50">
+            <div className="p-2 text-xs font-bold text-zinc-500 uppercase tracking-wider bg-zinc-950/50">Select Market</div>
+            <div className="flex flex-col max-h-64 overflow-y-auto">
+              {coins.map((coin) => (
+                <button
+                  key={coin.symbol}
+                  onClick={() => {
+                    onSelectSymbol(coin.symbol);
+                    setIsOpen(false);
+                  }}
+                  className={`flex items-center gap-3 p-3 hover:bg-zinc-800 transition-colors w-full text-left ${selectedSymbol === coin.symbol ? 'bg-zinc-800/50' : ''}`}
+                >
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${coin.color}`}>
+                    {coin.symbol.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="text-white font-bold text-sm">{coin.symbol}</div>
+                    <div className="text-zinc-500 text-xs">{coin.name}</div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col">

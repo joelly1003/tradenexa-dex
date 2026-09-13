@@ -39,13 +39,13 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
   const tickSize = centerPrice ? (centerPrice > 1000 ? 10 : centerPrice > 10 ? 0.1 : 0.01) : 10;
   const basePrice = centerPrice || 77068;
 
-  const asks = Array.from({ length: 14 }).map((_, i) => ({
+  const asks = Array.from({ length: 40 }).map((_, i) => ({
     price: basePrice + (tickSize * (i + 1)),
     size: (Math.random() * (centerPrice && centerPrice > 1000 ? 5 : 500)).toFixed(4),
     total: (Math.random() * (centerPrice && centerPrice > 1000 ? 20 : 2000)).toFixed(4)
   })).reverse();
   
-  const bids = Array.from({ length: 14 }).map((_, i) => ({
+  const bids = Array.from({ length: 40 }).map((_, i) => ({
     price: basePrice - (tickSize * (i + 1)),
     size: (Math.random() * (centerPrice && centerPrice > 1000 ? 5 : 500)).toFixed(4),
     total: (Math.random() * (centerPrice && centerPrice > 1000 ? 20 : 2000)).toFixed(4)
@@ -69,7 +69,7 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
         <span>Total {symbol}</span>
       </div>
 
-      <div className="flex-1 overflow-hidden flex flex-col py-1">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col py-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-track]:bg-transparent">
         {/* Asks (Red) */}
         <div className="flex flex-col-reverse flex-1 justify-end">
           {asks.map((ask, i) => (
