@@ -87,6 +87,36 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
         <span className="text-white font-mono">0.00000 {symbol}</span>
       </div>
 
+      {/* Limit Price field (Shown for Limit and Advanced) */}
+      {(orderType === 'Limit' || orderType === 'Advanced') && (
+        <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-3 border border-zinc-800 focus-within:border-blue-500 transition-colors">
+          <span className="text-zinc-500 text-sm pl-2">Limit Price</span>
+          <div className="flex items-center gap-2">
+            <input 
+              type="number" 
+              placeholder="0.00" 
+              className="bg-transparent text-right text-white font-mono outline-none w-24 text-sm placeholder:text-zinc-700" 
+            />
+            <span className="text-zinc-500 text-sm font-bold w-12 text-right">USD</span>
+          </div>
+        </div>
+      )}
+
+      {/* Trigger Price field (Shown for Advanced) */}
+      {orderType === 'Advanced' && (
+        <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-3 border border-zinc-800 focus-within:border-blue-500 transition-colors">
+          <span className="text-zinc-500 text-sm pl-2">Trigger Price</span>
+          <div className="flex items-center gap-2">
+            <input 
+              type="number" 
+              placeholder="0.00" 
+              className="bg-transparent text-right text-white font-mono outline-none w-24 text-sm placeholder:text-zinc-700" 
+            />
+            <span className="text-zinc-500 text-sm font-bold w-12 text-right">USD</span>
+          </div>
+        </div>
+      )}
+
       {/* Input */}
       <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-4 border border-zinc-800 focus-within:border-blue-500 transition-colors">
         <span className="text-zinc-500 text-sm pl-2">Size</span>

@@ -21,7 +21,7 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
         new (window as any).TradingView.widget({
           autosize: true,
           symbol: symbol,
-          interval: 'W',
+          interval: '1',
           timezone: 'Etc/UTC',
           theme: 'dark',
           style: '1',

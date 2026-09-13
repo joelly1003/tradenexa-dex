@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
   const [centerPrice, setCenterPrice] = useState<number | null>(null);
   const [lastPrice, setLastPrice] = useState<number | null>(null);
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
     const fetchPrice = async () => {
@@ -31,25 +32,44 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
       }
     };
     fetchPrice();
-    const interval = setInterval(fetchPrice, 5000);
+    const interval = setInterval(fetchPrice, 3000);
     return () => clearInterval(interval);
   }, [symbol]);
 
-  // Generate dynamic orderbook rows based on live centerPrice
+  // Fast interval for live motion tick
+  useEffect(() => {
+    const motionInterval = setInterval(() => {
+      setTick(t => t + 1);
+    }, 1000);
+    return () => clearInterval(motionInterval);
+  }, []);
+
+  // Generate dynamic orderbook rows based on live centerPrice and tick motion
   const tickSize = centerPrice ? (centerPrice > 1000 ? 10 : centerPrice > 10 ? 0.1 : 0.01) : 10;
   const basePrice = centerPrice || 77068;
 
-  const asks = Array.from({ length: 40 }).map((_, i) => ({
-    price: basePrice + (tickSize * (i + 1)),
-    size: (Math.random() * (centerPrice && centerPrice > 1000 ? 5 : 500)).toFixed(4),
-    total: (Math.random() * (centerPrice && centerPrice > 1000 ? 20 : 2000)).toFixed(4)
-  })).reverse();
+  // 15 lines for Asks and 15 lines for Bids
+  const asks = Array.from({ length: 15 }).map((_, i) => {
+    const noise = Math.sin(tick + i) * 0.15 + 1;
+    const sizeVal = (Math.random() * (centerPrice && centerPrice > 1000 ? 5 : 500) * noise).toFixed(4);
+    const totalVal = (Math.random() * (centerPrice && centerPrice > 1000 ? 20 : 2000) * noise).toFixed(4);
+    return {
+      price: basePrice + (tickSize * (i + 1)),
+      size: sizeVal,
+      total: totalVal
+    };
+  }).reverse();
   
-  const bids = Array.from({ length: 40 }).map((_, i) => ({
-    price: basePrice - (tickSize * (i + 1)),
-    size: (Math.random() * (centerPrice && centerPrice > 1000 ? 5 : 500)).toFixed(4),
-    total: (Math.random() * (centerPrice && centerPrice > 1000 ? 20 : 2000)).toFixed(4)
-  }));
+  const bids = Array.from({ length: 15 }).map((_, i) => {
+    const noise = Math.cos(tick + i) * 0.15 + 1;
+    const sizeVal = (Math.random() * (centerPrice && centerPrice > 1000 ? 5 : 500) * noise).toFixed(4);
+    const totalVal = (Math.random() * (centerPrice && centerPrice > 1000 ? 20 : 2000) * noise).toFixed(4);
+    return {
+      price: basePrice - (tickSize * (i + 1)),
+      size: sizeVal,
+      total: totalVal
+    };
+  });
 
   const isUp = !lastPrice || !centerPrice || centerPrice >= lastPrice;
 
