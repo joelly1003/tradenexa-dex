@@ -139,7 +139,7 @@ export function MarketInterface() {
             onClick={() => setActiveTab(tab.name)}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors border ${
               activeTab === tab.name 
-                ? 'bg-blue-600 dark:bg-cyan-400 text-white dark:text-black border-blue-600 dark:border-cyan-400 shadow-[0_0_15px_rgba(37,99,235,0.4)] dark:shadow-[0_0_15px_rgba(34,211,238,0.4)]' 
+                ? 'bg-blue-600 text-white border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]' 
                 : 'bg-white dark:bg-[#111114] text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-black dark:hover:text-white'
             }`}
           >

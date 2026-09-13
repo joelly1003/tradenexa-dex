@@ -157,7 +157,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
       </div>
 
       {/* Checkboxes */}
-      <div className="space-y-3 mb-8">
+      <div className="space-y-3 mb-6">
         <label className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer hover:text-zinc-300 transition-colors font-medium">
           <input 
             type="checkbox" 
@@ -167,15 +167,46 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
           />
           Reduce Only
         </label>
-        <label className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer hover:text-zinc-300 transition-colors font-medium">
-          <input 
-            type="checkbox" 
-            checked={tpSl}
-            onChange={e => setTpSl(e.target.checked)}
-            className="rounded bg-zinc-900 border-zinc-700 text-blue-500 focus:ring-1 focus:ring-blue-500 focus:ring-offset-0 focus:ring-offset-transparent cursor-pointer" 
-          />
-          TP/SL
-        </label>
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-xs text-zinc-400 cursor-pointer hover:text-zinc-300 transition-colors font-medium">
+            <input 
+              type="checkbox" 
+              checked={tpSl}
+              onChange={e => setTpSl(e.target.checked)}
+              className="rounded bg-zinc-900 border-zinc-700 text-blue-500 focus:ring-1 focus:ring-blue-500 focus:ring-offset-0 focus:ring-offset-transparent cursor-pointer" 
+            />
+            TP/SL
+          </label>
+
+          {/* Conditional TP/SL Inputs */}
+          {tpSl && (
+            <div className="pl-6 space-y-2 pt-1">
+              <div className="bg-zinc-900/80 rounded p-2 flex items-center justify-between border border-zinc-800 focus-within:border-green-500 transition-colors">
+                <span className="text-zinc-500 text-xs">Take Profit</span>
+                <div className="flex items-center gap-1">
+                  <input 
+                    type="number" 
+                    placeholder="0.00" 
+                    className="bg-transparent text-right text-white font-mono outline-none w-20 text-xs placeholder:text-zinc-700" 
+                  />
+                  <span className="text-zinc-500 text-xs font-bold">USD</span>
+                </div>
+              </div>
+
+              <div className="bg-zinc-900/80 rounded p-2 flex items-center justify-between border border-zinc-800 focus-within:border-red-500 transition-colors">
+                <span className="text-zinc-500 text-xs">Stop Loss</span>
+                <div className="flex items-center gap-1">
+                  <input 
+                    type="number" 
+                    placeholder="0.00" 
+                    className="bg-transparent text-right text-white font-mono outline-none w-20 text-xs placeholder:text-zinc-700" 
+                  />
+                  <span className="text-zinc-500 text-xs font-bold">USD</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <button 
