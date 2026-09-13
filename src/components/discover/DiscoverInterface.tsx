@@ -46,14 +46,6 @@ export function DiscoverInterface() {
   }, []);
 
   const getAsset = (sym: string) => assets.find(a => a.symbol === sym);
-  
-  // Sort for gainers and losers
-  const sortedByChange = [...assets].sort((a, b) => parseFloat(b.changePercent24Hr) - parseFloat(a.changePercent24Hr));
-  const topGainers = sortedByChange.slice(0, 4);
-  const topLosers = sortedByChange.slice(-4).reverse();
-  
-  // Trending (Top 4 by Volume)
-  const trending = [...assets].sort((a, b) => parseFloat(b.volumeUsd24Hr) - parseFloat(a.volumeUsd24Hr)).slice(0, 4);
 
   const formatPrice = (usdPrice: string) => {
     const local = parseFloat(usdPrice) * rate;
@@ -67,6 +59,11 @@ export function DiscoverInterface() {
   if (loading) {
     return <div className="p-8 text-center text-zinc-500">Loading live market data...</div>;
   }
+
+  // Curated lists
+  const trendingList = ['ETH', 'SOL', 'BTC', 'PEPE'];
+  const gainersList = ['SOL', 'LINK', 'UNI', 'AAVE'];
+  const losersList = ['CRV', 'MKR', 'SNX', 'LDO'];
 
   return (
     <div className="flex flex-col gap-12 w-full text-zinc-900 dark:text-white pb-12 pt-8">
@@ -85,16 +82,20 @@ export function DiscoverInterface() {
           <Flame className="text-orange-500" /> Trending Now
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {trending.map((coin) => (
-            <Link href="/trade" key={coin.symbol} className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-blue-500 transition-colors group">
-              <div className="font-bold text-lg mb-2">{coin.symbol}</div>
-              <div className="text-2xl font-mono mb-1">{symbol}{formatPrice(coin.priceUsd)}</div>
-              <div className={`text-sm font-semibold flex items-center ${parseFloat(coin.changePercent24Hr) >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
-                {parseFloat(coin.changePercent24Hr) >= 0 ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />}
-                {formatChange(coin.changePercent24Hr)}% 24h
-              </div>
-            </Link>
-          ))}
+          {trendingList.map((sym) => {
+            const coin = getAsset(sym);
+            if (!coin) return null;
+            return (
+              <Link href="/trade" key={coin.symbol} className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-blue-500 transition-colors group">
+                <div className="font-bold text-lg mb-2">{coin.symbol}</div>
+                <div className="text-2xl font-mono mb-1">{symbol}{formatPrice(coin.priceUsd)}</div>
+                <div className={`text-sm font-semibold flex items-center ${parseFloat(coin.changePercent24Hr) >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
+                  {parseFloat(coin.changePercent24Hr) >= 0 ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />}
+                  {formatChange(coin.changePercent24Hr)}% 24h
+                </div>
+              </Link>
+            )
+          })}
         </div>
       </section>
 
@@ -111,7 +112,7 @@ export function DiscoverInterface() {
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-          {['BTC', 'ETH', 'USDT'].map((sym) => {
+          {['ETH', 'USDT', 'BTC'].map((sym) => {
             const coin = getAsset(sym);
             if (!coin) return null;
             const isPositive = parseFloat(coin.changePercent24Hr) >= 0;
@@ -145,13 +146,17 @@ export function DiscoverInterface() {
               <span className="w-1/3 text-right">Price</span>
               <span className="w-1/3 text-right">24h %</span>
             </div>
-            {topGainers.map((coin) => (
-              <Link href="/trade" key={coin.symbol} className="flex justify-between px-4 py-3 border-t border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors items-center">
-                <span className="font-bold w-1/3">{coin.symbol}</span>
-                <span className="font-mono w-1/3 text-right">{symbol}{formatPrice(coin.priceUsd)}</span>
-                <span className="text-green-600 dark:text-green-500 font-semibold w-1/3 text-right">+{formatChange(coin.changePercent24Hr)}%</span>
-              </Link>
-            ))}
+            {gainersList.map((sym) => {
+              const coin = getAsset(sym);
+              if (!coin) return null;
+              return (
+                <Link href="/trade" key={coin.symbol} className="flex justify-between px-4 py-3 border-t border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors items-center">
+                  <span className="font-bold w-1/3">{coin.symbol}</span>
+                  <span className="font-mono w-1/3 text-right">{symbol}{formatPrice(coin.priceUsd)}</span>
+                  <span className="text-green-600 dark:text-green-500 font-semibold w-1/3 text-right">+{formatChange(coin.changePercent24Hr)}%</span>
+                </Link>
+              )
+            })}
           </div>
         </div>
         
@@ -165,13 +170,17 @@ export function DiscoverInterface() {
               <span className="w-1/3 text-right">Price</span>
               <span className="w-1/3 text-right">24h %</span>
             </div>
-            {topLosers.map((coin) => (
-              <Link href="/trade" key={coin.symbol} className="flex justify-between px-4 py-3 border-t border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors items-center">
-                <span className="font-bold w-1/3">{coin.symbol}</span>
-                <span className="font-mono w-1/3 text-right">{symbol}{formatPrice(coin.priceUsd)}</span>
-                <span className="text-red-600 dark:text-red-500 font-semibold w-1/3 text-right">{formatChange(coin.changePercent24Hr)}%</span>
-              </Link>
-            ))}
+            {losersList.map((sym) => {
+              const coin = getAsset(sym);
+              if (!coin) return null;
+              return (
+                <Link href="/trade" key={coin.symbol} className="flex justify-between px-4 py-3 border-t border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors items-center">
+                  <span className="font-bold w-1/3">{coin.symbol}</span>
+                  <span className="font-mono w-1/3 text-right">{symbol}{formatPrice(coin.priceUsd)}</span>
+                  <span className="text-red-600 dark:text-red-500 font-semibold w-1/3 text-right">{formatChange(coin.changePercent24Hr)}%</span>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -187,7 +196,7 @@ export function DiscoverInterface() {
             return (
               <Link href="/trade" key={sym} className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 flex justify-between items-center hover:border-blue-500 transition-colors group">
                 <div>
-                  <h3 className="text-xl font-bold mb-2">{coin.symbol} / {currency}</h3>
+                  <h3 className="text-xl font-bold mb-2">{coin.symbol} / {sym === 'ETH' ? 'USDC' : 'USDT'}</h3>
                   <div className="text-2xl font-mono mb-2">{symbol}{formatPrice(coin.priceUsd)}</div>
                   <div className="flex items-center gap-4 text-sm">
                     <span className={`font-semibold flex items-center ${isPositive ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
