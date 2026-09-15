@@ -24,6 +24,12 @@ export function MarketInterface() {
   const { getSymbol } = useRegional();
   const fiatSymbol = getSymbol();
   
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState('All Markets');
+  const [watchlist, setWatchlist] = useState<string[]>(['bitcoin', 'ethereum']);
+  const [lastUpdated, setLastUpdated] = useState<string>('');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchAssets = async () => {
@@ -47,8 +53,8 @@ export function MarketInterface() {
   }, []);
 
   const toggleWatchlist = (id: string) => {
-    setWatchlist(prev => 
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    setWatchlist((prev: string[]) => 
+      prev.includes(id) ? prev.filter((x: string) => x !== id) : [...prev, id]
     );
   };
 
