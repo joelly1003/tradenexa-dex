@@ -188,6 +188,7 @@ export function MarketInterface() {
   };
 
   const tabs = [
+    { name: 'All Markets', icon: null },
     { name: 'Trending', icon: '🔥' },
     { name: 'Top Gainers', icon: '🚀' },
     { name: 'Top Losers', icon: '🔻' },
@@ -237,48 +238,14 @@ export function MarketInterface() {
         </button>
       </div>
 
-      {/* Tabs Row */}
-      <div className="flex gap-3 overflow-x-visible pb-2 mb-6 items-center">
-        
-        {/* Dropdown "All Markets" pill */}
-        <div className="relative shrink-0" ref={categoryRef}>
-          <button
-            onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors border bg-blue-600 text-white border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
-          >
-            {marketCategory} <ChevronDown className={`w-4 h-4 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
-          </button>
-
-          {isCategoryOpen && (
-            <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden z-50 p-2">
-              <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Nado DEX Markets</div>
-              {nadoCategories.map((cat) => (
-                <button
-                  key={cat.label}
-                  onClick={() => {
-                    setMarketCategory(cat.label);
-                    setActiveTab(cat.label);
-                    setIsCategoryOpen(false);
-                  }}
-                  className={`w-full text-left px-3 py-2.5 rounded-xl transition-colors ${marketCategory === cat.label ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200'}`}
-                >
-                  <div className="text-sm">{cat.label}</div>
-                  <div className="text-xs text-zinc-400 font-normal">{cat.desc}</div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Other Filter Tabs */}
+      {/* Filter Tabs Row (Standard Pills, No Dropdown) */}
+      <div className="flex gap-3 overflow-x-auto pb-2 mb-6 items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {tabs.map(tab => (
           <button
             key={tab.name}
-            onClick={() => {
-              setActiveTab(tab.name);
-            }}
+            onClick={() => setActiveTab(tab.name)}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors border ${
-              activeTab === tab.name && activeTab !== marketCategory
+              activeTab === tab.name
                 ? 'bg-blue-600 text-white border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]' 
                 : 'bg-white dark:bg-[#111114] text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-black dark:hover:text-white'
             }`}
@@ -291,7 +258,7 @@ export function MarketInterface() {
 
       {/* Table */}
       <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/50 rounded-xl overflow-hidden overflow-x-auto">
-        <table className="w-full text-left min-w-[1100px]">
+        <table className="w-full text-left min-w-[1000px]">
           <thead>
             <tr className="text-[11px] font-bold text-zinc-500 tracking-wider uppercase border-b border-zinc-200 dark:border-zinc-800/50 bg-zinc-50 dark:bg-[#0a0a0c]/50">
               <th className="p-4 pl-6 w-12"></th>
@@ -303,18 +270,17 @@ export function MarketInterface() {
               <th className="p-4 text-right">Spread</th>
               <th className="p-4 text-right">Depth ±25</th>
               <th className="p-4 text-right">50K Slip</th>
-              <th className="p-4 text-right">Liq Score</th>
-              <th className="p-4 pr-6 text-right w-20"></th>
+              <th className="p-4 pr-6 text-right">Liq Score</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/50">
             {loading && assets.length === 0 ? (
               <tr>
-                <td colSpan={11} className="p-8 text-center text-zinc-500">Loading Nado DEX markets...</td>
+                <td colSpan={10} className="p-8 text-center text-zinc-500">Loading Nado DEX markets...</td>
               </tr>
             ) : displayAssets.length === 0 ? (
               <tr>
-                <td colSpan={11} className="p-8 text-center text-zinc-500">
+                <td colSpan={10} className="p-8 text-center text-zinc-500">
                   {activeTab === 'Watchlist' ? 'No starred assets in your watchlist. Click the star icon next to any coin to add it!' : 'No markets found.'}
                 </td>
               </tr>
@@ -331,9 +297,12 @@ export function MarketInterface() {
                 const slipVal = asset.slip50k || `${(Math.abs(change) * 1.2 + 0.5).toFixed(2)} bps`;
                 const liqVal = asset.liqScore || `${formatCompact((parseFloat(asset.volumeUsd24Hr || '1000000') * 0.05).toString())}`;
 
+                const iconSymbol = asset.symbol.toLowerCase() === 'kpepe' ? 'pepe' : asset.symbol.toLowerCase();
+                const iconUrl = `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${iconSymbol}.png`;
+
                 return (
-                  <tr key={asset.id} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group text-sm">
-                    <td className="p-4 pl-6">
+                  <tr key={asset.id} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group text-sm cursor-pointer" onClick={() => window.location.href = '/trade'}>
+                    <td className="p-4 pl-6" onClick={(e) => e.stopPropagation()}>
                       <button 
                         onClick={() => toggleWatchlist(asset.id)}
                         className={`transition-colors ${isFavorite ? 'text-yellow-500' : 'text-zinc-300 dark:text-zinc-600 hover:text-zinc-500 dark:hover:text-zinc-400'}`}
@@ -343,8 +312,18 @@ export function MarketInterface() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-bold shrink-0 text-black dark:text-white border border-zinc-200 dark:border-transparent">
-                          {asset.symbol.charAt(0)}
+                        {/* Coin Logo with image fallback */}
+                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 border border-zinc-700/50 overflow-hidden">
+                          <img 
+                            src={iconUrl} 
+                            alt={asset.symbol}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              // Fallback to stylized letter badge if icon image is not found
+                              (e.target as HTMLElement).style.display = 'none';
+                              (e.target as HTMLElement).parentElement!.innerText = asset.symbol.charAt(0);
+                            }}
+                          />
                         </div>
                         <div>
                           <div className="font-bold text-sm text-black dark:text-white flex items-center gap-1.5">
@@ -384,16 +363,8 @@ export function MarketInterface() {
                     <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-400">
                       {slipVal}
                     </td>
-                    <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-300">
+                    <td className="p-4 pr-6 text-right font-mono text-zinc-600 dark:text-zinc-300">
                       {liqVal}
-                    </td>
-                    <td className="p-4 pr-6 text-right">
-                      <Link 
-                        href="/trade"
-                        className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 px-3 py-1.5 rounded-full transition-colors border border-blue-200 dark:border-blue-500/20"
-                      >
-                        Trade <ArrowRight className="w-3 h-3" />
-                      </Link>
                     </td>
                   </tr>
                 );
