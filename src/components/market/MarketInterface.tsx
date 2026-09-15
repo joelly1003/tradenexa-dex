@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, Star, RefreshCcw, ArrowRight, ChevronDown } from 'lucide-react';
 import { useRegional } from '../providers/RegionalProvider';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface Asset {
@@ -21,6 +22,7 @@ interface Asset {
 }
 
 export function MarketInterface() {
+  const router = useRouter();
   const { getSymbol } = useRegional();
   const fiatSymbol = getSymbol();
   
@@ -305,7 +307,11 @@ export function MarketInterface() {
                 const secondaryLogo = `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${iconSymbol}.png`;
 
                 return (
-                  <tr key={asset.id} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group text-sm cursor-pointer" onClick={() => window.location.href = '/trade'}>
+                  <tr 
+                    key={asset.id} 
+                    className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group text-sm cursor-pointer" 
+                    onClick={() => router.push(`/trade?symbol=${asset.symbol}`)}
+                  >
                     <td className="p-4 pl-6" onClick={(e) => e.stopPropagation()}>
                       <button 
                         onClick={() => toggleWatchlist(asset.id)}
