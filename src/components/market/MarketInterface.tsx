@@ -72,12 +72,66 @@ export function MarketInterface() {
     { label: 'Commodities & FX', desc: 'Gold, Silver, FX perps' },
   ];
 
-  // Filter and Sort Logic
-  let displayAssets = [...assets];
+  // 31 Explicit Nado Perpetual Markets from Nado Exchange Frames 1-4
+  const nadoMarkets: Asset[] = [
+    { id: 'bitcoin', rank: '1', symbol: 'BTC', name: 'BTC-PERP (Bitcoin)', priceUsd: '75267.00', changePercent24Hr: '-4.50', volumeUsd24Hr: '181510000' },
+    { id: 'ethereum', rank: '2', symbol: 'ETH', name: 'ETH-PERP (Ethereum)', priceUsd: '2383.40', changePercent24Hr: '-6.60', volumeUsd24Hr: '57560000' },
+    { id: 'hype', rank: '3', symbol: 'HYPE', name: 'HYPE-PERP (Hyperliquid)', priceUsd: '76.56', changePercent24Hr: '-5.00', volumeUsd24Hr: '24650000' },
+    { id: 'solana', rank: '4', symbol: 'SOL', name: 'SOL-PERP (Solana)', priceUsd: '96.56', changePercent24Hr: '-6.60', volumeUsd24Hr: '19990000' },
+    { id: 'lit', rank: '5', symbol: 'LIT', name: 'LIT-PERP (Litentry)', priceUsd: '4.07', changePercent24Hr: '-9.90', volumeUsd24Hr: '1850000' },
+    { id: 'zcash', rank: '6', symbol: 'ZEC', name: 'ZEC-PERP (Zcash)', priceUsd: '1102.29', changePercent24Hr: '-7.20', volumeUsd24Hr: '5360000' },
+    { id: 'binance-coin', rank: '7', symbol: 'BNB', name: 'BNB-PERP (BNB Chain)', priceUsd: '709.61', changePercent24Hr: '-1.90', volumeUsd24Hr: '1450000' },
+    { id: 'pump', rank: '8', symbol: 'PUMP', name: 'PUMP-PERP (Pump.fun)', priceUsd: '0.003495', changePercent24Hr: '-5.60', volumeUsd24Hr: '1200000' },
+    { id: 'monero', rank: '9', symbol: 'XMR', name: 'XMR-PERP (Monero)', priceUsd: '502.23', changePercent24Hr: '-2.60', volumeUsd24Hr: '55970' },
+    { id: 'aster', rank: '10', symbol: 'ASTER', name: 'ASTER-PERP (Aster)', priceUsd: '0.67514', changePercent24Hr: '-4.50', volumeUsd24Hr: '266710' },
+    { id: 'ethena', rank: '11', symbol: 'ENA', name: 'ENA-PERP (Ethena)', priceUsd: '0.13725', changePercent24Hr: '-5.30', volumeUsd24Hr: '399750' },
+    { id: 'layerzero', rank: '12', symbol: 'ZRO', name: 'ZRO-PERP (LayerZero)', priceUsd: '0.9679', changePercent24Hr: '-3.70', volumeUsd24Hr: '84660' },
+    { id: 'xpl', rank: '13', symbol: 'XPL', name: 'XPL-PERP (Plasma)', priceUsd: '0.07969', changePercent24Hr: '-6.30', volumeUsd24Hr: '264170' },
+    { id: 'fartcoin', rank: '14', symbol: 'FARTCOIN', name: 'FARTCOIN-PERP (Fartcoin)', priceUsd: '0.13515', changePercent24Hr: '-7.20', volumeUsd24Hr: '200260' },
+    { id: 'aave', rank: '15', symbol: 'AAVE', name: 'AAVE-PERP (Aave)', priceUsd: '120.65', changePercent24Hr: '-7.00', volumeUsd24Hr: '191700' },
+    { id: 'dogecoin', rank: '16', symbol: 'DOGE', name: 'DOGE-PERP (Dogecoin)', priceUsd: '0.07962', changePercent24Hr: '-5.90', volumeUsd24Hr: '105470' },
+    { id: 'monad', rank: '17', symbol: 'MON', name: 'MON-PERP (Monad)', priceUsd: '0.021311', changePercent24Hr: '-9.20', volumeUsd24Hr: '208190' },
+    { id: 'bittensor', rank: '18', symbol: 'TAO', name: 'TAO-PERP (Bittensor)', priceUsd: '216.42', changePercent24Hr: '-7.90', volumeUsd24Hr: '580300' },
+    { id: 'sui', rank: '19', symbol: 'SUI', name: 'SUI-PERP (Sui Network)', priceUsd: '0.6797', changePercent24Hr: '-7.20', volumeUsd24Hr: '154510' },
+    { id: 'near-protocol', rank: '20', symbol: 'NEAR', name: 'NEAR-PERP (Near Protocol)', priceUsd: '2.31', changePercent24Hr: '-8.50', volumeUsd24Hr: '325500' },
+    { id: 'bitcoin-cash', rank: '21', symbol: 'BCH', name: 'BCH-PERP (Bitcoin Cash)', priceUsd: '214.12', changePercent24Hr: '-5.00', volumeUsd24Hr: '126770' },
+    { id: 'jupiter', rank: '22', symbol: 'JUP', name: 'JUP-PERP (Jupiter)', priceUsd: '0.21598', changePercent24Hr: '-11.00', volumeUsd24Hr: '232900' },
+    { id: 'xrp', rank: '23', symbol: 'XRP', name: 'XRP-PERP (Ripple XRP)', priceUsd: '1.28', changePercent24Hr: '-11.90', volumeUsd24Hr: '3460000' },
+    { id: 'uniswap', rank: '24', symbol: 'UNI', name: 'UNI-PERP (Uniswap)', priceUsd: '6.22', changePercent24Hr: '-5.20', volumeUsd24Hr: '1210000' },
+    { id: 'pengu', rank: '25', symbol: 'PENGU', name: 'PENGU-PERP (Pudgy Penguins)', priceUsd: '0.006777', changePercent24Hr: '-5.60', volumeUsd24Hr: '78110' },
+    { id: 'chainlink', rank: '26', symbol: 'LINK', name: 'LINK-PERP (Chainlink)', priceUsd: '10.85', changePercent24Hr: '-7.10', volumeUsd24Hr: '124340' },
+    { id: 'ondo', rank: '27', symbol: 'ONDO', name: 'ONDO-PERP (Ondo Finance)', priceUsd: '0.32702', changePercent24Hr: '-9.40', volumeUsd24Hr: '114800' },
+    { id: 'litecoin', rank: '28', symbol: 'LTC', name: 'LTC-PERP (Litecoin)', priceUsd: '50.86', changePercent24Hr: '-4.90', volumeUsd24Hr: '56960' },
+    { id: 'avalanche', rank: '29', symbol: 'AVAX', name: 'AVAX-PERP (Avalanche)', priceUsd: '7.23', changePercent24Hr: '-5.50', volumeUsd24Hr: '45110' },
+    { id: 'chip', rank: '30', symbol: 'CHIP', name: 'CHIP-PERP (Chip)', priceUsd: '0.036386', changePercent24Hr: '-11.80', volumeUsd24Hr: '8460' },
+    { id: 'kpepe', rank: '31', symbol: 'kPEPE', name: 'kPEPE-PERP (1k PEPE)', priceUsd: '0.003319', changePercent24Hr: '-5.50', volumeUsd24Hr: '49950' }
+  ];
 
-  if (marketCategory === 'Crypto Perps') {
-    const perpSymbols = ['BTC', 'ETH', 'SOL', 'AVAX', 'LINK', 'SUI', 'DOGE', 'PEPE', 'ARB', 'OP', 'NEAR', 'TIA', 'WIF', 'APT', 'XRP', 'BNB', 'ADA'];
-    displayAssets = displayAssets.filter(a => perpSymbols.includes(a.symbol));
+  // Merge live CoinCap prices into nadoMarkets if available
+  const mergedMarkets = nadoMarkets.map(m => {
+    const live = assets.find(a => a.symbol === m.symbol || a.id === m.id);
+    if (live) {
+      return {
+        ...m,
+        priceUsd: live.priceUsd,
+        changePercent24Hr: live.changePercent24Hr,
+        volumeUsd24Hr: live.volumeUsd24Hr
+      };
+    }
+    return m;
+  });
+
+  // Combine with any extra CoinCap assets for completeness
+  const allCombined = [
+    ...mergedMarkets,
+    ...assets.filter(a => !mergedMarkets.some(m => m.symbol === a.symbol))
+  ];
+
+  // Filter and Sort Logic
+  let displayAssets = [...allCombined];
+
+  if (marketCategory === 'Crypto Perps' || activeTab === 'All Markets' || marketCategory === 'All Markets') {
+    displayAssets = [...allCombined];
   } else if (marketCategory === 'Spot Markets') {
     displayAssets = displayAssets.slice(0, 15);
   } else if (marketCategory === 'RWA & Equities') {
