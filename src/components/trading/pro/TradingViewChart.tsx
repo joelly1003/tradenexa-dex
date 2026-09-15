@@ -1,33 +1,31 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: string }) {
-  const container = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [interval, setIntervalVal] = useState<string>('15'); // 15m default for clean continuous candles
 
   useEffect(() => {
-    if (!container.current) return;
+    if (!containerRef.current) return;
     
-    // Create a unique ID for the container so TradingView doesn't get confused on symbol change
+    // Unique ID for container on every symbol / interval change
     const containerId = `tv_chart_${Math.random().toString(36).substring(7)}`;
-    container.current.id = containerId;
-    container.current.innerHTML = '';
+    containerRef.current.id = containerId;
+    containerRef.current.innerHTML = '';
 
-    const script = document.createElement('script');
-    script.src = 'https://s3.tradingview.com/tv.js';
-    script.async = true;
-    script.onload = () => {
-      if (typeof window !== 'undefined' && (window as any).TradingView) {
+    const initWidget = () => {
+      if (typeof window !== 'undefined' && (window as any).TradingView && containerRef.current) {
         new (window as any).TradingView.widget({
           autosize: true,
           symbol: symbol,
-          interval: '1',
+          interval: interval,
           timezone: 'Etc/UTC',
           theme: 'dark',
           style: '1',
           locale: 'en',
           enable_publishing: false,
-          backgroundColor: '#0a0a0c', // Matches our dark UI
+          backgroundColor: '#0a0a0c',
           gridColor: '#1f1f22',
           hide_top_toolbar: false,
           hide_legend: false,
@@ -37,20 +35,54 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
         });
       }
     };
-    document.head.appendChild(script);
 
-    return () => {
-      // Clean up script
-      const scripts = document.head.getElementsByTagName('script');
-      for (let i = scripts.length - 1; i >= 0; i--) {
-        if (scripts[i].src.includes('tv.js')) {
-          document.head.removeChild(scripts[i]);
-        }
+    if (typeof window !== 'undefined' && (window as any).TradingView) {
+      initWidget();
+    } else {
+      const existingScript = document.getElementById('tradingview-widget-script');
+      if (existingScript) {
+        initWidget();
+      } else {
+        const script = document.createElement('script');
+        script.id = 'tradingview-widget-script';
+        script.src = 'https://s3.tradingview.com/tv.js';
+        script.async = true;
+        script.onload = initWidget;
+        document.head.appendChild(script);
       }
-    };
-  }, [symbol]);
+    }
+  }, [symbol, interval]);
+
+  const intervals = [
+    { label: '1m', value: '1' },
+    { label: '5m', value: '5' },
+    { label: '15m', value: '15' },
+    { label: '1h', value: '60' },
+    { label: '4h', value: '240' },
+    { label: '1D', value: 'D' },
+  ];
 
   return (
-    <div className="w-full h-full relative bg-[#0a0a0c]" ref={container} />
+    <div className="w-full h-full flex flex-col bg-[#0a0a0c]">
+      {/* Timeframe selector header */}
+      <div className="flex items-center gap-1 p-2 bg-[#0a0a0c] border-b border-zinc-900 text-xs text-zinc-400 font-semibold z-10 shrink-0">
+        <span className="text-zinc-500 mr-2 text-[11px] uppercase tracking-wider font-mono">Timeframe:</span>
+        {intervals.map((item) => (
+          <button
+            key={item.value}
+            onClick={() => setIntervalVal(item.value)}
+            className={`px-2.5 py-1 rounded transition-colors text-xs font-mono font-bold ${
+              interval === item.value
+                ? 'bg-blue-600 text-white'
+                : 'hover:bg-zinc-800 text-zinc-400 hover:text-white'
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="w-full flex-1 relative bg-[#0a0a0c]" ref={containerRef} />
+    </div>
   );
 }
+
