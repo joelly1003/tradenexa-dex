@@ -34,7 +34,19 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
           'ETH': 'ethereum',
           'SOL': 'solana',
           'AVAX': 'avalanche',
-          'LINK': 'chainlink'
+          'LINK': 'chainlink',
+          'SUI': 'sui',
+          'DOGE': 'dogecoin',
+          'PEPE': 'pepe',
+          'ARB': 'arbitrum',
+          'OP': 'optimism',
+          'NEAR': 'near-protocol',
+          'TIA': 'celestia',
+          'WIF': 'dogwifhat',
+          'APT': 'aptos',
+          'XRP': 'xrp',
+          'BNB': 'binance-coin',
+          'ADA': 'cardano'
         };
         const id = idMap[selectedSymbol] || 'bitcoin';
         const res = await fetch(`https://api.coincap.io/v2/assets/${id}`);
@@ -66,7 +78,19 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
     { symbol: 'ETH', name: 'Ethereum', color: 'bg-[#627EEA] text-white' },
     { symbol: 'SOL', name: 'Solana', color: 'bg-[#14F195] text-black' },
     { symbol: 'AVAX', name: 'Avalanche', color: 'bg-[#E84142] text-white' },
-    { symbol: 'LINK', name: 'Chainlink', color: 'bg-[#2A5ADA] text-white' }
+    { symbol: 'LINK', name: 'Chainlink', color: 'bg-[#2A5ADA] text-white' },
+    { symbol: 'SUI', name: 'Sui Network', color: 'bg-[#4CA2FF] text-white' },
+    { symbol: 'DOGE', name: 'Dogecoin', color: 'bg-[#C2A633] text-black' },
+    { symbol: 'PEPE', name: 'Pepe Coin', color: 'bg-[#43A047] text-white' },
+    { symbol: 'ARB', name: 'Arbitrum', color: 'bg-[#28A0F0] text-white' },
+    { symbol: 'OP', name: 'Optimism', color: 'bg-[#FF0420] text-white' },
+    { symbol: 'NEAR', name: 'Near Protocol', color: 'bg-[#000000] border border-zinc-700 text-white' },
+    { symbol: 'TIA', name: 'Celestia', color: 'bg-[#7B2CBF] text-white' },
+    { symbol: 'WIF', name: 'dogwifhat', color: 'bg-[#D4A373] text-black' },
+    { symbol: 'APT', name: 'Aptos', color: 'bg-[#000000] border border-zinc-700 text-white' },
+    { symbol: 'XRP', name: 'Ripple XRP', color: 'bg-[#23292F] text-white' },
+    { symbol: 'BNB', name: 'BNB Chain', color: 'bg-[#F3BA2F] text-black' },
+    { symbol: 'ADA', name: 'Cardano', color: 'bg-[#0033AD] text-white' }
   ];
 
   const currentCoin = coins.find(c => c.symbol === selectedSymbol) || coins[0];

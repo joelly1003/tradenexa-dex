@@ -15,7 +15,19 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
           'ETH': 'ethereum',
           'SOL': 'solana',
           'AVAX': 'avalanche',
-          'LINK': 'chainlink'
+          'LINK': 'chainlink',
+          'SUI': 'sui',
+          'DOGE': 'dogecoin',
+          'PEPE': 'pepe',
+          'ARB': 'arbitrum',
+          'OP': 'optimism',
+          'NEAR': 'near-protocol',
+          'TIA': 'celestia',
+          'WIF': 'dogwifhat',
+          'APT': 'aptos',
+          'XRP': 'xrp',
+          'BNB': 'binance-coin',
+          'ADA': 'cardano'
         };
         const id = idMap[symbol] || 'bitcoin';
         const res = await fetch(`https://api.coincap.io/v2/assets/${id}`);
