@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Search, Star, RefreshCcw, ArrowRight } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, Star, RefreshCcw, ArrowRight, ChevronDown } from 'lucide-react';
 import { useRegional } from '../providers/RegionalProvider';
 import Link from 'next/link';
 
@@ -50,9 +50,51 @@ export function MarketInterface() {
     );
   };
 
+  const [marketCategory, setMarketCategory] = useState('All Markets');
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const categoryRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (categoryRef.current && !categoryRef.current.contains(e.target as Node)) {
+        setIsCategoryOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const nadoCategories = [
+    { label: 'All Markets', desc: 'All listed Nado DEX pairs' },
+    { label: 'Crypto Perps', desc: 'BTC, ETH, SOL & 15+ perpetuals' },
+    { label: 'Spot Markets', desc: 'Direct spot trading pairs' },
+    { label: 'RWA & Equities', desc: 'SPYx, QQQx tokenized stocks' },
+    { label: 'Commodities & FX', desc: 'Gold, Silver, FX perps' },
+  ];
+
   // Filter and Sort Logic
   let displayAssets = [...assets];
-  
+
+  if (marketCategory === 'Crypto Perps') {
+    const perpSymbols = ['BTC', 'ETH', 'SOL', 'AVAX', 'LINK', 'SUI', 'DOGE', 'PEPE', 'ARB', 'OP', 'NEAR', 'TIA', 'WIF', 'APT', 'XRP', 'BNB', 'ADA'];
+    displayAssets = displayAssets.filter(a => perpSymbols.includes(a.symbol));
+  } else if (marketCategory === 'Spot Markets') {
+    displayAssets = displayAssets.slice(0, 15);
+  } else if (marketCategory === 'RWA & Equities') {
+    displayAssets = [
+      { id: 'spyx', rank: '1', symbol: 'SPYx', name: 'S&P 500 Index Perp', priceUsd: '562.40', changePercent24Hr: '0.84', volumeUsd24Hr: '124500000' },
+      { id: 'qqqx', rank: '2', symbol: 'QQQx', name: 'Nasdaq 100 Index Perp', priceUsd: '488.10', changePercent24Hr: '1.25', volumeUsd24Hr: '98400000' },
+      { id: 'aaplx', rank: '3', symbol: 'AAPLx', name: 'Apple Inc. Tokenized', priceUsd: '224.30', changePercent24Hr: '-0.45', volumeUsd24Hr: '45200000' },
+      { id: 'tslax', rank: '4', symbol: 'TSLAx', name: 'Tesla Inc. Tokenized', priceUsd: '238.90', changePercent24Hr: '3.62', volumeUsd24Hr: '87100000' },
+    ];
+  } else if (marketCategory === 'Commodities & FX') {
+    displayAssets = [
+      { id: 'gold', rank: '1', symbol: 'XAU', name: 'Gold / USD Perp', priceUsd: '2578.50', changePercent24Hr: '0.42', volumeUsd24Hr: '210000000' },
+      { id: 'silver', rank: '2', symbol: 'XAG', name: 'Silver / USD Perp', priceUsd: '30.85', changePercent24Hr: '1.18', volumeUsd24Hr: '64000000' },
+      { id: 'eurusd', rank: '3', symbol: 'EUR/USD', name: 'Euro / US Dollar', priceUsd: '1.108', changePercent24Hr: '-0.12', volumeUsd24Hr: '340000000' },
+    ];
+  }
+
   if (search) {
     displayAssets = displayAssets.filter(a => 
       a.name.toLowerCase().includes(search.toLowerCase()) || 
@@ -81,7 +123,6 @@ export function MarketInterface() {
   };
 
   const tabs = [
-    { name: 'All Markets', icon: null },
     { name: 'Trending', icon: '🔥' },
     { name: 'Top Gainers', icon: '🚀' },
     { name: 'Top Losers', icon: '🔻' },
@@ -95,7 +136,7 @@ export function MarketInterface() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
         <div>
           <h1 className="text-3xl md:text-4xl font-black mb-2 text-black dark:text-white">Perpetual Markets</h1>
-          <p className="text-zinc-500 dark:text-zinc-400">Discover, track, and trade regional and global crypto assets.</p>
+          <p className="text-zinc-500 dark:text-zinc-400">Discover, track, and trade regional and global crypto assets on Nado DEX.</p>
         </div>
         <div className="relative w-full md:w-72 shrink-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
@@ -131,14 +172,48 @@ export function MarketInterface() {
         </button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-3 overflow-x-auto pb-2 mb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      {/* Tabs Row */}
+      <div className="flex gap-3 overflow-x-visible pb-2 mb-6 items-center">
+        
+        {/* Dropdown "All Markets" pill */}
+        <div className="relative shrink-0" ref={categoryRef}>
+          <button
+            onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors border bg-blue-600 text-white border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]"
+          >
+            {marketCategory} <ChevronDown className={`w-4 h-4 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {isCategoryOpen && (
+            <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden z-50 p-2">
+              <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Nado DEX Markets</div>
+              {nadoCategories.map((cat) => (
+                <button
+                  key={cat.label}
+                  onClick={() => {
+                    setMarketCategory(cat.label);
+                    setActiveTab(cat.label);
+                    setIsCategoryOpen(false);
+                  }}
+                  className={`w-full text-left px-3 py-2.5 rounded-xl transition-colors ${marketCategory === cat.label ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold' : 'hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200'}`}
+                >
+                  <div className="text-sm">{cat.label}</div>
+                  <div className="text-xs text-zinc-400 font-normal">{cat.desc}</div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Other Filter Tabs */}
         {tabs.map(tab => (
           <button
             key={tab.name}
-            onClick={() => setActiveTab(tab.name)}
+            onClick={() => {
+              setActiveTab(tab.name);
+            }}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors border ${
-              activeTab === tab.name 
+              activeTab === tab.name && activeTab !== marketCategory
                 ? 'bg-blue-600 text-white border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]' 
                 : 'bg-white dark:bg-[#111114] text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-black dark:hover:text-white'
             }`}
