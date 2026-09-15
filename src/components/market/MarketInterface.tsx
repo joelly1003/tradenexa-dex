@@ -24,14 +24,10 @@ export function MarketInterface() {
   const { getSymbol } = useRegional();
   const fiatSymbol = getSymbol();
   
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState('All Markets');
-  const [watchlist, setWatchlist] = useState<string[]>(['bitcoin', 'ethereum']);
-  const [lastUpdated, setLastUpdated] = useState<string>('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchAssets = async () => {
+    setIsRefreshing(true);
     try {
       const res = await fetch('https://api.coincap.io/v2/assets?limit=100');
       const data = await res.json();
@@ -40,6 +36,7 @@ export function MarketInterface() {
     } catch (e) {
       console.error(e);
     }
+    setTimeout(() => setIsRefreshing(false), 800);
     setLoading(false);
   };
 
@@ -233,7 +230,7 @@ export function MarketInterface() {
           onClick={fetchAssets}
           className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-blue-600 dark:text-blue-400 shrink-0"
         >
-          <RefreshCcw className="w-4 h-4" />
+          <RefreshCcw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
           Refresh Prices
         </button>
       </div>
@@ -298,7 +295,8 @@ export function MarketInterface() {
                 const liqVal = asset.liqScore || `${formatCompact((parseFloat(asset.volumeUsd24Hr || '1000000') * 0.05).toString())}`;
 
                 const iconSymbol = asset.symbol.toLowerCase() === 'kpepe' ? 'pepe' : asset.symbol.toLowerCase();
-                const iconUrl = `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${iconSymbol}.png`;
+                const primaryLogo = `https://assets.coincap.io/assets/icons/${iconSymbol}@2x.png`;
+                const secondaryLogo = `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${iconSymbol}.png`;
 
                 return (
                   <tr key={asset.id} className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group text-sm cursor-pointer" onClick={() => window.location.href = '/trade'}>
@@ -312,16 +310,22 @@ export function MarketInterface() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        {/* Coin Logo with image fallback */}
-                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 border border-zinc-700/50 overflow-hidden">
+                        {/* Coin Logo with multi-layer image fallback */}
+                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 border border-zinc-700/50 overflow-hidden font-bold text-xs text-white">
                           <img 
-                            src={iconUrl} 
+                            src={primaryLogo} 
                             alt={asset.symbol}
                             className="w-full h-full object-cover"
                             onError={(e) => {
-                              // Fallback to stylized letter badge if icon image is not found
-                              (e.target as HTMLElement).style.display = 'none';
-                              (e.target as HTMLElement).parentElement!.innerText = asset.symbol.charAt(0);
+                              const target = e.target as HTMLImageElement;
+                              if (target.src === primaryLogo) {
+                                target.src = secondaryLogo;
+                              } else {
+                                target.style.display = 'none';
+                                if (target.parentElement) {
+                                  target.parentElement.innerText = asset.symbol.substring(0, 3);
+                                }
+                              }
                             }}
                           />
                         </div>
