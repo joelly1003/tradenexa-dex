@@ -40,7 +40,9 @@ export function MarketInterface() {
     setIsRefreshing(true);
     try {
       refetchNadoPrices();
-      const res = await fetch('https://api.coincap.io/v2/assets?limit=100');
+      const res = await fetch(`https://api.coincap.io/v2/assets?limit=100&_t=${Date.now()}`, {
+        cache: 'no-store'
+      });
       const data = await res.json();
       setAssets(data.data);
       setLastUpdated(new Date().toLocaleTimeString());
@@ -53,7 +55,7 @@ export function MarketInterface() {
 
   useEffect(() => {
     fetchAssets();
-    const interval = setInterval(fetchAssets, 15000); // 15s refresh
+    const interval = setInterval(fetchAssets, 5000); // 5s refresh for live feel
     return () => clearInterval(interval);
   }, []);
 
@@ -128,16 +130,29 @@ export function MarketInterface() {
 
   // Merge live CoinCap prices into nadoMarkets if available
   const mergedMarkets = nadoMarkets.map(m => {
+    let livePrice = m.priceUsd;
+    let nP;
+    
+    if (nadoPrices && nadoPrices.length > 0) {
+      nP = nadoPrices.find(n => n.symbol === m.symbol || n.symbol === m.name);
+      if (nP && nP.price_x18) {
+        livePrice = (Number(BigInt(nP.price_x18)) / 1e18).toString();
+      }
+    }
+
     const live = assets.find(a => a.symbol === m.symbol || a.id === m.id);
     if (live) {
       return {
         ...m,
-        priceUsd: live.priceUsd,
+        priceUsd: livePrice !== m.priceUsd ? livePrice : live.priceUsd,
         changePercent24Hr: live.changePercent24Hr,
         volumeUsd24Hr: live.volumeUsd24Hr
       };
     }
-    return m;
+    return {
+      ...m,
+      priceUsd: livePrice !== m.priceUsd ? livePrice : m.priceUsd,
+    };
   });
 
   // Combine with any extra CoinCap assets for completeness
