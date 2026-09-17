@@ -95,18 +95,21 @@ function TradeContent() {
   );
 }
 
-export function TradeInterface() {
-  return (
-    <Suspense fallback={
-      <div className="flex items-center justify-center h-[60vh] text-zinc-400 font-mono">
-        <div className="flex items-center gap-3">
-          <div className="w-4 h-4 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-          <span>Loading Nado DEX Trade Workspace...</span>
-        </div>
+import dynamic from 'next/dynamic';
+
+const TradeContentWithNoSSR = dynamic(() => Promise.resolve(TradeContent), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-[60vh] text-zinc-400 font-mono">
+      <div className="flex items-center gap-3">
+        <div className="w-4 h-4 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
+        <span>Loading Nado DEX Trade Workspace...</span>
       </div>
-    }>
-      <TradeContent />
-    </Suspense>
-  );
+    </div>
+  )
+});
+
+export function TradeInterface() {
+  return <TradeContentWithNoSSR />;
 }
 

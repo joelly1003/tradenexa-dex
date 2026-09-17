@@ -238,12 +238,18 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
 
       <button 
         onClick={buttonAction}
-        className={`w-full font-bold py-3 rounded mb-6 transition-colors ${buttonStyle}`}
+        className={`w-full font-bold py-3 rounded mb-2 transition-colors ${buttonStyle}`}
       >
         {buttonText}
       </button>
 
-      <div className="space-y-2 text-xs text-zinc-500 mt-auto font-sans">
+      {tradeError && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-2 rounded mb-4 break-words">
+          Error: {tradeError}
+        </div>
+      )}
+
+      <div className="space-y-2 text-xs text-zinc-500 mt-auto font-sans pt-2">
         <div className="flex justify-between"><span>Value</span><span className="font-mono">--</span></div>
         <div className="flex justify-between"><span>Cost</span><span className="font-mono">--</span></div>
         <div className="flex justify-between"><span>Liq. Price</span><span className="font-mono">--</span></div>

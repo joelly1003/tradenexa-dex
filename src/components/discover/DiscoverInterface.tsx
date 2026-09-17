@@ -34,10 +34,32 @@ export function DiscoverInterface() {
     const fetchAssets = async () => {
       try {
         const res = await fetch('https://api.coincap.io/v2/assets?limit=100');
-        const data = await res.json();
-        setAssets(data.data);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.data) {
+            setAssets(data.data);
+            return;
+          }
+        }
+        throw new Error('CoinCap rate limit or format error');
       } catch (e) {
-        console.error(e);
+        console.warn('Falling back to Binance API for Discover data', e);
+        try {
+          const bRes = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+          const bData = await bRes.json();
+          const mapped = bData.slice(0, 100).map((d: any) => ({
+            id: d.symbol.toLowerCase(),
+            symbol: d.symbol.replace('USDT', ''),
+            name: d.symbol.replace('USDT', ''),
+            priceUsd: d.lastPrice,
+            changePercent24Hr: d.priceChangePercent,
+            volumeUsd24Hr: d.quoteVolume
+          }));
+          setAssets(mapped);
+        } catch (err) {
+          console.error(err);
+          setAssets([]);
+        }
       } finally {
         setLoading(false);
       }
