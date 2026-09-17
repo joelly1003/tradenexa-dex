@@ -3,11 +3,15 @@
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useNadoTrade } from '../../../hooks/nado';
 
 export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
   const { isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
+  const { placeOrder, isSubmitting, error: tradeError } = useNadoTrade();
+
   const [amount, setAmount] = useState('');
+  const [limitPrice, setLimitPrice] = useState('');
   const [sliderVal, setSliderVal] = useState(0);
   const [marginMode, setMarginMode] = useState('Cross');
   const [leverage, setLeverage] = useState(50);
@@ -16,20 +20,43 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
   const [reduceOnly, setReduceOnly] = useState(false);
   const [tpSl, setTpSl] = useState(false);
 
+  const handlePlaceOrder = async () => {
+    if (!amount || parseFloat(amount) === 0) return;
+    try {
+      await placeOrder({
+        productId: 1, // Default BTC product
+        price: limitPrice ? parseFloat(limitPrice) : 75000,
+        amount: parseFloat(amount),
+        appendixOptions: {
+          isolated: marginMode === 'Isolated',
+          reduceOnly,
+          orderType: orderType === 'Limit' ? 'POST_ONLY' : 'DEFAULT',
+        },
+      });
+      alert('Order successfully signed via EIP-712 and submitted to Nado Gateway!');
+    } catch (e: any) {
+      console.error('Nado order placement error:', e);
+    }
+  };
+
   // Determine button text and action
   let buttonText = 'Connect Wallet to Trade';
-  let buttonAction = () => openConnectModal?.();
-  let buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white'; // Default un-connected style
+  let buttonAction: () => void = () => openConnectModal?.();
+  let buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white';
 
   if (isConnected) {
-    if (!amount || parseFloat(amount) === 0) {
-      buttonText = 'Review Trade';
+    if (isSubmitting) {
+      buttonText = 'Signing EIP-712 & Submitting...';
       buttonAction = () => {};
-      buttonStyle = 'bg-zinc-800 text-zinc-500 cursor-not-allowed'; // Disabled style when empty
+      buttonStyle = 'bg-blue-800 text-blue-200 cursor-wait animate-pulse';
+    } else if (!amount || parseFloat(amount) === 0) {
+      buttonText = 'Enter Trade Size';
+      buttonAction = () => {};
+      buttonStyle = 'bg-zinc-800 text-zinc-500 cursor-not-allowed';
     } else {
-      buttonText = 'Place Order';
-      buttonAction = () => { console.log('Placing order for', amount, symbol) };
-      buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20'; // Active style
+      buttonText = `Place ${symbol} ${orderType} Order`;
+      buttonAction = handlePlaceOrder;
+      buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20 cursor-pointer';
     }
   }
 

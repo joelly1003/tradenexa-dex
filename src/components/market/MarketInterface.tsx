@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, Star, RefreshCcw, ArrowRight, ChevronDown } from 'lucide-react';
 import { useRegional } from '../providers/RegionalProvider';
 import { useRouter } from 'next/navigation';
+import { useNadoEdgeTicker } from '../../hooks/nado';
 import Link from 'next/link';
 
 interface Asset {
@@ -26,6 +27,7 @@ export function MarketInterface() {
   const { getSymbol } = useRegional();
   const fiatSymbol = getSymbol();
   
+  const { data: nadoPrices, refetch: refetchNadoPrices } = useNadoEdgeTicker();
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -37,6 +39,7 @@ export function MarketInterface() {
   const fetchAssets = async () => {
     setIsRefreshing(true);
     try {
+      refetchNadoPrices();
       const res = await fetch('https://api.coincap.io/v2/assets?limit=100');
       const data = await res.json();
       setAssets(data.data);
