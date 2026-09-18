@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const res = await fetch(\https://api.binance.com/api/v3/ticker/24hr?symbol=\USDT\, {
+    const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}USDT`, {
       next: { revalidate: 3 }
     });
     const data = await res.json();
