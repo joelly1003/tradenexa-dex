@@ -53,6 +53,8 @@ function getTradingViewSymbol(symbol: string): string {
   return tvMap[sym] || `BINANCE:${sym}USDT`;
 }
 
+import { BottomTradeTabs } from './pro/BottomTradeTabs';
+
 function TradeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -73,20 +75,38 @@ function TradeContent() {
   return (
     <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] lg:overflow-hidden overflow-y-auto">
       <TopTickerBar selectedSymbol={selectedSymbol} onSelectSymbol={handleSelectSymbol} />
+      
       <div className="flex flex-col lg:flex-row flex-1 lg:overflow-hidden">
         
-        {/* Chart Area */}
-        <div className="w-full lg:flex-1 h-[400px] lg:h-full min-w-0 border-b lg:border-b-0 lg:border-r border-zinc-900 shrink-0">
-          <TradingViewChart symbol={getTradingViewSymbol(selectedSymbol)} />
-        </div>
-        
-        {/* Orderbook */}
-        <div className="w-full lg:w-[300px] shrink-0 h-[400px] lg:h-full border-b lg:border-b-0 border-zinc-900">
-          <Orderbook symbol={selectedSymbol} />
+        {/* Left Column: Top (Chart+Book) & Bottom (Tabs) */}
+        <div className="flex flex-col flex-1 min-w-0 border-r border-zinc-900 shrink-0 lg:overflow-hidden">
+          
+          {/* Top Half */}
+          <div className="flex flex-col lg:flex-row flex-1 lg:overflow-hidden">
+            {/* Chart Area */}
+            <div className="w-full lg:flex-1 h-[400px] lg:h-full min-w-0 border-b lg:border-b-0 lg:border-r border-zinc-900 shrink-0">
+              <TradingViewChart symbol={getTradingViewSymbol(selectedSymbol)} />
+            </div>
+            
+            {/* Orderbook */}
+            <div className="w-full lg:w-[300px] shrink-0 h-[400px] lg:h-full border-b lg:border-b-0 border-zinc-900">
+              <Orderbook symbol={selectedSymbol} />
+            </div>
+          </div>
+
+          {/* Bottom Half */}
+          <div className="w-full h-[250px] shrink-0 hidden lg:block">
+            <BottomTradeTabs />
+          </div>
+          {/* Mobile Bottom Tabs */}
+          <div className="w-full h-[250px] shrink-0 lg:hidden border-b border-zinc-900">
+            <BottomTradeTabs />
+          </div>
+
         </div>
         
         {/* Order Entry */}
-        <div className="w-full lg:w-[320px] shrink-0 h-auto lg:h-full lg:border-l border-zinc-900 pb-12 lg:pb-0">
+        <div className="w-full lg:w-[320px] shrink-0 h-auto lg:h-full pb-12 lg:pb-0 overflow-y-auto">
           <OrderEntry symbol={selectedSymbol} />
         </div>
         

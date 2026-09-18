@@ -266,7 +266,9 @@ export function MarketInterface() {
       {/* Info Bar */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/50 rounded-xl mb-6 gap-4">
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <span className="text-zinc-500 dark:text-zinc-400">Last updated: <span className="text-black dark:text-white font-mono">{lastUpdated || '--:--:--'}</span></span>
+          <span className="text-zinc-500 dark:text-zinc-400">Last updated: <span className="text-black dark:text-white font-mono">
+            {nadoPrices && nadoPrices.length > 0 && typeof window !== 'undefined' ? new Date(nadoPrices[0].timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--'}
+          </span></span>
           <span className="text-zinc-300 dark:text-zinc-700 hidden sm:inline">|</span>
           <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-medium">
             <div className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />

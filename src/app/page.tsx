@@ -29,7 +29,7 @@ export default function Home() {
         </h1>
         
         <p className="text-xl text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
-          Experience lightning-fast swaps and optimal routing—all priced natively in your preferred local fiat currency ({currency}).
+          Experience lightning-fast swaps and optimal routing—all priced natively in your preferred local fiat currency.
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
