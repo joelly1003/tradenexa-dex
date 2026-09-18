@@ -115,14 +115,16 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
         const id = idMap[symUpper];
         let fetched = false;
 
-        if (id) {
-          const res = await fetch(`https://api.coincap.io/v2/assets/${id}`);
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.data) {
-              const price = parseFloat(data.data.priceUsd);
-              const change = parseFloat(data.data.changePercent24Hr);
-              const vol = parseFloat(data.data.volumeUsd24Hr);
+        // Note: For perfect sync with TradingView, we should just query Binance proxy first, 
+        // but CoinCap is still good if you want to diversify. Let's try Binance first to ensure sync!
+        try {
+          const bRes = await fetch(`/api/binance?symbol=${symUpper === 'KPEPE' ? 'PEPE' : symUpper}`);
+          if (bRes.ok) {
+            const bData = await bRes.json();
+            if (bData && bData.lastPrice) {
+              const price = parseFloat(bData.lastPrice);
+              const change = parseFloat(bData.priceChangePercent);
+              const vol = parseFloat(bData.quoteVolume);
               setPriceData({
                 price: price < 0.01 ? price.toFixed(6) : price < 1 ? price.toFixed(4) : price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
                 change: change.toFixed(2),
@@ -131,17 +133,16 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
               fetched = true;
             }
           }
-        }
+        } catch(e) {}
 
-        if (!fetched) {
-          // Try Binance 24hr ticker fallback
-          const bRes = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symUpper === 'KPEPE' ? 'PEPE' : symUpper}USDT`);
-          if (bRes.ok) {
-            const bData = await bRes.json();
-            if (bData && bData.lastPrice) {
-              const price = parseFloat(bData.lastPrice);
-              const change = parseFloat(bData.priceChangePercent);
-              const vol = parseFloat(bData.quoteVolume);
+        if (!fetched && id) {
+          const res = await fetch(`https://api.coincap.io/v2/assets/${id}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.data) {
+              const price = parseFloat(data.data.priceUsd);
+              const change = parseFloat(data.data.changePercent24Hr);
+              const vol = parseFloat(data.data.volumeUsd24Hr);
               setPriceData({
                 price: price < 0.01 ? price.toFixed(6) : price < 1 ? price.toFixed(4) : price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
                 change: change.toFixed(2),
@@ -162,7 +163,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
     };
     
     fetchPrice();
-    const interval = setInterval(fetchPrice, 5000);
+    const interval = setInterval(fetchPrice, 2000);
     return () => clearInterval(interval);
   }, [selectedSymbol]);
 
@@ -264,11 +265,6 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
         <span className={`${isPositive ? 'text-green-500' : 'text-red-500'} font-mono font-bold text-lg`}>
           {priceData.price !== '--' ? `$${priceData.price}` : '--'}
         </span>
-      </div>
-
-      <div className="flex flex-col">
-        <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Oracle Price</span>
-        <span className="text-white font-mono">{priceData.price !== '--' ? `$${priceData.price}` : '--'}</span>
       </div>
 
       <div className="flex flex-col">

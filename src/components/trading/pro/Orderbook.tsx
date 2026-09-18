@@ -32,18 +32,18 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
       let fetchedPrice: number | null = null;
 
       try {
-        // Fetch exact Binance real-time price to match TradingView BINANCE:XXXUSDT chart
-        const bRes = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${symUpper === 'KPEPE' ? 'PEPE' : symUpper}USDT`);
+        // Fetch via local proxy to bypass CORS/ad-blockers and sync with TradingView
+        const bRes = await fetch(`/api/binance?symbol=${symUpper === 'KPEPE' ? 'PEPE' : symUpper}`);
         if (bRes.ok) {
           const bData = await bRes.json();
-          if (bData && bData.price) {
-            fetchedPrice = parseFloat(bData.price);
+          if (bData && bData.lastPrice) {
+            fetchedPrice = parseFloat(bData.lastPrice);
           }
         }
         
         const priceToUse = fetchedPrice || fallbackPrices[symUpper] || 100.0;
         setCenterPrice(prev => {
-          if (prev !== null) setLastPrice(prev);
+          if (prev !== null && prev !== priceToUse) setLastPrice(prev);
           return priceToUse;
         });
       } catch (e) {
@@ -52,7 +52,7 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
     };
 
     fetchPrice();
-    const interval = setInterval(fetchPrice, 3000);
+    const interval = setInterval(fetchPrice, 1500); // 1.5s refresh to match TV closer
     return () => clearInterval(interval);
   }, [symbol]);
 
