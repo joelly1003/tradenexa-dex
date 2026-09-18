@@ -15,7 +15,7 @@ export function useNadoEdgeTicker(productIds?: number[]) {
         console.warn('Edge query ticker error, simulating via Binance API:', err);
         // Fallback to Binance ticker for simulated real-time data
         try {
-          const binanceRes = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+          const binanceRes = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr');
           const data = await binanceRes.json();
           
           const toX18 = (numStr: string | number) => {

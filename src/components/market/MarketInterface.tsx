@@ -57,7 +57,7 @@ export function MarketInterface() {
     } catch (e) {
       console.warn('Market prices fallback to Binance', e);
       try {
-        const bRes = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+        const bRes = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr');
         const bData = await bRes.json();
         const mapped = bData.slice(0, 100).map((d: any) => ({
           id: d.symbol.toLowerCase(),
