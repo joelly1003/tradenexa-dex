@@ -27,61 +27,30 @@ export function MarketInterface() {
   const { getSymbol } = useRegional();
   const fiatSymbol = getSymbol();
   
-  const { data: nadoPrices, refetch: refetchNadoPrices } = useNadoEdgeTicker();
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: nadoPrices, refetch: refetchNadoPrices, isFetching } = useNadoEdgeTicker();
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('All Markets');
   const [watchlist, setWatchlist] = useState<string[]>(['bitcoin', 'ethereum']);
-  const [lastUpdated, setLastUpdated] = useState<string>('');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const fetchAssets = async () => {
+  const handleRefresh = async () => {
     setIsRefreshing(true);
-    try {
-      refetchNadoPrices();
-      const res = await fetch(`https://api.coincap.io/v2/assets?limit=100&_t=${Date.now()}`, {
-        cache: 'no-store'
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.data) {
-          setAssets(data.data);
-          setLastUpdated(new Date().toLocaleTimeString());
-          setTimeout(() => setIsRefreshing(false), 800);
-          setLoading(false);
-          return;
-        }
-      }
-      throw new Error('CoinCap error');
-    } catch (e) {
-      console.warn('Market prices fallback to Binance', e);
-      try {
-        const bRes = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr');
-        const bData = await bRes.json();
-        const mapped = bData.slice(0, 100).map((d: any) => ({
-          id: d.symbol.toLowerCase(),
-          symbol: d.symbol.replace('USDT', ''),
-          name: d.symbol.replace('USDT', ''),
-          priceUsd: d.lastPrice,
-          changePercent24Hr: d.priceChangePercent,
-          volumeUsd24Hr: d.quoteVolume
-        }));
-        setAssets(mapped);
-        setLastUpdated(new Date().toLocaleTimeString());
-      } catch(err) {
-        setAssets([]);
-      }
-    }
+    await refetchNadoPrices();
     setTimeout(() => setIsRefreshing(false), 800);
-    setLoading(false);
   };
 
-  useEffect(() => {
-    fetchAssets();
-    const interval = setInterval(fetchAssets, 5000); // 5s refresh for live feel
-    return () => clearInterval(interval);
-  }, []);
+  const assets: Asset[] = (nadoPrices || []).map(p => ({
+    id: p.symbol,
+    rank: '0',
+    symbol: p.symbol.split('-')[0],
+    name: p.symbol,
+    priceUsd: (parseFloat(p.price_x18) / 1e18).toString(),
+    changePercent24Hr: p.change_24h_percent,
+    volumeUsd24Hr: (parseFloat(p.volume_24h_x18) / 1e18).toString(),
+    tags: p.symbol.includes('PERP') ? ['PERP'] : ['SPOT']
+  }));
+
+  const loading = !nadoPrices;
 
   const toggleWatchlist = (id: string) => {
     setWatchlist((prev: string[]) => 
@@ -279,7 +248,7 @@ export function MarketInterface() {
           </div>
         </div>
         <button 
-          onClick={fetchAssets}
+          onClick={handleRefresh}
           className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-blue-600 dark:text-blue-400 shrink-0"
         >
           <RefreshCcw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />

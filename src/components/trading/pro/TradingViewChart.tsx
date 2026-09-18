@@ -41,7 +41,7 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
       hide_legend: false,
       save_image: false,
       toolbar_bg: "#0a0a0c",
-      withdateranges: true
+      withdateranges: false
     });
 
     widgetContainer.appendChild(script);

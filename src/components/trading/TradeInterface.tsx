@@ -95,11 +95,11 @@ function TradeContent() {
           </div>
 
           {/* Bottom Half */}
-          <div className="w-full h-[250px] shrink-0 hidden lg:block">
+          <div className="w-full h-[200px] shrink-0 hidden lg:block">
             <BottomTradeTabs />
           </div>
           {/* Mobile Bottom Tabs */}
-          <div className="w-full h-[250px] shrink-0 lg:hidden border-b border-zinc-900">
+          <div className="w-full h-[200px] shrink-0 lg:hidden border-b border-zinc-900">
             <BottomTradeTabs />
           </div>
 

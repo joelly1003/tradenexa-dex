@@ -4,6 +4,7 @@ import { useRegional } from '../providers/RegionalProvider';
 import { ArrowUpRight, ArrowDownRight, Flame, Globe, AlertTriangle, TrendingUp, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useNadoEdgeTicker } from '../../hooks/nado/useNadoEdgeTicker';
 
 interface Asset {
   id: string;
@@ -18,8 +19,7 @@ export function DiscoverInterface() {
   const { region, currency, getSymbol } = useRegional();
   const symbol = getSymbol();
   
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: nadoPrices = [], isLoading } = useNadoEdgeTicker();
 
   // Hardcode some simple exchange rates for demonstration, or default to 1
   const rates: Record<string, number> = {
@@ -30,43 +30,6 @@ export function DiscoverInterface() {
   };
   const rate = rates[currency] || 1;
 
-  useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        const res = await fetch('https://api.coincap.io/v2/assets?limit=100');
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.data) {
-            setAssets(data.data);
-            return;
-          }
-        }
-        throw new Error('CoinCap rate limit or format error');
-      } catch (e) {
-        console.warn('Falling back to Binance API for Discover data', e);
-        try {
-          const bRes = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr');
-          const bData = await bRes.json();
-          const mapped = bData.slice(0, 100).map((d: any) => ({
-            id: d.symbol.toLowerCase(),
-            symbol: d.symbol.replace('USDT', ''),
-            name: d.symbol.replace('USDT', ''),
-            priceUsd: d.lastPrice,
-            changePercent24Hr: d.priceChangePercent,
-            volumeUsd24Hr: d.quoteVolume
-          }));
-          setAssets(mapped);
-        } catch (err) {
-          console.error(err);
-          setAssets([]);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAssets();
-  }, []);
-
   const formatPrice = (usdPrice: string) => {
     const local = parseFloat(usdPrice) * rate;
     return local < 1 ? local.toFixed(4) : local.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -76,9 +39,19 @@ export function DiscoverInterface() {
     return parseFloat(changeStr).toFixed(2);
   };
 
-  if (loading || assets.length === 0) {
-    return <div className="p-8 text-center text-zinc-500 font-bold animate-pulse mt-10">Loading live market data...</div>;
+  if (isLoading || nadoPrices.length === 0) {
+    return <div className="p-8 text-center text-zinc-500 font-bold animate-pulse mt-10">Loading live Nado market data...</div>;
   }
+
+  // Format nadoPrices to match the expected Asset interface shape for the UI
+  const assets: Asset[] = nadoPrices.map(p => ({
+    id: p.symbol,
+    symbol: p.symbol.split('-')[0],
+    name: p.symbol.includes('PERP') ? `${p.symbol.split('-')[0]} Perpetual` : p.symbol,
+    priceUsd: (parseFloat(p.price_x18) / 1e18).toString(),
+    changePercent24Hr: p.change_24h_percent,
+    volumeUsd24Hr: (parseFloat(p.volume_24h_x18) / 1e18).toString()
+  }));
 
   // Dynamically calculate curated lists
   const validAssets = [...assets].filter(a => a.priceUsd && a.changePercent24Hr && a.volumeUsd24Hr);
