@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useAppKit } from '@reown/appkit/react';
 import { useNadoTrade } from '../../../hooks/nado';
 
 export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
   const { isConnected } = useAccount();
-  const { openConnectModal } = useConnectModal();
+  const { open } = useAppKit();
   const { placeOrder, isSubmitting, error: tradeError } = useNadoTrade();
 
   const [amount, setAmount] = useState('');
@@ -41,7 +41,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
 
   // Determine button text and action
   let buttonText = 'Connect Wallet to Trade';
-  let buttonAction: () => void = () => openConnectModal?.();
+  let buttonAction: () => void = () => open();
   let buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white';
 
   if (isConnected) {
