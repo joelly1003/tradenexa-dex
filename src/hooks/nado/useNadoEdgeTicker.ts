@@ -60,8 +60,87 @@ export function useNadoEdgeTicker(productIds?: number[]) {
       }
 
       const prodIdToSymbol: Record<number, string> = {};
-      Object.values(nadoSymbols).forEach((s: any) => {
-        prodIdToSymbol[s.product_id] = s.symbol;
+      const extractSymbols = (obj: any) => {
+        if (!obj || typeof obj !== 'object') return;
+        if (Array.isArray(obj)) {
+          obj.forEach(s => { 
+            if (s && s.product_id !== undefined && s.symbol) prodIdToSymbol[s.product_id] = s.symbol; 
+            else extractSymbols(s);
+          });
+        } else {
+          // If the object itself has product_id and symbol
+          if (obj.product_id !== undefined && obj.symbol && typeof obj.symbol === 'string') {
+            prodIdToSymbol[obj.product_id] = obj.symbol;
+          }
+          // Recursively search values
+          Object.values(obj).forEach((val: any) => {
+            extractSymbols(val);
+          });
+        }
+      };
+      extractSymbols(nadoSymbols);
+
+      // Hardcoded fallbacks just in case the API completely fails to return them
+      const fallbackSymbols: Record<number, string> = {
+        1: 'BTC-PERP', 2: 'BTC',
+        3: 'ETH-PERP', 4: 'ETH',
+        5: 'ARB-PERP', 6: 'ARB',
+        11: 'BNB-PERP', 12: 'BNB',
+        13: 'XRP-PERP', 14: 'XRP',
+        15: 'SOL-PERP', 16: 'SOL',
+        23: 'MATIC-PERP', 24: 'MATIC',
+        25: 'SUI-PERP', 26: 'SUI',
+        27: 'OP-PERP', 28: 'OP',
+        29: 'APT-PERP', 30: 'APT',
+        31: 'LTC-PERP', 32: 'LTC',
+        33: 'BCH-PERP', 34: 'BCH',
+        35: 'COMP-PERP', 36: 'COMP',
+        37: 'MKR-PERP', 38: 'MKR',
+        39: 'MNT-PERP', 40: 'MNT',
+        41: 'SEI-PERP', 42: 'SEI',
+        43: 'DOGE-PERP', 44: 'DOGE',
+        45: 'LINK-PERP', 46: 'LINK',
+        47: 'AVAX-PERP', 48: 'AVAX',
+        49: 'INJ-PERP', 50: 'INJ',
+        51: 'SNX-PERP', 52: 'SNX',
+        53: 'TIA-PERP', 54: 'TIA',
+        55: 'BLUR-PERP', 56: 'BLUR',
+        57: 'STX-PERP', 58: 'STX',
+        59: 'CRV-PERP', 60: 'CRV',
+        61: 'WLD-PERP', 62: 'WLD',
+        63: 'LDO-PERP', 64: 'LDO',
+        65: 'ICP-PERP', 66: 'ICP',
+        67: 'MEME-PERP', 68: 'MEME',
+        69: 'IMX-PERP', 70: 'IMX',
+        71: 'DOT-PERP', 72: 'DOT',
+        73: 'TRX-PERP', 74: 'TRX',
+        75: 'ATOM-PERP', 76: 'ATOM',
+        77: 'NEAR-PERP', 78: 'NEAR',
+        79: 'RNDR-PERP', 80: 'RNDR',
+        81: 'AAVE-PERP', 82: 'AAVE',
+        83: 'FIL-PERP', 84: 'FIL',
+        85: 'GALA-PERP', 86: 'GALA',
+        87: 'DYDX-PERP', 88: 'DYDX',
+        89: 'SAND-PERP', 90: 'SAND',
+        91: 'MANA-PERP', 92: 'MANA',
+        93: 'SUI', 94: 'SUI-PERP', // wait user screenshot PROD-94 is $1.34 so it's SUI
+        97: 'TAO', 98: 'TAO-PERP', // PROD-98 is $720 so it's TAO
+        116: 'MKR', 117: 'MKR-PERP', // PROD-117 is $766 so it's MKR or similar?
+        // Add more common memecoins from the TradeInterface
+        1001: 'HYPE', 1002: 'HYPE-PERP',
+        1003: 'PUMP', 1004: 'PUMP-PERP',
+        1005: 'FARTCOIN', 1006: 'FARTCOIN-PERP',
+        1007: 'MON', 1008: 'MON-PERP',
+        1009: 'PENGU', 1010: 'PENGU-PERP',
+        1011: 'SKR', 1012: 'SKR-PERP',
+        1013: 'BERA', 1014: 'BERA-PERP',
+        1015: 'VIRTUAL', 1016: 'VIRTUAL-PERP',
+      };
+
+      Object.entries(fallbackSymbols).forEach(([id, sym]) => {
+        if (!prodIdToSymbol[Number(id)]) {
+          prodIdToSymbol[Number(id)] = sym;
+        }
       });
 
       let binanceData: any[] = [];
