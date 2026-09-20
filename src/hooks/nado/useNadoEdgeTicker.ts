@@ -65,28 +65,57 @@ export function useNadoEdgeTicker(productIds?: number[]) {
       });
 
       let binanceData: any[] = [];
+      let bybitData: any[] = [];
+      let mexcData: any[] = [];
+
       try {
-        const binanceRes = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr');
-        binanceData = await binanceRes.json();
+        const [binanceRes, bybitRes, mexcRes] = await Promise.allSettled([
+          fetch('https://data-api.binance.vision/api/v3/ticker/24hr'),
+          fetch('https://api.bybit.com/v5/market/tickers?category=spot'),
+          fetch('https://api.mexc.com/api/v3/ticker/24hr')
+        ]);
+
+        if (binanceRes.status === 'fulfilled') binanceData = await binanceRes.value.json();
+        if (bybitRes.status === 'fulfilled') {
+          const bJson = await bybitRes.value.json();
+          bybitData = bJson?.result?.list || [];
+        }
+        if (mexcRes.status === 'fulfilled') mexcData = await mexcRes.value.json();
       } catch(e) {}
 
-      const binanceMap = new Map();
-      binanceData.forEach((d: any) => binanceMap.set(d.symbol, d));
+      const marketMap = new Map();
+      // Populate Binance
+      if (Array.isArray(binanceData)) {
+        binanceData.forEach((d: any) => marketMap.set(d.symbol, { price: d.lastPrice, change: d.priceChangePercent, vol: d.quoteVolume }));
+      }
+      // Populate Bybit (overrides Binance if any)
+      if (Array.isArray(bybitData)) {
+        bybitData.forEach((d: any) => marketMap.set(d.symbol, { price: d.lastPrice, change: (parseFloat(d.price24hPcnt) * 100).toString(), vol: d.turnover24h }));
+      }
+      // Populate MEXC
+      if (Array.isArray(mexcData)) {
+        mexcData.forEach((d: any) => marketMap.set(d.symbol, { price: d.lastPrice, change: (parseFloat(d.priceChangePercent) * 100).toString(), vol: d.quoteVolume }));
+      }
 
       return nadoPrices.map((p: any) => {
         const sym = prodIdToSymbol[p.product_id] || `PROD-${p.product_id}`;
         let baseAsset = sym.replace('-PERP', '').replace('w', '').replace('x', '');
+        if (baseAsset === 'KPEPE') baseAsset = 'PEPE';
         
-        const bMatch = binanceMap.get(baseAsset + 'USDT');
+        let mMatch = marketMap.get(baseAsset + 'USDT');
+        
+        // Use real market price if found, otherwise fallback to Nado's native price
+        const realPrice = mMatch?.price || (parseFloat(p.bid_x18) / 1e18).toString();
+        const priceX18 = mMatch?.price ? (parseFloat(mMatch.price) * 1e18).toLocaleString('fullwide', {useGrouping:false}) : p.bid_x18;
         
         return {
           product_id: p.product_id,
           symbol: sym,
-          price_x18: p.bid_x18, 
-          bid_x18: p.bid_x18,
-          ask_x18: p.ask_x18,
-          change_24h_percent: bMatch?.priceChangePercent || ((Math.random() * 10) - 5).toFixed(2),
-          volume_24h_x18: bMatch ? bMatch.quoteVolume + '000000000000000000' : '1000000000000000000000000',
+          price_x18: priceX18,
+          bid_x18: priceX18,
+          ask_x18: priceX18,
+          change_24h_percent: mMatch?.change || ((Math.random() * 10) - 5).toFixed(2),
+          volume_24h_x18: mMatch ? (parseFloat(mMatch.vol) * 1e18).toLocaleString('fullwide', {useGrouping:false}) : '1000000000000000000000000',
           timestamp: now
         } as CachedPriceItem;
       });
