@@ -1,16 +1,32 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
+import { useAccount } from 'wagmi';
 
 export function PortfolioInterface() {
+  const { address } = useAccount();
   const [topTab, setTopTab] = useState<'Overview' | 'Margin Manager' | 'History'>('Overview');
   const [leftTab, setLeftTab] = useState<'Account' | 'PnL' | 'Volume'>('Account');
   const [timeframe, setTimeframe] = useState<'24h' | '7d' | '30d' | 'All'>('24h');
   const [isTimeframeOpen, setIsTimeframeOpen] = useState(false);
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<'Transfer' | 'Withdraw' | 'Deposit' | null>(null);
 
+  const accountRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (accountRef.current && !accountRef.current.contains(event.target as Node)) {
+        setIsAccountDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] text-white lg:overflow-hidden overflow-y-auto p-6 lg:p-8 mx-auto w-full relative">
+    <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] text-white lg:overflow-hidden overflow-y-auto p-4 lg:p-6 mx-auto w-full max-w-[1400px] relative">
       
       {/* Action Modal */}
       {activeModal && (
@@ -58,35 +74,72 @@ export function PortfolioInterface() {
       )}
 
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row justify-between md:items-center gap-6 mb-8 shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-red-500/10 text-red-500 flex items-center justify-center rounded-lg border border-red-500/20 shadow-sm">
-            <span className="font-black text-2xl leading-none">∷</span>
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6 shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-red-500/10 text-red-500 flex items-center justify-center rounded-md border border-red-500/20 shadow-sm shrink-0">
+            <span className="font-black text-lg leading-none">V</span>
           </div>
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-black tracking-tight">Account 1</h1>
-            <div className="text-sm text-zinc-400 font-medium flex items-center gap-2 mt-1">
-              Active Account <span className="cursor-pointer hover:text-white transition-colors bg-zinc-800 px-2 py-0.5 rounded text-xs">👁 view</span>
+          <div className="relative" ref={accountRef}>
+            <div className="flex items-center gap-2 cursor-pointer group" onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}>
+              <h1 className="text-[17px] font-bold tracking-tight text-white group-hover:text-zinc-200">Account 1</h1>
+              <svg className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (address) window.open(`https://explorer.inkonchain.com/address/${address}`, '_blank');
+                  else alert("Wallet not connected");
+                }}
+                className="ml-1 text-zinc-500 hover:text-white transition-colors"
+                title="View on Explorer"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
             </div>
+            <div className="text-xs text-zinc-500 font-medium leading-none mt-0.5">
+              Account
+            </div>
+
+            {isAccountDropdownOpen && (
+              <div className="absolute top-full left-0 mt-2 w-48 bg-[#151518] border border-zinc-800 rounded-lg shadow-xl overflow-hidden z-20">
+                <button 
+                  className="w-full text-left px-4 py-2.5 text-sm text-white hover:bg-zinc-800 flex items-center justify-between"
+                  onClick={() => setIsAccountDropdownOpen(false)}
+                >
+                  <span className="font-bold">Account 1</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                </button>
+                <button 
+                  className="w-full text-left px-4 py-2.5 text-sm text-zinc-400 hover:text-white hover:bg-zinc-800"
+                  onClick={() => setIsAccountDropdownOpen(false)}
+                >
+                  Create New Account
+                </button>
+              </div>
+            )}
           </div>
         </div>
         
-        <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 md:pb-0 shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="flex gap-2 sm:gap-2.5 overflow-x-auto shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <button 
             onClick={() => setActiveModal('Transfer')}
-            className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800 px-6 sm:px-8 py-2.5 rounded-xl text-base font-bold transition-all active:scale-95 whitespace-nowrap text-zinc-300 hover:text-white shadow-sm"
+            className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800 px-4 py-1.5 rounded-md text-[13px] font-medium transition-all active:scale-95 whitespace-nowrap text-zinc-300 hover:text-white shadow-sm"
           >
             Transfer
           </button>
           <button 
             onClick={() => setActiveModal('Withdraw')}
-            className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800 px-6 sm:px-8 py-2.5 rounded-xl text-base font-bold transition-all active:scale-95 whitespace-nowrap text-zinc-300 hover:text-white shadow-sm"
+            className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800 px-4 py-1.5 rounded-md text-[13px] font-medium transition-all active:scale-95 whitespace-nowrap text-zinc-300 hover:text-white shadow-sm"
           >
             Withdraw
           </button>
           <button 
             onClick={() => setActiveModal('Deposit')}
-            className="bg-blue-600 hover:bg-blue-500 border border-blue-500/50 text-white px-6 sm:px-8 py-2.5 rounded-xl text-base font-bold transition-all active:scale-95 whitespace-nowrap shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.4)]"
+            className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800 px-4 py-1.5 rounded-md text-[13px] font-medium transition-all active:scale-95 whitespace-nowrap text-zinc-300 hover:text-white shadow-sm"
           >
             Deposit
           </button>
@@ -94,12 +147,12 @@ export function PortfolioInterface() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-8 border-b border-zinc-900 mb-8 shrink-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="flex gap-6 border-b border-zinc-900/50 mb-6 shrink-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {(['Overview', 'Margin Manager', 'History'] as const).map(tab => (
           <button 
             key={tab}
             onClick={() => setTopTab(tab)}
-            className={`pb-4 font-bold text-base transition-colors -mb-[1px] whitespace-nowrap ${topTab === tab ? 'text-white border-b-2 border-blue-500' : 'text-zinc-500 hover:text-zinc-300 border-b-2 border-transparent'}`}
+            className={`pb-2.5 font-bold text-[14px] transition-colors -mb-[1px] whitespace-nowrap ${topTab === tab ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
           >
             {tab}
           </button>
@@ -108,84 +161,92 @@ export function PortfolioInterface() {
 
       {/* Conditional Top Tab View */}
       {topTab === 'History' ? (
-        <div className="flex-1 border border-zinc-900 rounded-2xl p-8 bg-[#101014] flex flex-col items-center justify-center text-zinc-500 shadow-inner">
-          <div className="w-16 h-16 rounded-full bg-zinc-900 flex items-center justify-center mb-4">
-            <span className="text-2xl">📋</span>
+        <div className="flex-1 border border-zinc-900 rounded-lg p-8 bg-[#0a0a0c] flex flex-col items-center justify-center text-zinc-500">
+          <div className="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center mb-3">
+            <span className="text-lg">H</span>
           </div>
-          <p className="text-base font-semibold text-zinc-400">No recent trade or deposit history found on Ink Chain.</p>
-          <button onClick={() => setActiveModal('Deposit')} className="mt-6 text-blue-500 hover:text-blue-400 font-bold text-sm underline underline-offset-4">Make a deposit to get started</button>
+          <p className="text-sm font-semibold text-zinc-400">No recent trade or deposit history found.</p>
         </div>
       ) : topTab === 'Margin Manager' ? (
-        <div className="flex-1 border border-zinc-900 rounded-2xl p-8 bg-[#101014] flex flex-col items-center justify-center text-zinc-500 shadow-inner">
-          <div className="w-16 h-16 rounded-full bg-zinc-900 flex items-center justify-center mb-4">
-            <span className="text-2xl">🛡️</span>
+        <div className="flex-1 border border-zinc-900 rounded-lg p-8 bg-[#0a0a0c] flex flex-col items-center justify-center text-zinc-500">
+          <div className="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center mb-3">
+            <span className="text-lg">M</span>
           </div>
-          <p className="text-base font-semibold text-zinc-400">Cross / Isolated Margin Manager active.</p>
-          <p className="text-lg font-bold text-white mt-2">Available Margin: $0.00</p>
+          <p className="text-sm font-semibold text-zinc-400">Cross / Isolated Margin Manager active.</p>
+          <p className="text-base font-bold text-white mt-1">Available Margin: $0.00</p>
         </div>
       ) : (
         <>
           {/* 3 Summary Boxes */}
-          <div className="grid grid-cols-1 md:grid-cols-3 border border-zinc-900 rounded-2xl mb-8 bg-[#101014] shrink-0 shadow-lg overflow-hidden">
-            <div className="p-6 lg:p-8 border-b md:border-b-0 md:border-r border-zinc-900/50 flex flex-col justify-between h-36 md:h-40 hover:bg-zinc-900/30 transition-colors">
+          <div className="grid grid-cols-1 md:grid-cols-3 border border-zinc-900 mb-6 bg-[#0a0a0c] shrink-0">
+            <div className="p-4 border-b md:border-b-0 md:border-r border-zinc-900 flex flex-col justify-between h-[88px] hover:bg-[#0c0c0f] transition-colors">
               <div>
-                <div className="text-zinc-400 text-sm font-semibold mb-2">Total Equity</div>
-                <div className="text-3xl lg:text-4xl font-black tracking-tight">$0.00</div>
+                <div className="text-zinc-500 text-[11px] font-medium mb-0.5">Total Equity</div>
+                <div className="text-[20px] font-bold tracking-tight text-white">$0.00</div>
               </div>
-              <div className="text-sm text-zinc-500 font-medium">24h PnL <span className="text-zinc-300 ml-1.5 font-mono">$0.00</span></div>
+              <div className="text-[11px] text-zinc-500 font-medium">24h PnL <span className="text-white ml-1 font-mono">$0.00</span></div>
             </div>
             
-            <div className="p-6 lg:p-8 border-b md:border-b-0 md:border-r border-zinc-900/50 flex flex-col justify-between h-36 md:h-40 hover:bg-zinc-900/30 transition-colors">
+            <div className="p-4 border-b md:border-b-0 md:border-r border-zinc-900 flex flex-col justify-between h-[88px] hover:bg-[#0c0c0f] transition-colors">
               <div>
-                <div className="text-zinc-400 text-sm font-semibold mb-2">30d Volume</div>
-                <div className="text-3xl lg:text-4xl font-black tracking-tight">$0.00</div>
+                <div className="text-zinc-500 text-[11px] font-medium mb-0.5">30d Volume</div>
+                <div className="text-[20px] font-bold tracking-tight text-white">$0.00</div>
               </div>
-              <div className="text-sm text-zinc-500 font-medium">Fee Tier: <span className="text-zinc-300 ml-1.5 font-mono bg-zinc-900 px-2 py-0.5 rounded">0.01% / 0.035%</span></div>
+              <div className="text-[11px] text-zinc-500 font-medium">Fee Tier: <span className="text-white ml-1 font-mono">0.01% / 0.035%</span></div>
             </div>
 
-            <div className="p-6 lg:p-8 flex flex-col justify-between h-36 md:h-40 hover:bg-zinc-900/30 transition-colors">
+            <div className="p-4 flex flex-col justify-between h-[88px] hover:bg-[#0c0c0f] transition-colors">
               <div>
-                <div className="text-zinc-400 text-sm font-semibold mb-2">NLP Balance</div>
-                <div className="text-3xl lg:text-4xl font-black tracking-tight text-blue-400">$0.00</div>
+                <div className="text-zinc-500 text-[11px] font-medium mb-0.5">NLP Balance</div>
+                <div className="text-[20px] font-bold tracking-tight text-white">$0.00</div>
               </div>
-              <div className="text-sm text-zinc-500 font-medium">APR: <span className="text-green-500 ml-1.5 font-mono font-bold bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20">6.33%</span></div>
+              <div className="text-[11px] text-zinc-500 font-medium">APR: <span className="text-white ml-1 font-mono font-bold">6.95%</span></div>
             </div>
           </div>
 
           {/* Main Bottom Section */}
-          <div className="flex flex-1 lg:min-h-0 min-h-[500px] border border-zinc-900 rounded-2xl overflow-hidden bg-[#101014] flex-col md:flex-row shadow-lg">
+          <div className="flex flex-1 lg:min-h-0 min-h-[400px] border border-zinc-900 bg-[#0a0a0c] flex-col md:flex-row">
             {/* Left Side Stats */}
-            <div className="w-full md:w-[400px] border-b md:border-b-0 md:border-r border-zinc-900 flex flex-col bg-[#101014]">
-              <div className="flex gap-6 p-6 border-b border-zinc-900 text-sm font-bold bg-[#0c0c0f]">
+            <div className="w-full md:w-[320px] border-b md:border-b-0 md:border-r border-zinc-900 flex flex-col">
+              <div className="flex gap-4 p-3 px-4 border-b border-zinc-900 text-[13px] font-bold bg-[#0c0c0f]">
                 {(['Account', 'PnL', 'Volume'] as const).map(tab => (
                   <button 
                     key={tab}
                     onClick={() => setLeftTab(tab)}
-                    className={`transition-colors ${leftTab === tab ? 'text-white border-b-2 border-blue-500 pb-1' : 'text-zinc-500 hover:text-zinc-300 border-b-2 border-transparent pb-1'}`}
+                    className={`transition-colors ${leftTab === tab ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
                   >
                     {tab}
                   </button>
                 ))}
               </div>
               
-              <div className="p-6 space-y-6 text-sm font-medium">
+              <div className="p-4 space-y-3.5 text-[12px] font-medium">
                 {leftTab === 'Account' && (
                   <>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Balance</span>
-                      <span className="text-white font-mono text-base">$0.00</span>
+                      <span className="text-white font-mono font-bold">$0.00</span>
                     </div>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Unrealized Perp PnL</span>
-                      <span className="text-white font-mono text-base">$0.00</span>
+                      <span className="text-white font-mono font-bold">$0.00</span>
                     </div>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Unrealized Spot PnL</span>
-                      <span className="text-white font-mono text-base">$0.00</span>
+                      <span className="text-white font-mono font-bold">$0.00</span>
                     </div>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Available Margin</span>
-                      <span className="text-white font-mono text-base">$0.00</span>
+                      <span className="text-white font-mono font-bold">$0.00</span>
+                    </div>
+                    <div className="flex justify-between items-center pt-2 group">
+                      <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Maintenance Margin & Ratio</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-1 bg-zinc-800 rounded-full relative">
+                           <div className="absolute left-0 top-0 h-full w-[10%] bg-[#22c55e]"></div>
+                        </div>
+                        <span className="text-[#22c55e] font-mono font-bold">0.00%</span>
+                      </div>
                     </div>
                   </>
                 )}
@@ -194,15 +255,15 @@ export function PortfolioInterface() {
                   <>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Realized PnL ({timeframe})</span>
-                      <span className="text-green-500 font-mono text-base font-bold">+$0.00</span>
+                      <span className="text-[#22c55e] font-mono font-bold">+$0.00</span>
                     </div>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Unrealized PnL</span>
-                      <span className="text-white font-mono text-base">$0.00</span>
+                      <span className="text-white font-mono font-bold">$0.00</span>
                     </div>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Win Rate</span>
-                      <span className="text-white font-mono text-base">0.0%</span>
+                      <span className="text-white font-mono font-bold">0.0%</span>
                     </div>
                   </>
                 )}
@@ -211,44 +272,37 @@ export function PortfolioInterface() {
                   <>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Perp Volume ({timeframe})</span>
-                      <span className="text-white font-mono text-base">$0.00</span>
+                      <span className="text-white font-mono font-bold">$0.00</span>
                     </div>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Spot Volume ({timeframe})</span>
-                      <span className="text-white font-mono text-base">$0.00</span>
+                      <span className="text-white font-mono font-bold">$0.00</span>
                     </div>
                     <div className="flex justify-between items-center group">
                       <span className="text-zinc-400 group-hover:text-zinc-300 transition-colors">Total Trades</span>
-                      <span className="text-white font-mono text-base">0</span>
+                      <span className="text-white font-mono font-bold">0</span>
                     </div>
                   </>
                 )}
-
-                <div className="flex justify-between items-center mt-8 pt-6 border-t border-zinc-900">
-                  <span className="text-zinc-400">Margin Ratio</span>
-                  <div className="flex items-center gap-3">
-                    <div className="w-16 h-1.5 bg-gradient-to-r from-red-500/20 to-green-500/20 rounded-full relative overflow-hidden">
-                       <div className="absolute left-0 top-0 h-full w-[5%] bg-[#22c55e] shadow-[0_0_5px_#22c55e]"></div>
-                    </div>
-                    <span className="text-[#22c55e] font-mono font-bold text-base">0.00%</span>
-                  </div>
-                </div>
               </div>
             </div>
 
             {/* Right Side Chart Area */}
             <div className="flex-1 flex flex-col relative bg-[#0a0a0c]">
-              <div className="absolute top-6 right-6 z-10">
+              <div className="absolute top-3 right-3 z-10">
                 <div className="relative">
                   <button 
                     onClick={() => setIsTimeframeOpen(!isTimeframeOpen)}
-                    className="bg-zinc-900 border border-zinc-800 text-sm font-bold text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-zinc-800 transition-colors active:scale-95"
+                    className="bg-[#151518] border border-zinc-800 text-[11px] text-zinc-300 px-3 py-1 rounded flex items-center gap-1.5 hover:text-white transition-colors"
                   >
-                    {timeframe} <span className="text-[10px] text-zinc-500 mt-0.5">▼</span>
+                    {timeframe} 
+                    <svg className="w-3 h-3 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </button>
 
                   {isTimeframeOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-28 bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden z-20">
+                    <div className="absolute top-full right-0 mt-1 w-24 bg-[#151518] border border-zinc-800 rounded shadow-xl overflow-hidden z-20">
                       {(['24h', '7d', '30d', 'All'] as const).map(tf => (
                         <button
                           key={tf}
@@ -256,7 +310,7 @@ export function PortfolioInterface() {
                             setTimeframe(tf);
                             setIsTimeframeOpen(false);
                           }}
-                          className={`w-full text-left px-4 py-2.5 text-sm hover:bg-zinc-800 transition-colors ${timeframe === tf ? 'text-blue-400 font-bold bg-blue-500/5' : 'text-zinc-300 font-medium'}`}
+                          className={`w-full text-left px-3 py-1.5 text-[11px] hover:bg-zinc-800 transition-colors ${timeframe === tf ? 'text-white bg-zinc-800' : 'text-zinc-400'}`}
                         >
                           {tf}
                         </button>
@@ -267,21 +321,26 @@ export function PortfolioInterface() {
               </div>
               
               {/* Faux Grid Background */}
-              <div className="flex-1 w-full h-full p-8 pb-14 relative flex items-end">
-                <div className="absolute inset-0 bg-[radial-gradient(#27272a_1.5px,transparent_1.5px)] [background-size:32px_32px] opacity-20"></div>
+              <div className="flex-1 w-full h-full p-4 pb-8 relative flex items-end overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(#1f1f22_1px,transparent_1px)] [background-size:24px_24px] opacity-30"></div>
                 
                 {/* The Green flat line for $0 balance */}
-                <div className="w-full h-[2px] bg-[#22c55e] relative z-10 opacity-90 shadow-[0_0_12px_rgba(34,197,94,0.4)]"></div>
+                <div className="w-full h-[1px] bg-[#22c55e] relative z-10"></div>
                 
                 {/* X Axis labels */}
-                <div className="absolute bottom-5 left-8 right-8 justify-between text-xs text-zinc-600 font-mono font-medium hidden sm:flex">
+                <div className="absolute bottom-2 left-4 right-4 flex justify-between text-[10px] text-zinc-500 font-mono font-medium hidden sm:flex">
+                  <span>5:00 PM</span>
+                  <span>7:00 PM</span>
+                  <span>9:00 PM</span>
+                  <span>11:00 PM</span>
                   <span>1:00 AM</span>
-                  <span>4:00 AM</span>
-                  <span>8:00 AM</span>
-                  <span>12:00 PM</span>
-                  <span>4:00 PM</span>
-                  <span>8:00 PM</span>
-                  <span>11:55 PM</span>
+                  <span>3:00 AM</span>
+                  <span>5:00 AM</span>
+                  <span>7:00 AM</span>
+                  <span>9:00 AM</span>
+                  <span>11:00 AM</span>
+                  <span>1:00 PM</span>
+                  <span>3:40 PM</span>
                 </div>
               </div>
             </div>
