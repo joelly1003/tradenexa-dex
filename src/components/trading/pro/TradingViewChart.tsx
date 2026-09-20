@@ -50,8 +50,11 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
   }, [symbol]);
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0a0a0c]">
+    <div className="w-full h-full flex flex-col bg-[#0a0a0c] relative group">
       <div className="w-full flex-1 relative bg-[#0a0a0c]" ref={containerRef} />
+      {/* Hide TradingView Logo / Watermark Overlay */}
+      <div className="absolute bottom-8 left-1 w-[60px] h-[32px] bg-[#0a0a0c] z-10 pointer-events-none" />
+      <div className="absolute bottom-1 left-1 w-[40px] h-[24px] bg-[#0a0a0c] z-10 pointer-events-none" />
     </div>
   );
 }
