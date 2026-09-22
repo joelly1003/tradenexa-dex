@@ -3,13 +3,13 @@
 import Link from 'next/link';
 import { ArrowRight, Wallet, ArrowDownUp, TrendingUp, ShieldCheck, Banknote, LineChart, PieChart, Globe, CheckCircle2, Zap, Activity } from 'lucide-react';
 import { useRegional } from '../components/providers/RegionalProvider';
-import { useAccount } from 'wagmi';
+import { useAccount, useBlockNumber } from 'wagmi';
 
 export default function Home() {
   const { region, getSymbol, currency } = useRegional();
   const symbol = getSymbol();
   const { isConnected } = useAccount();
-
+  const { data: blockNumber, isError, isLoading } = useBlockNumber({ watch: true });
 
   return (
     <div className="relative flex flex-col gap-10 max-w-7xl mx-auto py-4 px-4 sm:px-6">
@@ -19,9 +19,15 @@ export default function Home() {
 
       {/* Top Section: Hero */}
       <div className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto space-y-6 min-h-[75vh]">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-sm font-semibold">
-          <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-          Live on Mainnet
+        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold transition-colors ${
+          isError 
+            ? 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400' 
+            : isLoading 
+              ? 'bg-zinc-50 dark:bg-zinc-500/10 text-zinc-600 dark:text-zinc-400'
+              : 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400'
+        }`}>
+          <span className={`w-2 h-2 rounded-full ${isError ? 'bg-red-500' : 'bg-blue-500 animate-pulse'}`}></span>
+          {isError ? 'Network Offline' : isLoading ? 'Checking Network...' : `Live on Mainnet • Block ${Number(blockNumber)}`}
         </div>
         
         <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">

@@ -127,9 +127,9 @@ export function MarketInterface() {
             {nadoPrices && nadoPrices.length > 0 && typeof window !== 'undefined' ? new Date(nadoPrices[0].timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--'}
           </span></span>
           <span className="text-zinc-300 dark:text-zinc-700 hidden sm:inline">|</span>
-          <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-medium">
-            <div className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-            WebSocket Live Feed
+          <div className={`flex items-center gap-1.5 font-medium ${isFetching ? 'text-yellow-500' : 'text-blue-600 dark:text-blue-400'}`}>
+            <div className={`w-2 h-2 rounded-full ${isFetching ? 'bg-yellow-500' : 'bg-blue-600 dark:bg-blue-400'} animate-pulse`} />
+            {isFetching ? 'Connecting Feed...' : 'WebSocket Live Feed'}
           </div>
           <div className="flex items-center gap-1.5 text-green-600 dark:text-green-500 border border-green-600/20 dark:border-green-500/20 bg-green-50 dark:bg-green-500/10 px-2 py-0.5 rounded-full text-xs font-semibold">
             ✓ Live Rates

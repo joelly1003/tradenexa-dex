@@ -13,7 +13,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   
-  const { data: tickers } = useNadoEdgeTicker();
+  const { data: tickers, isLoading, isError } = useNadoEdgeTicker();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -141,9 +141,19 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
 
       <div className="flex flex-col">
         <span className="text-[10px] text-zinc-500 uppercase tracking-wider font-semibold">Status</span>
-        <span className="text-green-500 font-mono flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Live
-        </span>
+        {isLoading ? (
+          <span className="text-yellow-500 font-mono flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span> Connecting
+          </span>
+        ) : isError ? (
+          <span className="text-red-500 font-mono flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span> Offline
+          </span>
+        ) : (
+          <span className="text-green-500 font-mono flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Live
+          </span>
+        )}
       </div>
     </div>
   );

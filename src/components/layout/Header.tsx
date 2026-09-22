@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-import { useDisconnect } from 'wagmi';
+import { useDisconnect, useAccount } from 'wagmi';
 import { ConnectWalletButton } from '../wallet/ConnectWalletButton';
 import { CurrencySelector } from './CurrencySelector';
 
@@ -14,6 +14,7 @@ export function Header() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
   const { disconnect } = useDisconnect();
+  const { chain } = useAccount();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -96,8 +97,8 @@ export function Header() {
                 <div>
                   <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Network Node</label>
                   <select className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-sm text-black dark:text-white focus:outline-none focus:border-blue-500">
-                    <option>Ink Mainnet (Default)</option>
-                    <option>Ink Fallback 1</option>
+                    <option>{chain ? `${chain.name} (Default)` : 'Ink Mainnet (Default)'}</option>
+                    <option>{chain ? `${chain.name} Fallback 1` : 'Ink Fallback 1'}</option>
                   </select>
                 </div>
               </div>
