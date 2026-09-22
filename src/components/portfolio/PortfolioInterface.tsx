@@ -1,11 +1,13 @@
 'use client';
-
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
+import { useAppKit } from '@reown/appkit/react';
+import { Wallet } from 'lucide-react';
 
 export function PortfolioInterface() {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
+  const { open } = useAppKit();
   const [topTab, setTopTab] = useState<'Overview' | 'Margin Manager' | 'History'>('Overview');
   const [leftTab, setLeftTab] = useState<'Account' | 'PnL' | 'Volume'>('Account');
   const [timeframe, setTimeframe] = useState<'24h' | '7d' | '30d' | 'All'>('24h');
@@ -14,6 +16,9 @@ export function PortfolioInterface() {
   const [activeModal, setActiveModal] = useState<'Transfer' | 'Withdraw' | 'Deposit' | null>(null);
 
   const accountRef = useRef<HTMLDivElement>(null);
+  
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -24,6 +29,28 @@ export function PortfolioInterface() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  if (!mounted) return null;
+
+  if (!isConnected) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] bg-zinc-950 p-6 text-white">
+        <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl max-w-md w-full text-center shadow-xl">
+          <div className="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Wallet className="w-8 h-8" />
+          </div>
+          <h2 className="text-2xl font-black tracking-tight mb-3">Connect Wallet</h2>
+          <p className="text-zinc-400 text-sm mb-8">Please connect your wallet to view and manage your portfolio positions.</p>
+          <button 
+            onClick={() => open()}
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-[0_0_20px_rgba(37,99,235,0.2)]"
+          >
+            Connect Wallet
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] text-white lg:overflow-hidden overflow-y-auto p-4 lg:p-6 mx-auto w-full max-w-[1400px] relative">

@@ -7,6 +7,7 @@ import { Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { useDisconnect } from 'wagmi';
+import { ConnectWalletButton } from '../wallet/ConnectWalletButton';
 
 export function Header() {
   const pathname = usePathname();
@@ -63,6 +64,7 @@ export function Header() {
         <div className="hidden sm:flex items-center gap-1 relative" ref={settingsRef}>
           <button 
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+            aria-label="Settings"
             className={`p-2.5 rounded-full transition-colors ${isSettingsOpen ? 'bg-[#1a1b1f] text-white border-[#2b2d31]' : 'bg-[#101114] text-zinc-400 hover:text-white hover:bg-[#1a1b1f]'} border border-[#1a1b1f]`}
           >
             <Settings className="w-[18px] h-[18px]" />
@@ -111,8 +113,7 @@ export function Header() {
             </div>
           )}
         </div>
-
-        <appkit-button />
+        <ConnectWalletButton />
       </div>
     </header>
   );

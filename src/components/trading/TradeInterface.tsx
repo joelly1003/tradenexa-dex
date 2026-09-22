@@ -2,6 +2,9 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useAccount } from 'wagmi';
+import { useAppKit } from '@reown/appkit/react';
+import { Wallet } from 'lucide-react';
 import { TopTickerBar } from './pro/TopTickerBar';
 import { TradingViewChart } from './pro/TradingViewChart';
 import { Orderbook } from './pro/Orderbook';
@@ -49,17 +52,19 @@ function getTradingViewSymbol(symbol: string): string {
     'VIRTUAL': 'BYBIT:VIRTUALUSDT',
     'ARB': 'BINANCE:ARBUSDT',
   };
-
   return tvMap[sym] || `BINANCE:${sym}USDT`;
 }
-
-import { BottomTradeTabs } from './pro/BottomTradeTabs';
 
 function TradeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { isConnected } = useAccount();
+  const { open } = useAppKit();
   const symbolParam = searchParams.get('symbol') || searchParams.get('coin') || 'BTC';
   const [selectedSymbol, setSelectedSymbol] = useState(symbolParam.toUpperCase());
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (symbolParam) {
@@ -67,69 +72,60 @@ function TradeContent() {
     }
   }, [symbolParam]);
 
-  const handleSelectSymbol = (sym: string) => {
-    setSelectedSymbol(sym.toUpperCase());
-    router.push(`/trade?symbol=${sym.toUpperCase()}`);
+  const handleSymbolChange = (newSymbol: string) => {
+    setSelectedSymbol(newSymbol);
+    router.push(`/trade?symbol=${newSymbol}`);
   };
 
-  return (
-    <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] lg:overflow-hidden overflow-y-auto">
-      <TopTickerBar selectedSymbol={selectedSymbol} onSelectSymbol={handleSelectSymbol} />
-      
-      <div className="flex flex-col lg:flex-row flex-1 lg:overflow-hidden">
-        
-        {/* Left Column: Top (Chart+Book) & Bottom (Tabs) */}
-        <div className="flex flex-col flex-1 min-w-0 border-r border-zinc-900 shrink-0 lg:overflow-hidden">
-          
-          {/* Top Half */}
-          <div className="flex flex-col lg:flex-row flex-1 lg:overflow-hidden">
-            {/* Chart Area */}
-            <div className="w-full lg:flex-1 h-[400px] lg:h-full min-w-0 border-b lg:border-b-0 lg:border-r border-zinc-900 shrink-0">
-              <TradingViewChart symbol={getTradingViewSymbol(selectedSymbol)} />
-            </div>
-            
-            {/* Orderbook */}
-            <div className="w-full lg:w-[300px] shrink-0 h-[400px] lg:h-full border-b lg:border-b-0 border-zinc-900">
-              <Orderbook symbol={selectedSymbol} />
-            </div>
-          </div>
+  if (!mounted) return null;
 
-          {/* Bottom Half */}
-          <div className="w-full h-[200px] shrink-0 hidden lg:block">
-            <BottomTradeTabs />
+  if (!isConnected) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] bg-zinc-950 p-6 text-white">
+        <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl max-w-md w-full text-center shadow-xl">
+          <div className="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Wallet className="w-8 h-8" />
           </div>
-          {/* Mobile Bottom Tabs */}
-          <div className="w-full h-[200px] shrink-0 lg:hidden border-b border-zinc-900">
-            <BottomTradeTabs />
-          </div>
-
+          <h2 className="text-2xl font-black tracking-tight mb-3">Connect Wallet</h2>
+          <p className="text-zinc-400 text-sm mb-8">Please connect your wallet to access the professional trading interface and start placing orders.</p>
+          <button 
+            onClick={() => open()}
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition-all active:scale-95 shadow-[0_0_20px_rgba(37,99,235,0.2)]"
+          >
+            Connect Wallet
+          </button>
         </div>
-        
-        {/* Order Entry */}
-        <div className="w-full lg:w-[320px] shrink-0 h-auto lg:h-full pb-12 lg:pb-0 overflow-y-auto">
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] text-white overflow-hidden mx-auto w-full max-w-[1800px] border-x border-zinc-900">
+      <TopTickerBar 
+        selectedSymbol={selectedSymbol} 
+        onSelectSymbol={handleSymbolChange} 
+      />
+      
+      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+        {/* Left column (Chart) */}
+        <div className="flex-[3] flex flex-col border-r border-zinc-900 min-h-[500px] lg:min-h-0 bg-[#131722] relative z-0">
+           <TradingViewChart symbol={getTradingViewSymbol(selectedSymbol)} />
+        </div>
+
+        {/* Middle column (Orderbook) */}
+        <div className="flex-1 flex flex-col border-r border-zinc-900 min-h-[400px] lg:min-h-0 bg-[#0a0a0c]">
+          <Orderbook symbol={selectedSymbol} />
+        </div>
+
+        {/* Right column (Order Entry) */}
+        <div className="w-full lg:w-[360px] flex flex-col min-h-[400px] lg:min-h-0 bg-[#0a0a0c]">
           <OrderEntry symbol={selectedSymbol} />
         </div>
-        
       </div>
     </div>
   );
 }
 
-import dynamic from 'next/dynamic';
-
-const TradeContentWithNoSSR = dynamic(() => Promise.resolve(TradeContent), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center h-[60vh] text-zinc-400 font-mono">
-      <div className="flex items-center gap-3">
-        <div className="w-4 h-4 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-        <span>Loading Nado DEX Trade Workspace...</span>
-      </div>
-    </div>
-  )
-});
-
 export function TradeInterface() {
-  return <TradeContentWithNoSSR />;
+  return <TradeContent />;
 }
-

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Activity, Globe, Code, Send, MessageSquare } from 'lucide-react';
 
 export function Footer() {
@@ -13,30 +14,30 @@ export function Footer() {
             TradeNexa is a globally localized decentralized exchange providing seamless cryptocurrency trading with deep liquidity, native fiat support, and region-specific optimizations.
           </p>
           <div className="flex items-center gap-4">
-            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Globe className="w-5 h-5" /></a>
-            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Send className="w-5 h-5" /></a>
-            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><MessageSquare className="w-5 h-5" /></a>
-            <a href="#" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Code className="w-5 h-5" /></a>
+            <a href="https://tradenexa.com" target="_blank" rel="noopener noreferrer" aria-label="TradeNexa Website" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Globe className="w-5 h-5" /></a>
+            <a href="https://t.me/tradenexa" target="_blank" rel="noopener noreferrer" aria-label="TradeNexa Telegram" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Send className="w-5 h-5" /></a>
+            <a href="https://discord.gg/tradenexa" target="_blank" rel="noopener noreferrer" aria-label="TradeNexa Discord" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><MessageSquare className="w-5 h-5" /></a>
+            <a href="https://github.com/joelly1003/tradenexa-dex" target="_blank" rel="noopener noreferrer" aria-label="TradeNexa GitHub" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors"><Code className="w-5 h-5" /></a>
           </div>
         </div>
         
         <div>
           <h4 className="font-bold text-black dark:text-white mb-4 uppercase tracking-wider text-xs">Products</h4>
           <ul className="space-y-3 font-medium">
-            <li><a href="/trade" className="hover:text-blue-500 transition-colors">Spot Trading</a></li>
-            <li><a href="/trade" className="hover:text-blue-500 transition-colors">Limit Orders</a></li>
-            <li><a href="/market" className="hover:text-blue-500 transition-colors">Market Explorer</a></li>
-            <li><a href="/portfolio" className="hover:text-blue-500 transition-colors">Portfolio Manager</a></li>
+            <li><Link href="/trade" className="hover:text-blue-500 transition-colors">Spot Trading</Link></li>
+            <li><Link href="/trade" className="hover:text-blue-500 transition-colors">Limit Orders</Link></li>
+            <li><Link href="/market" className="hover:text-blue-500 transition-colors">Market Explorer</Link></li>
+            <li><Link href="/portfolio" className="hover:text-blue-500 transition-colors">Portfolio Manager</Link></li>
           </ul>
         </div>
         
         <div>
           <h4 className="font-bold text-black dark:text-white mb-4 uppercase tracking-wider text-xs">Support</h4>
           <ul className="space-y-3 font-medium">
-            <li><a href="#" className="hover:text-blue-500 transition-colors">Documentation</a></li>
-            <li><a href="#" className="hover:text-blue-500 transition-colors">Regional Guides</a></li>
-            <li><a href="#" className="hover:text-blue-500 transition-colors">Fees & Slippage</a></li>
-            <li><a href="#" className="hover:text-blue-500 transition-colors">Contact Us</a></li>
+            <li><Link href="/docs" className="hover:text-blue-500 transition-colors">Documentation</Link></li>
+            <li><Link href="/guides" className="hover:text-blue-500 transition-colors">Regional Guides</Link></li>
+            <li><Link href="/fees" className="hover:text-blue-500 transition-colors">Fees & Slippage</Link></li>
+            <li><Link href="/contact" className="hover:text-blue-500 transition-colors">Contact Us</Link></li>
           </ul>
         </div>
         
@@ -47,8 +48,8 @@ export function Footer() {
             RPC & Aggregator: Operational
           </div>
           <ul className="space-y-3 font-medium">
-            <li><a href="https://etherscan.io/" className="hover:text-blue-500 transition-colors">Verified Contracts ↗</a></li>
-            <li><a href="#" className="hover:text-blue-500 transition-colors">Bug Bounty</a></li>
+            <li><a href="https://explorer.inkonchain.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Verified Contracts ↗</a></li>
+            <li><Link href="/bounty" className="hover:text-blue-500 transition-colors">Bug Bounty</Link></li>
           </ul>
         </div>
       </div>
@@ -56,9 +57,9 @@ export function Footer() {
       <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-4">
         <p>&copy; {new Date().getFullYear()} TradeNexa. All rights reserved.</p>
         <div className="flex items-center gap-6 font-medium">
-          <a href="#" className="hover:text-black dark:hover:text-white">Terms of Service</a>
-          <a href="#" className="hover:text-black dark:hover:text-white">Privacy Policy</a>
-          <a href="#" className="hover:text-black dark:hover:text-white">Cookie Settings</a>
+          <Link href="/terms" className="hover:text-black dark:hover:text-white">Terms of Service</Link>
+          <Link href="/privacy" className="hover:text-black dark:hover:text-white">Privacy Policy</Link>
+          <Link href="/cookies" className="hover:text-black dark:hover:text-white">Cookie Settings</Link>
         </div>
       </div>
     </footer>
