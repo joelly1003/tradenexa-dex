@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { ArrowRight, Wallet, ArrowDownUp, TrendingUp, ShieldCheck, Banknote, LineChart, PieChart, Globe, CheckCircle2, Zap, Activity } from 'lucide-react';
 import { useRegional } from '../components/providers/RegionalProvider';
 import { useAccount, useBlockNumber } from 'wagmi';
+import { useAppKit } from '@reown/appkit/react';
 
 export default function Home() {
   const { region, getSymbol, currency } = useRegional();
   const symbol = getSymbol();
   const { isConnected } = useAccount();
   const { data: blockNumber, isError, isLoading } = useBlockNumber({ watch: true });
+  const { open } = useAppKit();
 
   return (
     <div className="relative flex flex-col gap-10 max-w-7xl mx-auto py-4 px-4 sm:px-6">
@@ -68,11 +70,15 @@ export default function Home() {
           </p>
           
           {/* Trust Badges / Payment Rails */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+          <div className="flex flex-wrap justify-center gap-4 mb-12 transition-all duration-500">
             {['PIX', 'SEPA', 'UPI', 'M-PESA', 'TRANSAK', 'STRIPE'].map((badge) => (
-              <div key={badge} className="px-4 py-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-sm font-black tracking-widest text-zinc-500 dark:text-zinc-400">
+              <button 
+                key={badge} 
+                onClick={() => open()}
+                className="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-lg text-sm font-black tracking-widest text-zinc-500 dark:text-zinc-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors shadow-sm active:scale-95"
+              >
                 {badge}
-              </div>
+              </button>
             ))}
           </div>
         </div>

@@ -14,7 +14,6 @@ export function PortfolioInterface() {
   const [timeframe, setTimeframe] = useState<'24h' | '7d' | '30d' | 'All'>('24h');
   const [isTimeframeOpen, setIsTimeframeOpen] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
-  const [activeModal, setActiveModal] = useState<'Transfer' | 'Withdraw' | 'Deposit' | null>(null);
 
   const accountRef = useRef<HTMLDivElement>(null);
   
@@ -56,51 +55,6 @@ export function PortfolioInterface() {
   return (
     <div className="flex flex-col h-auto lg:h-[calc(100vh-81px)] bg-[#0a0a0c] text-white lg:overflow-hidden overflow-y-auto p-4 lg:p-6 mx-auto w-full max-w-[1400px] relative">
       
-      {/* Action Modal */}
-      {activeModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-2xl w-full max-w-md shadow-2xl relative">
-            <h2 className="text-2xl font-bold mb-4 text-white">{activeModal} Funds</h2>
-            <p className="text-base text-zinc-400 mb-8">Enter details to process your {activeModal.toLowerCase()} on Ink Chain.</p>
-            
-            <div className="space-y-6 mb-8">
-              <div>
-                <label className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2 block">Asset</label>
-                <select className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 text-base text-white focus:outline-none focus:border-blue-500 transition-colors cursor-pointer hover:border-zinc-700">
-                  <option>USDC (USD Coin)</option>
-                  <option>ETH (Ethereum)</option>
-                  <option>USDT (Tether)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm font-bold text-zinc-400 uppercase tracking-wider mb-2 block">Amount</label>
-                <input 
-                  type="number" 
-                  placeholder="0.00" 
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3.5 text-base text-white focus:outline-none focus:border-blue-500 font-mono transition-colors hover:border-zinc-700 placeholder:text-zinc-600"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <button 
-                onClick={() => setActiveModal(null)}
-                className="flex-1 bg-zinc-800 hover:bg-zinc-700 py-3.5 rounded-xl text-base font-bold transition-all active:scale-95 text-white"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={() => setActiveModal(null)}
-                className="flex-1 bg-blue-600 hover:bg-blue-500 py-3.5 rounded-xl text-base font-bold transition-all active:scale-95 text-white shadow-lg shadow-blue-500/20"
-              >
-                Confirm {activeModal}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Top Header */}
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6 shrink-0">
         <div className="flex items-center gap-3">
@@ -154,22 +108,22 @@ export function PortfolioInterface() {
           </div>
         </div>
         
-        <div className="flex gap-2 sm:gap-2.5 overflow-x-auto shrink-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="flex items-center gap-2 mt-4 md:mt-0">
           <button 
-            onClick={() => setActiveModal('Transfer')}
-            className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800 px-4 py-1.5 rounded-md text-[13px] font-medium transition-all active:scale-95 whitespace-nowrap text-zinc-300 hover:text-white shadow-sm"
+            onClick={() => open()}
+            className="bg-[#151518] hover:bg-zinc-800 border border-zinc-800 text-white px-4 py-2 rounded-lg font-bold text-[13px] transition-colors"
           >
             Transfer
           </button>
           <button 
-            onClick={() => setActiveModal('Withdraw')}
-            className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800 px-4 py-1.5 rounded-md text-[13px] font-medium transition-all active:scale-95 whitespace-nowrap text-zinc-300 hover:text-white shadow-sm"
+            onClick={() => open()}
+            className="bg-[#151518] hover:bg-zinc-800 border border-zinc-800 text-white px-4 py-2 rounded-lg font-bold text-[13px] transition-colors"
           >
             Withdraw
           </button>
           <button 
-            onClick={() => setActiveModal('Deposit')}
-            className="bg-[#1c1c1f] hover:bg-zinc-800 border border-zinc-800 px-4 py-1.5 rounded-md text-[13px] font-medium transition-all active:scale-95 whitespace-nowrap text-zinc-300 hover:text-white shadow-sm"
+            onClick={() => open()}
+            className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold text-[13px] shadow-sm shadow-blue-500/20 transition-all active:scale-95"
           >
             Deposit
           </button>
