@@ -1,12 +1,13 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
 import { Wallet } from 'lucide-react';
 
 export function PortfolioInterface() {
   const { address, isConnected } = useAccount();
+  const { data: balanceData } = useBalance({ address });
   const { open } = useAppKit();
   const [topTab, setTopTab] = useState<'Overview' | 'Margin Manager' | 'History'>('Overview');
   const [leftTab, setLeftTab] = useState<'Account' | 'PnL' | 'Volume'>('Account');
@@ -108,7 +109,9 @@ export function PortfolioInterface() {
           </div>
           <div className="relative" ref={accountRef}>
             <div className="flex items-center gap-2 cursor-pointer group" onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}>
-              <h1 className="text-[17px] font-bold tracking-tight text-white group-hover:text-zinc-200">Account 1</h1>
+              <h1 className="text-[17px] font-bold tracking-tight text-white group-hover:text-zinc-200">
+                {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Account 1'}
+              </h1>
               <svg className="w-3.5 h-3.5 text-zinc-500 group-hover:text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
@@ -137,7 +140,7 @@ export function PortfolioInterface() {
                   className="w-full text-left px-4 py-2.5 text-sm text-white hover:bg-zinc-800 flex items-center justify-between"
                   onClick={() => setIsAccountDropdownOpen(false)}
                 >
-                  <span className="font-bold">Account 1</span>
+                  <span className="font-bold">{address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Account 1'}</span>
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                 </button>
                 <button 
@@ -209,7 +212,7 @@ export function PortfolioInterface() {
             <div className="p-4 border-b md:border-b-0 md:border-r border-zinc-900 flex flex-col justify-between h-[88px] hover:bg-[#0c0c0f] transition-colors">
               <div>
                 <div className="text-zinc-500 text-[11px] font-medium mb-0.5">Total Equity</div>
-                <div className="text-[20px] font-bold tracking-tight text-white">$0.00</div>
+                <div className="text-[20px] font-bold tracking-tight text-white">${balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.00'}</div>
               </div>
               <div className="text-[11px] text-zinc-500 font-medium">24h PnL <span className="text-white ml-1 font-mono">$0.00</span></div>
             </div>
@@ -224,8 +227,8 @@ export function PortfolioInterface() {
 
             <div className="p-4 flex flex-col justify-between h-[88px] hover:bg-[#0c0c0f] transition-colors">
               <div>
-                <div className="text-zinc-500 text-[11px] font-medium mb-0.5">NLP Balance</div>
-                <div className="text-[20px] font-bold tracking-tight text-white">$0.00</div>
+                <div className="text-zinc-500 text-[11px] font-medium mb-0.5">Wallet Balance ({balanceData?.symbol || 'ETH'})</div>
+                <div className="text-[20px] font-bold tracking-tight text-white">{balanceData ? parseFloat(balanceData.formatted).toFixed(4) : '0.00'}</div>
               </div>
               <div className="text-[11px] text-zinc-500 font-medium">APR: <span className="text-white ml-1 font-mono font-bold">6.95%</span></div>
             </div>
