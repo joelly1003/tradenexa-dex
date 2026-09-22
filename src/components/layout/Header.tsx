@@ -30,7 +30,7 @@ export function Header() {
     { name: 'Trade', href: '/trade' },
     { name: 'Market', href: '/market' },
     { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Discover', href: '/discover' },
+    { name: 'Leaderboard', href: '/leaderboard' },
   ];
 
   return (

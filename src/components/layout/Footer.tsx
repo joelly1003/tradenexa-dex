@@ -87,7 +87,7 @@ export function Footer() {
           <h4 className="font-bold text-black dark:text-white mb-4 uppercase tracking-wider text-xs">Network</h4>
           <NetworkStatus />
           <ul className="space-y-3 font-medium">
-            <li><a href="https://explorer.inkonchain.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Verified Contracts ?</a></li>
+            <li><a href="https://explorer.inkonchain.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Verified Contracts ↗</a></li>
             <li><Link href="/bounty" className="hover:text-blue-500 transition-colors">Bug Bounty</Link></li>
           </ul>
         </div>
