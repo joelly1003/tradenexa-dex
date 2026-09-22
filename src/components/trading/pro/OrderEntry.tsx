@@ -1,14 +1,29 @@
 'use client';
 
-import { useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useState, useEffect } from 'react';
+import { useAccount, useBalance } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
-import { useNadoTrade } from '../../../hooks/nado';
+import { useNadoTrade } from '../../../hooks/nado/useNadoTrade';
+import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
 
 export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
+  const { data: balanceData } = useBalance({ address });
   const { open } = useAppKit();
   const { placeOrder, isSubmitting, error: tradeError } = useNadoTrade();
+  const { data: tickers } = useNadoEdgeTicker();
+
+  const symUpper = symbol.toUpperCase() === 'KPEPE' ? 'PEPE' : symbol.toUpperCase();
+  const perpSymbol = `${symUpper}-PERP`;
+  
+  const currentAsset = (tickers || []).find(t => t.symbol === perpSymbol || t.symbol === symUpper) || 
+    (tickers || []).find(t => t.symbol.startsWith(symUpper));
+    
+  const currentPrice = currentAsset ? parseFloat(currentAsset.price_x18) / 1e18 : 0;
+  const productId = currentAsset ? currentAsset.product_id : 1;
+
+  // Use real ETH balance as mock available margin, or fallback to 10,000
+  const availableMargin = balanceData ? parseFloat(balanceData.formatted) * 2500 : 10000;
 
   const [amount, setAmount] = useState('');
   const [limitPrice, setLimitPrice] = useState('');
@@ -19,13 +34,17 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
 
   const [reduceOnly, setReduceOnly] = useState(false);
   const [tpSl, setTpSl] = useState(false);
+  
+  // Real math for max size
+  const tradePrice = orderType === 'Limit' || orderType === 'Advanced' ? (parseFloat(limitPrice) || currentPrice) : currentPrice;
+  const maxPositionSize = tradePrice > 0 ? (availableMargin * leverage) / tradePrice : 0;
 
   const handlePlaceOrder = async () => {
     if (!amount || parseFloat(amount) === 0) return;
     try {
       await placeOrder({
-        productId: 1, // Default BTC product
-        price: limitPrice ? parseFloat(limitPrice) : 75000,
+        productId: productId,
+        price: tradePrice,
         amount: parseFloat(amount),
         appendixOptions: {
           isolated: marginMode === 'Isolated',
@@ -60,6 +79,12 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
     }
   }
 
+  // Calculate Value and Cost
+  const parsedAmount = parseFloat(amount) || 0;
+  const orderValue = parsedAmount * tradePrice;
+  const orderCost = orderValue / leverage;
+  const liqPrice = tradePrice > 0 ? tradePrice * 0.98 : 0; // rough mock liq price
+
   return (
     <div className="flex flex-col h-full bg-[#0a0a0c] p-4 text-white shrink-0">
       {/* Margin / Leverage row */}
@@ -77,7 +102,18 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
         <div className="flex-1 relative">
           <select 
             value={leverage}
-            onChange={e => setLeverage(Number(e.target.value))}
+            onChange={e => {
+              const newLev = Number(e.target.value);
+              setLeverage(newLev);
+              // adjust amount if it exceeds new max
+              const newMax = tradePrice > 0 ? (availableMargin * newLev) / tradePrice : 0;
+              if (parsedAmount > newMax) {
+                setAmount(newMax.toFixed(5));
+                setSliderVal(100);
+              } else {
+                setSliderVal(newMax > 0 ? (parsedAmount / newMax) * 100 : 0);
+              }
+            }}
             className="w-full bg-zinc-900 hover:bg-zinc-800 py-1.5 rounded text-sm font-semibold transition-colors border border-zinc-800 appearance-none text-center outline-none cursor-pointer"
           >
             <option value={1}>1x</option>
@@ -107,7 +143,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
 
       <div className="flex justify-between text-xs text-zinc-400 mb-2 font-sans">
         <span>Available Margin</span>
-        <span className="text-white font-mono">$0.00</span>
+        <span className="text-white font-mono">${availableMargin.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
       </div>
       <div className="flex justify-between text-xs text-zinc-400 mb-6 font-sans">
         <span>Position</span>
@@ -121,7 +157,9 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
           <div className="flex items-center gap-2">
             <input 
               type="number" 
-              placeholder="0.00" 
+              placeholder={currentPrice > 0 ? currentPrice.toString() : "0.00"}
+              value={limitPrice}
+              onChange={(e) => setLimitPrice(e.target.value)}
               className="bg-transparent text-right text-white font-mono outline-none w-24 text-sm placeholder:text-zinc-700" 
             />
             <span className="text-zinc-500 text-sm font-bold w-12 text-right">USD</span>
@@ -136,7 +174,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
           <div className="flex items-center gap-2">
             <input 
               type="number" 
-              placeholder="0.00" 
+              placeholder={currentPrice > 0 ? currentPrice.toString() : "0.00"}
               className="bg-transparent text-right text-white font-mono outline-none w-24 text-sm placeholder:text-zinc-700" 
             />
             <span className="text-zinc-500 text-sm font-bold w-12 text-right">USD</span>
@@ -153,8 +191,9 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
             placeholder="0.00000" 
             value={amount}
             onChange={(e) => {
+              const val = Number(e.target.value || 0);
               setAmount(e.target.value);
-              setSliderVal(Math.min(100, Math.max(0, Number(e.target.value || 0) * 10))); // mock mapping
+              setSliderVal(maxPositionSize > 0 ? Math.min(100, Math.max(0, (val / maxPositionSize) * 100)) : 0);
             }}
             className="bg-transparent text-right text-white font-mono outline-none w-24 text-sm placeholder:text-zinc-700" 
           />
@@ -172,14 +211,16 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
           onChange={(e) => {
             const v = Number(e.target.value);
             setSliderVal(v);
-            setAmount((v / 10).toFixed(5)); // mock mapping
+            if (maxPositionSize > 0) {
+              setAmount((maxPositionSize * (v / 100)).toFixed(5));
+            }
           }}
           className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-white hover:accent-blue-400 transition-all"
         />
         
         <div className="flex justify-between text-[10px] text-zinc-500 mt-2 font-mono font-bold">
-          <span>{sliderVal}%</span>
-          <span>Max --</span>
+          <span>{Math.round(sliderVal)}%</span>
+          <span>Max {maxPositionSize.toFixed(4)}</span>
         </div>
       </div>
 
@@ -250,9 +291,18 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
       )}
 
       <div className="space-y-2 text-xs text-zinc-500 mt-auto font-sans pt-2">
-        <div className="flex justify-between"><span>Value</span><span className="font-mono">--</span></div>
-        <div className="flex justify-between"><span>Cost</span><span className="font-mono">--</span></div>
-        <div className="flex justify-between"><span>Liq. Price</span><span className="font-mono">--</span></div>
+        <div className="flex justify-between">
+          <span>Value</span>
+          <span className="font-mono text-white">${orderValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Cost</span>
+          <span className="font-mono text-white">${orderCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Liq. Price</span>
+          <span className="font-mono">~${liqPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+        </div>
       </div>
     </div>
   );
