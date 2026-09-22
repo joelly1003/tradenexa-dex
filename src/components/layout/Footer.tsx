@@ -1,6 +1,48 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { Activity, Globe, Code, Send, MessageSquare } from 'lucide-react';
+import { Globe, Code, Send, MessageSquare } from 'lucide-react';
+import { useBlockNumber } from 'wagmi';
+import { useEffect, useState } from 'react';
+
+function NetworkStatus() {
+  const { data: blockNumber, isError, isLoading } = useBlockNumber({ watch: true });
+  const [status, setStatus] = useState<'checking' | 'operational' | 'degraded'>('checking');
+
+  useEffect(() => {
+    if (blockNumber) {
+      setStatus('operational');
+    } else if (isError) {
+      setStatus('degraded');
+    }
+  }, [blockNumber, isError]);
+
+  if (status === 'checking' || isLoading) {
+    return (
+      <div className="flex items-center gap-2 mb-4 p-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 rounded-lg border border-zinc-200 dark:border-zinc-700 font-medium w-fit">
+        <span className="w-2 h-2 rounded-full bg-zinc-400 animate-pulse"></span>
+        RPC: Checking...
+      </div>
+    );
+  }
+
+  if (status === 'degraded') {
+    return (
+      <div className="flex items-center gap-2 mb-4 p-2 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded-lg border border-red-200 dark:border-red-500/20 font-medium w-fit">
+        <span className="w-2 h-2 rounded-full bg-red-500"></span>
+        RPC: Degraded
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-2 mb-4 p-2 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-lg border border-green-200 dark:border-green-500/20 font-medium w-fit">
+      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+      RPC: Operational ({Number(blockNumber)})
+    </div>
+  );
+}
 
 export function Footer() {
   return (
@@ -25,7 +67,7 @@ export function Footer() {
           <h4 className="font-bold text-black dark:text-white mb-4 uppercase tracking-wider text-xs">Products</h4>
           <ul className="space-y-3 font-medium">
             <li><Link href="/trade" className="hover:text-blue-500 transition-colors">Spot Trading</Link></li>
-            <li><Link href="/trade" className="hover:text-blue-500 transition-colors">Limit Orders</Link></li>
+            <li><Link href="/trade?tab=limit" className="hover:text-blue-500 transition-colors">Limit Orders</Link></li>
             <li><Link href="/market" className="hover:text-blue-500 transition-colors">Market Explorer</Link></li>
             <li><Link href="/portfolio" className="hover:text-blue-500 transition-colors">Portfolio Manager</Link></li>
           </ul>
@@ -43,12 +85,9 @@ export function Footer() {
         
         <div>
           <h4 className="font-bold text-black dark:text-white mb-4 uppercase tracking-wider text-xs">Network</h4>
-          <div className="flex items-center gap-2 mb-4 p-2 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-lg border border-green-200 dark:border-green-500/20 font-medium w-fit">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            RPC & Aggregator: Operational
-          </div>
+          <NetworkStatus />
           <ul className="space-y-3 font-medium">
-            <li><a href="https://explorer.inkonchain.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Verified Contracts ↗</a></li>
+            <li><a href="https://explorer.inkonchain.com/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">Verified Contracts ?</a></li>
             <li><Link href="/bounty" className="hover:text-blue-500 transition-colors">Bug Bounty</Link></li>
           </ul>
         </div>

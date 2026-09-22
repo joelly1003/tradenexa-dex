@@ -5,6 +5,7 @@ import { ArrowUpRight, ArrowDownRight, Flame, Globe, AlertTriangle, TrendingUp, 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useNadoEdgeTicker } from '../../hooks/nado/useNadoEdgeTicker';
+import { formatFiat, FIAT_RATES } from '../../store/currencyStore';
 
 interface Asset {
   id: string;
@@ -21,18 +22,8 @@ export function DiscoverInterface() {
   
   const { data: nadoPrices = [], isLoading } = useNadoEdgeTicker();
 
-  // Hardcode some simple exchange rates for demonstration, or default to 1
-  const rates: Record<string, number> = {
-    'USD': 1,
-    'GBP': 0.79,
-    'EUR': 0.92,
-    'NGN': 1150
-  };
-  const rate = rates[currency] || 1;
-
   const formatPrice = (usdPrice: string) => {
-    const local = parseFloat(usdPrice) * rate;
-    return local < 1 ? local.toFixed(4) : local.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return formatFiat(usdPrice, currency, parseFloat(usdPrice) < 1 ? 4 : 2);
   };
 
   const formatChange = (changeStr: string) => {
@@ -81,7 +72,7 @@ export function DiscoverInterface() {
           {trendingList.map((coin) => (
             <Link href="/trade" key={coin.symbol} className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-blue-500 transition-colors group shadow-sm">
               <div className="font-bold text-lg mb-2">{coin.symbol} <span className="text-xs font-normal text-zinc-500">{coin.name}</span></div>
-              <div className="text-2xl font-mono mb-1 font-bold text-blue-500">{symbol}{formatPrice(coin.priceUsd)}</div>
+              <div className="text-2xl font-mono mb-1 font-bold text-blue-500">{formatPrice(coin.priceUsd)}</div>
               <div className={`text-sm font-semibold flex items-center ${parseFloat(coin.changePercent24Hr) >= 0 ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
                 {parseFloat(coin.changePercent24Hr) >= 0 ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />}
                 {formatChange(coin.changePercent24Hr)}% 24h
@@ -112,7 +103,7 @@ export function DiscoverInterface() {
                 <div className="flex justify-between items-end">
                   <div>
                     <div className="text-xs font-bold text-zinc-500 mb-1">Local Price</div>
-                    <div className="font-mono text-xl font-bold">{symbol}{formatPrice(coin.priceUsd)}</div>
+                    <div className="font-mono text-xl font-bold">{formatPrice(coin.priceUsd)}</div>
                   </div>
                   <div className={`text-sm font-bold bg-zinc-100 dark:bg-zinc-900 px-2 py-1 rounded ${isPositive ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
                     {isPositive ? '+' : ''}{formatChange(coin.changePercent24Hr)}%
@@ -139,7 +130,7 @@ export function DiscoverInterface() {
             {gainersList.map((coin) => (
               <Link href="/trade" key={coin.symbol} className="flex justify-between px-4 py-3.5 border-t border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors items-center group">
                 <span className="font-bold w-1/3 group-hover:text-blue-500 transition-colors">{coin.symbol} <span className="hidden sm:inline font-normal text-xs text-zinc-500">{coin.name}</span></span>
-                <span className="font-mono font-medium w-1/3 text-right">{symbol}{formatPrice(coin.priceUsd)}</span>
+                <span className="font-mono font-medium w-1/3 text-right">{formatPrice(coin.priceUsd)}</span>
                 <span className="text-green-600 dark:text-green-500 font-bold w-1/3 text-right bg-green-500/10 px-2 py-1 rounded-md ml-4">+{formatChange(coin.changePercent24Hr)}%</span>
               </Link>
             ))}
@@ -159,7 +150,7 @@ export function DiscoverInterface() {
             {losersList.map((coin) => (
               <Link href="/trade" key={coin.symbol} className="flex justify-between px-4 py-3.5 border-t border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors items-center group">
                 <span className="font-bold w-1/3 group-hover:text-blue-500 transition-colors">{coin.symbol} <span className="hidden sm:inline font-normal text-xs text-zinc-500">{coin.name}</span></span>
-                <span className="font-mono font-medium w-1/3 text-right">{symbol}{formatPrice(coin.priceUsd)}</span>
+                <span className="font-mono font-medium w-1/3 text-right">{formatPrice(coin.priceUsd)}</span>
                 <span className="text-red-600 dark:text-red-500 font-bold w-1/3 text-right bg-red-500/10 px-2 py-1 rounded-md ml-4">{formatChange(coin.changePercent24Hr)}%</span>
               </Link>
             ))}
@@ -177,13 +168,13 @@ export function DiscoverInterface() {
               <Link href="/trade" key={coin.symbol} className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 flex justify-between items-center hover:border-blue-500 transition-colors group shadow-sm">
                 <div>
                   <h3 className="text-xl font-bold mb-2 group-hover:text-blue-500 transition-colors">{coin.symbol} / USDT</h3>
-                  <div className="text-3xl font-mono mb-3 font-bold">{symbol}{formatPrice(coin.priceUsd)}</div>
+                  <div className="text-3xl font-mono mb-3 font-bold">{formatPrice(coin.priceUsd)}</div>
                   <div className="flex items-center gap-4 text-sm">
                     <span className={`font-bold flex items-center px-2 py-0.5 rounded ${isPositive ? 'text-green-600 bg-green-500/10 dark:text-green-500' : 'text-red-600 bg-red-500/10 dark:text-red-500'}`}>
                       {isPositive ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />} 
                       {formatChange(coin.changePercent24Hr)}%
                     </span>
-                    <span className="text-zinc-500 font-semibold text-xs uppercase tracking-wider">Vol {symbol}{(parseFloat(coin.volumeUsd24Hr) * rate / 1e9).toFixed(2)}B</span>
+                    <span className="text-zinc-500 font-semibold text-xs uppercase tracking-wider">Vol {symbol}{(parseFloat(coin.volumeUsd24Hr) * (FIAT_RATES[currency]?.rate || 1) / 1e9).toFixed(2)}B</span>
                   </div>
                 </div>
                 <div className={`w-32 h-16 flex items-end opacity-50 group-hover:opacity-100 transition-opacity ${isPositive ? 'stroke-green-500' : 'stroke-red-500'}`}>

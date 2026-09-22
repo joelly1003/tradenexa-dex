@@ -1,14 +1,14 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { useCurrencyStore, FiatCurrency, FIAT_RATES } from '../../store/currencyStore';
 
-type Currency = 'USD' | 'EUR' | 'NGN' | 'GBP';
 type Language = 'EN' | 'ES' | 'FR' | 'DE';
 type Region = 'US' | 'EU' | 'NG' | 'UK';
 
 interface RegionalContextType {
-  currency: Currency;
-  setCurrency: (c: Currency) => void;
+  currency: FiatCurrency;
+  setCurrency: (c: FiatCurrency) => void;
   language: Language;
   setLanguage: (l: Language) => void;
   region: Region;
@@ -19,24 +19,30 @@ interface RegionalContextType {
 const RegionalContext = createContext<RegionalContextType | undefined>(undefined);
 
 export function RegionalProvider({ children }: { children: ReactNode }) {
-  const [currency, setCurrency] = useState<Currency>('USD');
+  const { fiat, setFiat } = useCurrencyStore();
   const [language, setLanguage] = useState<Language>('EN');
   const [region, setRegion] = useState<Region>('US');
+  const [mounted, setMounted] = useState(false);
 
-
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const getSymbol = () => {
-    switch (currency) {
-      case 'USD': return '$';
-      case 'EUR': return '€';
-      case 'NGN': return '₦';
-      case 'GBP': return '£';
-      default: return '$';
-    }
+    if (!mounted) return '$';
+    return FIAT_RATES[fiat]?.symbol || '$';
   };
 
   return (
-    <RegionalContext.Provider value={{ currency, setCurrency, language, setLanguage, region, setRegion, getSymbol }}>
+    <RegionalContext.Provider value={{ 
+      currency: mounted ? fiat : 'USD', 
+      setCurrency: setFiat, 
+      language, 
+      setLanguage, 
+      region, 
+      setRegion, 
+      getSymbol 
+    }}>
       {children}
     </RegionalContext.Provider>
   );

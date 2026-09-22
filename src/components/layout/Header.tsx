@@ -1,6 +1,5 @@
 'use client';
 
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { Settings } from 'lucide-react';
@@ -8,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { useDisconnect } from 'wagmi';
 import { ConnectWalletButton } from '../wallet/ConnectWalletButton';
+import { CurrencySelector } from './CurrencySelector';
 
 export function Header() {
   const pathname = usePathname();
@@ -34,7 +34,7 @@ export function Header() {
   ];
 
   return (
-    <header className="flex flex-wrap items-center justify-between p-3 sm:px-6 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 relative">
+    <header className="flex flex-wrap items-center justify-between p-3 sm:px-6 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 relative z-50">
       {/* Left section: Logo */}
       <div className="flex-1 flex items-center justify-start">
         <Link href="/" className="flex items-center">
@@ -60,23 +60,25 @@ export function Header() {
 
       {/* Right section: Icons, Wallet */}
       <div className="flex-1 flex items-center gap-3 sm:gap-4 justify-end relative">
+        <CurrencySelector />
+        
         {/* Action Icons */}
         <div className="hidden sm:flex items-center gap-1 relative" ref={settingsRef}>
           <button 
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
             aria-label="Settings"
-            className={`p-2.5 rounded-full transition-colors ${isSettingsOpen ? 'bg-[#1a1b1f] text-white border-[#2b2d31]' : 'bg-[#101114] text-zinc-400 hover:text-white hover:bg-[#1a1b1f]'} border border-[#1a1b1f]`}
+            className={`p-2 rounded-full transition-colors ${isSettingsOpen ? 'bg-[#1a1b1f] text-white border-[#2b2d31]' : 'bg-[#101114] text-zinc-400 hover:text-white hover:bg-[#1a1b1f]'} border border-[#1a1b1f] h-[38px] w-[38px] flex items-center justify-center`}
           >
             <Settings className="w-[18px] h-[18px]" />
           </button>
           
           {isSettingsOpen && (
-            <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden">
-              <div className="p-3 border-b border-zinc-200 dark:border-zinc-800">
+            <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden py-2">
+              <div className="px-4 pb-2 border-b border-zinc-200 dark:border-zinc-800">
                 <h3 className="font-bold text-sm text-black dark:text-white">Preferences</h3>
               </div>
               
-              <div className="p-3 space-y-4">
+              <div className="p-4 space-y-4">
                 {/* Theme Setting */}
                 <div>
                   <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Theme</label>
@@ -88,17 +90,6 @@ export function Header() {
                       Light
                     </button>
                   </div>
-                </div>
-
-                {/* Display Currency */}
-                <div>
-                  <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Currency</label>
-                  <select className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-sm text-black dark:text-white focus:outline-none focus:border-blue-500">
-                    <option>USD ($)</option>
-                    <option>EUR (€)</option>
-                    <option>GBP (£)</option>
-                    <option>NGN (₦)</option>
-                  </select>
                 </div>
                 
                 {/* RPC Node */}
