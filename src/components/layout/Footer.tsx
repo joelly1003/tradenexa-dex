@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0a0a0c] px-6 py-8 text-sm text-zinc-500">
+    <footer className="mt-auto border-t border-white/5 bg-black px-6 py-8 text-sm text-zinc-500">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         
         {/* Left Section: Logo & Tagline */}
@@ -18,7 +18,7 @@ export function Footer() {
               height={40} 
               className="w-auto h-8 object-contain"
             />
-            <span className="text-[8px] font-black tracking-[0.25em] text-blue-500 uppercase ml-11">Powered by Nado</span>
+            <span className="text-[8px] font-black tracking-[0.25em] text-[#B1FA41] uppercase ml-11">Powered by Nado</span>
           </Link>
           <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs">
             Institutional-grade performance built on the Ink network.

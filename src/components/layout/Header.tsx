@@ -37,7 +37,7 @@ export function Header() {
   ];
 
   return (
-    <header className="flex flex-wrap items-center justify-between p-3 sm:px-6 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 relative z-50">
+    <header className="flex flex-wrap items-center justify-between p-4 sm:px-8 bg-black border-b border-white/5 relative z-50 font-sans">
       {/* Left section: Logo */}
       <div className="flex-1 flex items-center justify-start">
         <Link href="/" className="flex flex-col items-start gap-0.5">
@@ -49,19 +49,23 @@ export function Header() {
             className="w-auto h-8 object-contain"
             priority
           />
-          <span className="text-[8px] font-black tracking-[0.25em] text-blue-500 uppercase ml-11">Powered by Nado</span>
+          <span className="text-[8px] font-black tracking-[0.25em] text-[#B1FA41] uppercase ml-11">Powered by Nado</span>
         </Link>
       </div>
 
-      {/* Center section: Navigation */}
-      <nav className="flex w-full md:w-auto order-last md:order-none mt-2 md:mt-0 overflow-x-auto flex-shrink-0 items-center justify-start md:justify-center gap-6 md:gap-8 text-xs font-black uppercase tracking-widest [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      {/* Center section: Navigation (Pill-shaped like Cryptfy) */}
+      <nav className="hidden md:flex flex-shrink-0 items-center justify-center gap-2">
         {navLinks.map((link) => {
           const isActive = pathname === link.href;
           return (
             <Link 
               key={link.name} 
               href={link.href} 
-              className={`transition-colors whitespace-nowrap ${isActive ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 pb-1 -mb-[5px]' : 'text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white'}`}
+              className={`px-5 py-2 rounded-full text-xs font-semibold transition-all ${
+                isActive 
+                  ? 'bg-white/10 text-white' 
+                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
+              }`}
             >
               {link.name}
             </Link>
@@ -77,15 +81,15 @@ export function Header() {
           <button 
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
             aria-label="Settings"
-            className={`p-2 rounded-full transition-colors ${isSettingsOpen ? 'bg-[#1a1b1f] text-white border-[#2b2d31]' : 'bg-[#101114] text-zinc-400 hover:text-white hover:bg-[#1a1b1f]'} border border-[#1a1b1f] h-[38px] w-[38px] flex items-center justify-center`}
+            className={`p-2 rounded-full transition-colors ${isSettingsOpen ? 'bg-white/20 text-white' : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'} h-[38px] w-[38px] flex items-center justify-center`}
           >
             <Settings className="w-[18px] h-[18px]" />
           </button>
           
           {isSettingsOpen && (
-            <div className="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden py-2">
-              <div className="px-4 pb-2 border-b border-zinc-200 dark:border-zinc-800">
-                <h3 className="font-bold text-sm text-black dark:text-white">Preferences</h3>
+            <div className="absolute top-full right-0 mt-3 w-64 bg-[#0a0a0c] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden py-2">
+              <div className="px-4 pb-3 pt-2 border-b border-white/5">
+                <h3 className="font-bold text-sm text-white">Preferences</h3>
               </div>
               
               <div className="p-4 space-y-4">
@@ -93,10 +97,10 @@ export function Header() {
                 <div>
                   <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Theme</label>
                   <div className="grid grid-cols-2 gap-2">
-                    <button className="py-1.5 px-3 rounded-lg text-sm font-medium bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white border border-transparent">
+                    <button className="py-1.5 px-3 rounded-lg text-sm font-medium bg-[#B1FA41] text-black border border-transparent">
                       Dark
                     </button>
-                    <button className="py-1.5 px-3 rounded-lg text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-500 transition-colors">
+                    <button className="py-1.5 px-3 rounded-lg text-sm font-medium hover:bg-white/5 text-zinc-500 transition-colors">
                       Light
                     </button>
                   </div>
@@ -108,7 +112,7 @@ export function Header() {
                   <select 
                     value={fiat} 
                     onChange={(e) => setFiat(e.target.value as any)}
-                    className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-sm text-black dark:text-white focus:outline-none focus:border-blue-500"
+                    className="w-full bg-[#121824] border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-[#B1FA41]"
                   >
                     {currencies.map(c => (
                       <option key={c} value={c}>{c}</option>
@@ -119,7 +123,7 @@ export function Header() {
                 {/* Language Setting */}
                 <div>
                   <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Language</label>
-                  <select className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-sm text-black dark:text-white focus:outline-none focus:border-blue-500">
+                  <select className="w-full bg-[#121824] border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-[#B1FA41]">
                     <option>English</option>
                     <option>Espanol</option>
                     <option>Portugues</option>
@@ -129,7 +133,7 @@ export function Header() {
                 {/* RPC Node */}
                 <div>
                   <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Network Node</label>
-                  <select className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-sm text-black dark:text-white focus:outline-none focus:border-blue-500">
+                  <select className="w-full bg-[#121824] border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-[#B1FA41]">
                     <option>{chain ? `${chain.name} (Default)` : 'Ink Mainnet (Default)'}</option>
                     <option>{chain ? `${chain.name} Fallback 1` : 'Ink Fallback 1'}</option>
                   </select>
@@ -138,7 +142,11 @@ export function Header() {
             </div>
           )}
         </div>
-        <ConnectWalletButton />
+        
+        {/* Custom style for the wallet button to match the neon theme */}
+        <div className="[&_button]:!bg-white [&_button]:!text-black [&_button]:hover:!bg-zinc-200 [&_button]:!font-bold [&_button]:!rounded-full">
+          <ConnectWalletButton />
+        </div>
       </div>
     </header>
   );
