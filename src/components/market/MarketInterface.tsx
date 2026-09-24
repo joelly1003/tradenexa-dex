@@ -168,7 +168,6 @@ export function MarketInterface() {
                 : 'bg-white dark:bg-[#111114] text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-black dark:hover:text-white'
             }`}
           >
-            {tab.icon && <span>{tab.icon}</span>}
             {tab.name}
           </button>
         ))}

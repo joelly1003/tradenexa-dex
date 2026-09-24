@@ -143,32 +143,33 @@ export function useNadoEdgeTicker(productIds?: number[]) {
         }
       });
 
-      let coincapData: any[] = [];
+      let binanceData: any[] = [];
       try {
-        const ccRes = await fetch('https://api.coincap.io/v2/assets?limit=100');
-        if (ccRes.ok) {
-          const ccJson = await ccRes.json();
-          coincapData = ccJson.data || [];
+        const binanceRes = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+        if (binanceRes.ok) {
+          binanceData = await binanceRes.json();
         }
       } catch (e) {
-        console.warn('CoinCap fetch failed', e);
+        console.warn('Binance fetch failed', e);
       }
 
       const marketMap = new Map();
-      coincapData.forEach((d: any) => {
-        marketMap.set(d.symbol.toUpperCase(), { 
-          price: d.priceUsd, 
-          change: d.changePercent24Hr, 
-          vol: d.volumeUsd24Hr 
+      if (Array.isArray(binanceData)) {
+        binanceData.forEach((d: any) => {
+          marketMap.set(d.symbol, { 
+            price: d.lastPrice, 
+            change: d.priceChangePercent, 
+            vol: d.quoteVolume 
+          });
         });
-      });
+      }
 
       return nadoPrices.map((p: any) => {
         const sym = prodIdToSymbol[p.product_id] || `PROD-${p.product_id}`;
         let baseAsset = sym.replace('-PERP', '').replace('w', '').replace('x', '');
         if (baseAsset === 'KPEPE') baseAsset = 'PEPE';
         
-        const mMatch = marketMap.get(baseAsset);
+        const mMatch = marketMap.get(baseAsset + 'USDT');
         
         // Use real market price if found, otherwise fallback to Nado's native price
         const priceX18 = mMatch?.price ? (parseFloat(mMatch.price) * 1e18).toLocaleString('fullwide', {useGrouping:false}) : p.bid_x18;
