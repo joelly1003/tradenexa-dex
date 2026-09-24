@@ -186,7 +186,7 @@ export function useNadoEdgeTicker(productIds?: number[]) {
         } as CachedPriceItem;
       });
     },
-    refetchInterval: 5000,
-    staleTime: 2000,
+    refetchInterval: 2000,
+    staleTime: 1000,
   });
 }

@@ -161,12 +161,17 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
       {/* 1. Header & Routing */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex gap-2">
-          <button 
-            onClick={() => setMarginMode(marginMode === 'Cross' ? 'Isolated' : 'Cross')}
-            className="px-3 py-1.5 bg-white/5 hover:bg-white/10 rounded border border-white/10 text-xs font-semibold transition-colors flex items-center gap-1.5"
-          >
-            {marginMode} <ChevronDown className="w-3 h-3 text-zinc-400" />
-          </button>
+          <div className="relative">
+            <select 
+              value={marginMode}
+              onChange={(e) => setMarginMode(e.target.value)}
+              className="px-3 py-1.5 bg-[#121824] hover:bg-[#1a2332] rounded border border-white/10 text-xs font-semibold transition-colors flex items-center appearance-none pr-8 outline-none cursor-pointer text-white"
+            >
+              <option value="Cross">Cross</option>
+              <option value="Isolated">Isolated</option>
+            </select>
+            <ChevronDown className="w-3 h-3 text-zinc-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
         </div>
         <div className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[10px] font-mono text-blue-400 flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />

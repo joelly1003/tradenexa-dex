@@ -93,7 +93,7 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
     };
 
     fetchOrderbookAndTrades();
-    const interval = setInterval(fetchOrderbookAndTrades, 2000); // 2s refresh for orderbook
+    const interval = setInterval(fetchOrderbookAndTrades, 1000); // 1s refresh for orderbook
     return () => clearInterval(interval);
   }, [symbol, activeTab]);
 
