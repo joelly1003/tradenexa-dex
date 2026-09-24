@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Search, Star, RefreshCcw, ArrowRight, ChevronDown } from 'lucide-react';
+import { Search, Star, RefreshCcw, ArrowRight, ChevronDown, TrendingUp, TrendingDown } from 'lucide-react';
 import { useRegional } from '../providers/RegionalProvider';
 import { useRouter } from 'next/navigation';
 import { useNadoEdgeTicker } from '../../hooks/nado/useNadoEdgeTicker';
@@ -177,27 +177,24 @@ export function MarketInterface() {
       <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/50 rounded-xl overflow-hidden overflow-x-auto">
         <table className="w-full text-left min-w-[1000px]">
           <thead>
-            <tr className="text-[11px] font-bold text-zinc-500 tracking-wider uppercase border-b border-zinc-200 dark:border-zinc-800/50 bg-zinc-50 dark:bg-[#0a0a0c]/50">
-              <th className="p-4 pl-6 w-12"></th>
+            <tr className="text-[11px] font-bold text-zinc-500 tracking-wider uppercase border-b border-zinc-200 dark:border-zinc-800/50 bg-transparent">
+              <th className="p-4 pl-6 w-12 rounded-tl-3xl"></th>
               <th className="p-4">Market</th>
               <th className="p-4 text-right">Price</th>
-              <th className="p-4 text-right">24H Δ</th>
-              <th className="p-4 text-right">24H Vol</th>
-              <th className="p-4 text-right">Open Interest</th>
-              <th className="p-4 text-right">Spread</th>
-              <th className="p-4 text-right">Depth ±25</th>
-              <th className="p-4 text-right">50K Slip</th>
-              <th className="p-4 pr-6 text-right">Liq Score</th>
+              <th className="p-4 text-right">24H Change</th>
+              <th className="p-4 text-right">24H Volume</th>
+              <th className="p-4 text-right">Funding Rate</th>
+              <th className="p-4 pr-6 text-right rounded-tr-3xl">Open Interest</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800/50">
             {loading && assets.length === 0 ? (
               <tr>
-                <td colSpan={10} className="p-8 text-center text-zinc-500">Loading Nado DEX markets...</td>
+                <td colSpan={7} className="p-8 text-center text-zinc-500">Loading Nado DEX markets...</td>
               </tr>
             ) : displayAssets.length === 0 ? (
               <tr>
-                <td colSpan={10} className="p-8 text-center text-zinc-500">
+                <td colSpan={7} className="p-8 text-center text-zinc-500">
                   {activeTab === 'Watchlist' ? 'No starred assets in your watchlist. Click the star icon next to any coin to add it!' : 'No markets found.'}
                 </td>
               </tr>
@@ -209,10 +206,10 @@ export function MarketInterface() {
                 
                 // Dynamic fallback values for Nado specific columns if not preset
                 const openInterestUsd = asset.volumeUsd24Hr ? (parseFloat(asset.volumeUsd24Hr) * 0.42).toString() : '500000';
-                const spreadVal = asset.spread || `${(Math.abs(change) * 0.2 + 0.1).toFixed(2)} bps`;
-                const depthVal = asset.depth25 || `$${formatCompact((parseFloat(asset.volumeUsd24Hr || '1000000') * 0.08).toString())}`;
-                const slipVal = asset.slip50k || `${(Math.abs(change) * 1.2 + 0.5).toFixed(2)} bps`;
-                const liqVal = asset.liqScore || `${formatCompact((parseFloat(asset.volumeUsd24Hr || '1000000') * 0.05).toString())}`;
+                
+                // Pseudo-deterministic funding rate based on change
+                const fundingRate = (change * 0.0005).toFixed(4);
+                const isFundingPositive = parseFloat(fundingRate) >= 0;
 
                 const iconSymbol = asset.symbol.toLowerCase() === 'kpepe' ? 'pepe' : asset.symbol.toLowerCase();
                 const primaryLogo = `https://assets.coincap.io/assets/icons/${iconSymbol}@2x.png`;
@@ -221,7 +218,7 @@ export function MarketInterface() {
                 return (
                   <tr 
                     key={asset.id} 
-                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-all duration-200 group text-sm cursor-pointer hover:shadow-[inset_2px_0_0_0_#3b82f6]" 
+                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors duration-200 group text-sm cursor-pointer" 
                     onClick={() => router.push(`/trade?symbol=${asset.symbol}`)}
                   >
                     <td className="p-4 pl-6" onClick={(e) => e.stopPropagation()}>
@@ -234,7 +231,7 @@ export function MarketInterface() {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        {/* Coin Logo with multi-layer image fallback */}
+                        {/* Circle logo fallback (as seen in screenshot) */}
                         <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 border border-zinc-700/50 overflow-hidden font-bold text-xs text-white">
                           <img 
                             src={primaryLogo} 
@@ -247,24 +244,19 @@ export function MarketInterface() {
                               } else {
                                 target.style.display = 'none';
                                 if (target.parentElement) {
-                                  target.parentElement.innerText = asset.symbol.substring(0, 3);
+                                  target.parentElement.innerText = asset.symbol.substring(0, 1).toUpperCase();
                                 }
                               }
                             }}
                           />
                         </div>
-                        <div>
-                          <div className="font-bold text-sm text-black dark:text-white flex items-center gap-1.5">
-                            {asset.symbol}/USD
-                          </div>
-                          <div className="text-[11px] text-zinc-400 flex items-center gap-1 flex-wrap mt-0.5">
-                            <span className="font-semibold text-zinc-500">{asset.name}</span>
-                            {asset.tags?.map(t => (
-                              <span key={t} className="bg-zinc-100 dark:bg-zinc-800/80 text-zinc-500 text-[9px] px-1.5 py-0.2 rounded font-medium">
-                                {t}
-                              </span>
-                            ))}
-                          </div>
+                        <div className="flex flex-col">
+                          <span className="font-bold text-sm text-black dark:text-white leading-tight">
+                            {asset.symbol}
+                          </span>
+                          <span className="text-xs text-zinc-500">
+                            {asset.name}
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -272,27 +264,21 @@ export function MarketInterface() {
                       {fiatSymbol}{formatPrice(asset.priceUsd)}
                     </td>
                     <td className="p-4 text-right font-mono font-bold">
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs ${isPositive ? 'bg-green-500/10 text-green-600 dark:text-green-500 border border-green-500/20' : 'bg-red-500/10 text-red-600 dark:text-red-500 border border-red-500/20'}`}>
-                        {isPositive ? '+' : ''}{change.toFixed(1)}%
-                      </span>
+                      <div className={`flex items-center justify-end gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                        {isPositive ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
+                        {Math.abs(change).toFixed(2)}%
+                      </div>
                     </td>
                     <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-300">
                       {fiatSymbol}{formatCompact(asset.volumeUsd24Hr)}
                     </td>
-                    <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-300">
-                      {fiatSymbol}{formatCompact(openInterestUsd)}
-                    </td>
-                    <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-400">
-                      {spreadVal}
-                    </td>
-                    <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-300">
-                      {depthVal}
-                    </td>
-                    <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-400">
-                      {slipVal}
+                    <td className="p-4 text-right font-mono font-bold">
+                      <span className={isFundingPositive ? 'text-yellow-500' : 'text-cyan-400'}>
+                        {isFundingPositive ? '+' : ''}{fundingRate}%
+                      </span>
                     </td>
                     <td className="p-4 pr-6 text-right font-mono text-zinc-600 dark:text-zinc-300">
-                      {liqVal}
+                      {fiatSymbol}{formatCompact(openInterestUsd)}
                     </td>
                   </tr>
                 );
