@@ -14,10 +14,13 @@ export default function Home() {
   const { open } = useAppKit();
 
   return (
-    <div className="relative flex flex-col gap-10 max-w-7xl mx-auto py-4 px-4 sm:px-6">
+    <div className="relative flex flex-col gap-10 max-w-7xl mx-auto py-4 px-4 sm:px-6 overflow-hidden">
       
-      {/* Decorative Background Blob */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] bg-blue-500/10 dark:bg-blue-500/5 blur-[100px] rounded-full pointer-events-none -z-10" />
+      {/* Decorative Background Blobs */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[500px] pointer-events-none -z-10 flex justify-center opacity-60 dark:opacity-40">
+        <div className="absolute top-10 left-1/4 w-[400px] h-[400px] bg-blue-500/20 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute top-20 right-1/4 w-[400px] h-[400px] bg-indigo-500/20 rounded-full blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '7s' }} />
+      </div>
 
       {/* Top Section: Hero */}
       <div className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto space-y-6 min-h-[75vh]">
@@ -32,8 +35,11 @@ export default function Home() {
           {isError ? 'Network Offline' : isLoading ? 'Checking Network...' : `Live on Mainnet • Block ${Number(blockNumber)}`}
         </div>
         
-        <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
-          Trade Crypto in Your <span className="text-blue-600 dark:text-blue-500">Local Currency</span>
+        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[1.1]">
+          Trade Crypto in Your <br className="hidden md:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500 dark:from-blue-400 dark:to-indigo-400">
+            Local Currency
+          </span>
         </h1>
         
         <p className="text-xl text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
@@ -41,8 +47,8 @@ export default function Home() {
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
-          <Link href="/trade" className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold transition-colors shadow-lg shadow-blue-500/20 text-lg">
-            Start Trading <ArrowRight className="w-5 h-5 ml-1" />
+          <Link href="/trade" className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-[0_0_40px_rgba(37,99,235,0.3)] hover:shadow-[0_0_60px_rgba(37,99,235,0.5)] hover:-translate-y-1 text-lg">
+            Start Trading <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 

@@ -22,8 +22,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
   const currentPrice = currentAsset ? parseFloat(currentAsset.price_x18) / 1e18 : 0;
   const productId = currentAsset ? currentAsset.product_id : 1;
 
-  // Use real ETH balance as mock available margin, or fallback to 10,000
-  const availableMargin = balanceData ? parseFloat(balanceData.formatted) * 2500 : 10000;
+  const availableMargin = balanceData ? parseFloat(balanceData.formatted) : 0;
 
   const [amount, setAmount] = useState('');
   const [limitPrice, setLimitPrice] = useState('');
@@ -61,21 +60,21 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
   // Determine button text and action
   let buttonText = 'Connect Wallet to Trade';
   let buttonAction: () => void = () => open();
-  let buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white';
+  let buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)]';
 
   if (isConnected) {
     if (isSubmitting) {
       buttonText = 'Signing EIP-712 & Submitting...';
       buttonAction = () => {};
-      buttonStyle = 'bg-blue-800 text-blue-200 cursor-wait animate-pulse';
+      buttonStyle = 'bg-zinc-800 text-blue-400 cursor-wait animate-pulse border border-blue-900/50';
     } else if (!amount || parseFloat(amount) === 0) {
       buttonText = 'Enter Trade Size';
       buttonAction = () => {};
-      buttonStyle = 'bg-zinc-800 text-zinc-500 cursor-not-allowed';
+      buttonStyle = 'bg-zinc-900 text-zinc-500 cursor-not-allowed border border-zinc-800';
     } else {
       buttonText = `Place ${symbol} ${orderType} Order`;
       buttonAction = handlePlaceOrder;
-      buttonStyle = 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20 cursor-pointer';
+      buttonStyle = 'bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_40px_rgba(37,99,235,0.5)] transition-all cursor-pointer hover:-translate-y-0.5 active:scale-[0.98]';
     }
   }
 
@@ -152,7 +151,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
 
       {/* Limit Price field (Shown for Limit and Advanced) */}
       {(orderType === 'Limit' || orderType === 'Advanced') && (
-        <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-3 border border-zinc-800 focus-within:border-blue-500 transition-colors">
+        <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-3 border border-zinc-800 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500/50 focus-within:shadow-[0_0_15px_rgba(37,99,235,0.15)] transition-all">
           <span className="text-zinc-500 text-sm pl-2">Limit Price</span>
           <div className="flex items-center gap-2">
             <input 
@@ -169,7 +168,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
 
       {/* Trigger Price field (Shown for Advanced) */}
       {orderType === 'Advanced' && (
-        <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-3 border border-zinc-800 focus-within:border-blue-500 transition-colors">
+        <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-3 border border-zinc-800 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500/50 focus-within:shadow-[0_0_15px_rgba(37,99,235,0.15)] transition-all">
           <span className="text-zinc-500 text-sm pl-2">Trigger Price</span>
           <div className="flex items-center gap-2">
             <input 
@@ -183,7 +182,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
       )}
 
       {/* Input */}
-      <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-4 border border-zinc-800 focus-within:border-blue-500 transition-colors">
+      <div className="bg-zinc-900/50 rounded p-2 flex items-center justify-between mb-4 border border-zinc-800 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500/50 focus-within:shadow-[0_0_15px_rgba(37,99,235,0.15)] transition-all">
         <span className="text-zinc-500 text-sm pl-2">Size</span>
         <div className="flex items-center gap-2">
           <input 

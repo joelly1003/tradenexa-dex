@@ -56,22 +56,20 @@ export function ConnectWalletButton() {
   }
 
   const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
-  const balanceFormatted = balance ? `${parseFloat(balance.formatted).toFixed(4)} ${balance.symbol}` : '0.00 INK';
+  const balanceValue = balance ? parseFloat(balance.formatted).toFixed(2) : '0.00';
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="h-10 pl-3 pr-2 flex items-center gap-3 bg-zinc-100 dark:bg-[#101114] hover:bg-zinc-200 dark:hover:bg-[#1a1b1f] border border-transparent dark:border-zinc-800 text-black dark:text-white rounded-xl transition-all font-mono text-sm"
+        className="flex items-center gap-3 pr-4 pl-1 py-1 bg-zinc-100 dark:bg-[#101114] hover:bg-zinc-200 dark:hover:bg-[#151518] border border-transparent dark:border-zinc-800 text-black dark:text-white rounded-full transition-all text-left"
       >
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 border-2 border-white dark:border-zinc-950 flex-shrink-0"></div>
-          <span className="font-bold tracking-tight">{truncatedAddress}</span>
+        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center flex-shrink-0">
+          <Wallet className="w-4 h-4 text-white dark:text-[#101114]" />
         </div>
-        <div className="w-[1px] h-4 bg-zinc-300 dark:bg-zinc-800"></div>
-        <div className="flex items-center gap-1">
-          <span className="text-zinc-500 dark:text-zinc-400 font-medium text-xs hidden sm:block">{balanceFormatted}</span>
-          <ChevronDown className={`w-4 h-4 text-zinc-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+        <div className="flex flex-col justify-center">
+          <span className="font-mono font-bold text-[13px] leading-none mb-1">{truncatedAddress}</span>
+          <span className="text-zinc-500 dark:text-zinc-400 font-medium text-[11px] leading-none">Balance: {balanceValue} USDC</span>
         </div>
       </button>
 
@@ -80,7 +78,7 @@ export function ConnectWalletButton() {
           <div className="p-4 border-b border-zinc-200 dark:border-zinc-800">
             <div className="text-xs text-zinc-500 uppercase tracking-wider font-bold mb-1">Connected to Ink</div>
             <div className="font-mono font-bold text-black dark:text-white">{truncatedAddress}</div>
-            <div className="text-sm font-medium text-zinc-500 mt-2">{balanceFormatted}</div>
+            <div className="text-sm font-medium text-zinc-500 mt-2">Balance: {balanceValue} USDC</div>
           </div>
           <div className="p-2">
             <button 

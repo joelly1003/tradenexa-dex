@@ -70,7 +70,19 @@ export function MarketInterface() {
     );
   }
 
-  if (activeTab === 'Top Gainers') {
+  // Default sorting logic: Important coins first, then by volume
+  const importantCoins = ['BTC', 'ETH', 'SOL', 'SUI', 'BNB', 'ARB', 'OP', 'APT'];
+
+  if (activeTab === 'All Markets') {
+    displayAssets.sort((a, b) => {
+      const aIndex = importantCoins.indexOf(a.symbol);
+      const bIndex = importantCoins.indexOf(b.symbol);
+      if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+      if (aIndex !== -1) return -1;
+      if (bIndex !== -1) return 1;
+      return parseFloat(b.volumeUsd24Hr) - parseFloat(a.volumeUsd24Hr);
+    });
+  } else if (activeTab === 'Top Gainers') {
     displayAssets.sort((a, b) => parseFloat(b.changePercent24Hr) - parseFloat(a.changePercent24Hr));
   } else if (activeTab === 'Top Losers') {
     displayAssets.sort((a, b) => parseFloat(a.changePercent24Hr) - parseFloat(b.changePercent24Hr));
@@ -210,7 +222,7 @@ export function MarketInterface() {
                 return (
                   <tr 
                     key={asset.id} 
-                    className="hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-colors group text-sm cursor-pointer" 
+                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-all duration-200 group text-sm cursor-pointer hover:shadow-[inset_2px_0_0_0_#3b82f6]" 
                     onClick={() => router.push(`/trade?symbol=${asset.symbol}`)}
                   >
                     <td className="p-4 pl-6" onClick={(e) => e.stopPropagation()}>

@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { useDisconnect, useAccount } from 'wagmi';
 import { ConnectWalletButton } from '../wallet/ConnectWalletButton';
-import { CurrencySelector } from './CurrencySelector';
+import { useCurrencyStore, FIAT_RATES, FiatCurrency } from '../../store/currencyStore';
 
 export function Header() {
   const pathname = usePathname();
@@ -15,6 +15,8 @@ export function Header() {
   const settingsRef = useRef<HTMLDivElement>(null);
   const { disconnect } = useDisconnect();
   const { chain } = useAccount();
+  const { fiat, setFiat } = useCurrencyStore();
+  const currencies = Object.keys(FIAT_RATES) as FiatCurrency[];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -30,7 +32,7 @@ export function Header() {
     { name: 'Dashboard', href: '/' },
     { name: 'Trade', href: '/trade' },
     { name: 'Market', href: '/market' },
-    { name: 'Portfolio', href: '/portfolio' },
+    { name: 'Earn', href: '/earn' },
     { name: 'Leaderboard', href: '/leaderboard' },
   ];
 
@@ -38,8 +40,14 @@ export function Header() {
     <header className="flex flex-wrap items-center justify-between p-3 sm:px-6 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 relative z-50">
       {/* Left section: Logo */}
       <div className="flex-1 flex items-center justify-start">
-        <Link href="/" className="flex items-center">
-          <Image src="/logo.png" alt="TradeNexa" width={280} height={80} className="h-20 w-auto object-contain" />
+        <Link href="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-black text-white shadow-lg shadow-blue-600/20">
+            T
+          </div>
+          <div className="flex flex-col">
+            <span className="font-black text-xl tracking-tight text-black dark:text-white leading-none">TradeNexa</span>
+            <span className="text-[9px] font-black tracking-[0.2em] text-blue-500 mt-1 uppercase">Powered by Nado</span>
+          </div>
         </Link>
       </div>
 
@@ -61,7 +69,6 @@ export function Header() {
 
       {/* Right section: Icons, Wallet */}
       <div className="flex-1 flex items-center gap-3 sm:gap-4 justify-end relative">
-        <CurrencySelector />
         
         {/* Action Icons */}
         <div className="hidden sm:flex items-center gap-1 relative" ref={settingsRef}>
@@ -91,6 +98,30 @@ export function Header() {
                       Light
                     </button>
                   </div>
+                </div>
+
+                {/* Currency Setting */}
+                <div>
+                  <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Currency</label>
+                  <select 
+                    value={fiat} 
+                    onChange={(e) => setFiat(e.target.value as any)}
+                    className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-sm text-black dark:text-white focus:outline-none focus:border-blue-500"
+                  >
+                    {currencies.map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Language Setting */}
+                <div>
+                  <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Language</label>
+                  <select className="w-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-2 text-sm text-black dark:text-white focus:outline-none focus:border-blue-500">
+                    <option>English</option>
+                    <option>Espanol</option>
+                    <option>Portugues</option>
+                  </select>
                 </div>
                 
                 {/* RPC Node */}

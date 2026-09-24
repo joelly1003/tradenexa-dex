@@ -90,9 +90,9 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
         </button>
 
         {isOpen && (
-          <div className="absolute top-full left-0 mt-2 w-64 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl shadow-black/50 overflow-hidden z-50">
-            <div className="p-2 text-xs font-bold text-zinc-500 uppercase tracking-wider bg-zinc-950/50">Select Nado Perp Market</div>
-            <div className="flex flex-col max-h-72 overflow-y-auto">
+          <div className="absolute top-full left-0 mt-3 w-64 bg-zinc-900/95 backdrop-blur-xl border border-zinc-800 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden z-50 transform origin-top-left transition-all ring-1 ring-white/5">
+            <div className="p-3 text-[11px] font-black text-zinc-500 uppercase tracking-widest bg-zinc-950/80 border-b border-zinc-800">Select Market</div>
+            <div className="flex flex-col max-h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-thumb]:rounded-full">
               {coins.map((coin) => (
                 <button
                   key={coin.symbol}
