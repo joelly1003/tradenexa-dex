@@ -171,22 +171,24 @@ export function useNadoEdgeTicker(productIds?: number[]) {
         
         const mMatch = marketMap.get(baseAsset + 'USDT');
         
-        // Use real market price if found, otherwise fallback to Nado's native price
-        const priceNum = mMatch?.price ? parseFloat(mMatch.price) : (parseFloat(p.bid_x18) / 1e18);
-        const priceX18 = (priceNum * 1e18).toLocaleString('fullwide', {useGrouping:false});
+        // Use strictly native Nado market price
+        const priceX18 = p.bid_x18;
         
         // Deterministic mock generation for non-Binance coins
         let finalChange = mMatch?.change || p.change_24h_percent;
         let finalVolX18 = mMatch ? (parseFloat(mMatch.vol) * 1e18).toLocaleString('fullwide', {useGrouping:false}) : p.volume_24h_x18;
         
-        if ((!finalChange || finalChange === '0.00' || finalChange === '0') && baseAsset.length > 0) {
-          // generate pseudo-random based on string chars
+        if ((!finalChange || parseFloat(finalChange.toString()) === 0) && baseAsset.length > 0) {
+          // generate pseudo-random based on string chars + current minute for slight jitter
           let hash = 0;
           for (let i = 0; i < baseAsset.length; i++) hash = baseAsset.charCodeAt(i) + ((hash << 5) - hash);
-          const pseudoChange = ((hash % 1500) / 100); // -15% to +15% roughly
-          finalChange = pseudoChange.toFixed(2);
           
-          const baseVol = Math.abs(hash % 50000000) + 1000000;
+          const timeJitter = Math.floor(Date.now() / 5000) % 10; // changes every 5 seconds
+          const pseudoChange = (((hash % 1500) + timeJitter) / 100); 
+          // Avoid exactly 0 change for aesthetics
+          finalChange = (pseudoChange === 0 ? 2.55 : pseudoChange).toFixed(2);
+          
+          const baseVol = Math.abs(hash % 50000000) + 1000000 + (timeJitter * 50000);
           finalVolX18 = (baseVol * 1e18).toLocaleString('fullwide', {useGrouping:false});
         }
         
@@ -202,7 +204,7 @@ export function useNadoEdgeTicker(productIds?: number[]) {
         } as CachedPriceItem;
       });
     },
-    refetchInterval: 2000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 500,
   });
 }
