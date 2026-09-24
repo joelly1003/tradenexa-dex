@@ -40,14 +40,16 @@ export function Header() {
     <header className="flex flex-wrap items-center justify-between p-3 sm:px-6 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 relative z-50">
       {/* Left section: Logo */}
       <div className="flex-1 flex items-center justify-start">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-black text-white shadow-lg shadow-blue-600/20">
-            T
-          </div>
-          <div className="flex flex-col">
-            <span className="font-black text-xl tracking-tight text-black dark:text-white leading-none">TradeNexa</span>
-            <span className="text-[9px] font-black tracking-[0.2em] text-blue-500 mt-1 uppercase">Powered by Nado</span>
-          </div>
+        <Link href="/" className="flex flex-col items-start gap-0.5">
+          <Image 
+            src="/logo.png" 
+            alt="TradeNexa Logo" 
+            width={160} 
+            height={40} 
+            className="w-auto h-8 object-contain"
+            priority
+          />
+          <span className="text-[8px] font-black tracking-[0.25em] text-blue-500 uppercase ml-11">Powered by Nado</span>
         </Link>
       </div>
 

@@ -10,14 +10,15 @@ export function Footer() {
         
         {/* Left Section: Logo & Tagline */}
         <div className="flex flex-col gap-1.5">
-          <Link href="/" className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-black text-white shadow-lg shadow-blue-600/20">
-              T
-            </div>
-            <div className="flex flex-col">
-              <span className="font-black text-xl tracking-tight text-black dark:text-white leading-none">TradeNexa</span>
-              <span className="text-[9px] font-black tracking-[0.2em] text-blue-500 mt-1 uppercase">Powered by Nado</span>
-            </div>
+          <Link href="/" className="flex flex-col items-start gap-0.5 mb-1">
+            <Image 
+              src="/logo.png" 
+              alt="TradeNexa Logo" 
+              width={160} 
+              height={40} 
+              className="w-auto h-8 object-contain"
+            />
+            <span className="text-[8px] font-black tracking-[0.25em] text-blue-500 uppercase ml-11">Powered by Nado</span>
           </Link>
           <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs">
             Institutional-grade performance built on the Ink network.
