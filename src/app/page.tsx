@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Globe, Zap, Wallet, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { useAccount, useBlockNumber } from 'wagmi';
 
 export default function Home() {
@@ -11,75 +11,124 @@ export default function Home() {
   return (
     <div className="relative flex flex-col min-h-[calc(100vh-80px)] bg-black overflow-hidden font-sans">
       
-      {/* Decorative Neon Glowing Orb (from the image) */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#B1FA41]/20 rounded-full blur-[150px] pointer-events-none -z-10" />
-      <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-[800px] h-[800px] bg-[#B1FA41]/10 rounded-full blur-[150px] pointer-events-none -z-10" />
+      {/* Decorative Neon Glowing Orbs */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-[#B1FA41]/10 rounded-full blur-[150px] pointer-events-none -z-10" />
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center text-center max-w-4xl mx-auto space-y-8 min-h-[65vh] px-4 pt-10">
+      <div className="flex flex-col items-center justify-center text-center max-w-5xl mx-auto space-y-8 min-h-[70vh] px-4 pt-10">
         
-        <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[1.05] text-white">
-          Transform <span className="text-[#B1FA41]">the way</span> <br />
-          you trading
+        {/* Mainnet Pill */}
+        <div className="inline-flex items-center gap-2 bg-[#B1FA41]/5 border border-[#B1FA41]/20 rounded-full px-4 py-1.5 text-xs font-bold text-[#B1FA41] shadow-[0_0_15px_rgba(177,250,65,0.1)]">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
+          Live on Mainnet • Block {isLoading || isError ? '...' : blockNumber?.toString() || 'Loading'}
+        </div>
+        
+        <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-black tracking-tight leading-[1.05] text-white">
+          Trade Crypto in Your <br />
+          <span className="text-[#B1FA41]">Local Currency</span>
         </h1>
         
-        <p className="text-lg text-zinc-400 font-medium leading-relaxed max-w-xl">
-          Safe and easy tools crypto trading for everyone.
+        <p className="text-lg text-zinc-400 font-medium leading-relaxed max-w-2xl mx-auto">
+          Experience lightning-fast swaps and optimal routing—all priced natively in your preferred local fiat currency.
         </p>
 
-        {/* Input & Button Combo */}
-        <div className="relative w-full max-w-md mt-4 p-1.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-md flex items-center shadow-2xl transition-all focus-within:border-[#B1FA41]/50">
-          <input 
-            type="email" 
-            placeholder="Enter your email" 
-            className="flex-1 bg-transparent border-none outline-none text-white px-4 placeholder:text-zinc-500 text-sm"
-          />
+        {/* Call to Action */}
+        <div className="pt-4 flex flex-col items-center gap-6">
           <Link 
             href="/trade" 
-            className="group flex items-center gap-2 bg-[#B1FA41] hover:bg-[#9de036] text-black px-6 py-2.5 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(177,250,65,0.2)] hover:shadow-[0_0_30px_rgba(177,250,65,0.4)] text-sm"
+            className="group flex items-center justify-center gap-2 bg-[#B1FA41] hover:bg-[#9de036] text-black px-8 py-3.5 rounded-xl font-black text-lg transition-all shadow-[0_0_20px_rgba(177,250,65,0.2)] hover:shadow-[0_0_30px_rgba(177,250,65,0.4)] hover:-translate-y-0.5 w-64"
           >
-            Trade now
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            Start Trading
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
+          
+          <div className="flex items-center justify-center flex-wrap gap-6 text-sm font-bold text-white">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
+              0% Hidden Fees
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
+              Deep Liquidity
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
+              MEV Protection
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Dashboard Mockup Section (Using our app's style but mocked like the image) */}
-      <div className="relative mx-auto w-full max-w-5xl px-4 pb-20">
-        <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-[#0c0c0c] rounded-t-[32px] md:rounded-[32px] border border-white/5 shadow-2xl overflow-hidden relative">
+      {/* Features Section */}
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-20 border-t border-white/5 bg-[#08080a]">
+        <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-6">
+            Why TradeNexa is Different
+          </h2>
+          <p className="text-zinc-400 font-medium text-lg">
+            Unlike generic global exchanges, we build native features specifically for your region so you never have to calculate exchange rates in your head again.
+          </p>
           
-          {/* Top Navbar mockup inside the image */}
-          <div className="absolute top-0 left-0 w-full h-16 border-b border-white/5 flex items-center px-6 justify-between opacity-50">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-[#B1FA41]" />
-              <div className="w-24 h-4 rounded bg-white/20" />
-            </div>
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-white/10" />
-              <div className="w-8 h-8 rounded-full bg-white/10" />
-            </div>
+          {/* Payment Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+            {['PIX', 'SEPA', 'UPI', 'M-PESA', 'TRANSAK', 'STRIPE'].map((pill) => (
+              <div key={pill} className="bg-white/5 border border-white/10 text-zinc-300 font-bold text-sm px-5 py-2 rounded-xl uppercase tracking-wider">
+                {pill}
+              </div>
+            ))}
           </div>
+        </div>
+
+        {/* 4 Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           
-          {/* Left Sidebar mockup */}
-          <div className="absolute top-16 left-0 w-48 h-full border-r border-white/5 p-4 flex flex-col gap-4 opacity-30">
-            <div className="w-full h-8 rounded bg-[#B1FA41]/20" />
-            <div className="w-3/4 h-8 rounded bg-white/5" />
-            <div className="w-5/6 h-8 rounded bg-white/5" />
-            <div className="w-full h-8 rounded bg-white/5" />
+          {/* Feature 1 */}
+          <div className="flex flex-col items-start text-left">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+              <Globe className="w-6 h-6 text-[#B1FA41]" />
+            </div>
+            <h3 className="text-xl font-black text-white mb-3">Native Localization</h3>
+            <p className="text-zinc-500 font-medium text-sm leading-relaxed">
+              Every price, fee, and chart is instantly converted to your selected local fiat currency for intuitive trading.
+            </p>
           </div>
 
-          {/* Main Content Area mockup */}
-          <div className="absolute top-16 left-48 right-0 h-full p-6 flex gap-6">
-            <div className="flex-[2] bg-white/5 rounded-2xl border border-white/5 p-6 opacity-60">
-              <div className="w-32 h-4 bg-white/20 rounded mb-4" />
-              <div className="w-48 h-10 bg-white/40 rounded mb-8" />
-              <div className="w-full h-32 bg-gradient-to-t from-[#B1FA41]/20 to-transparent rounded" />
+          {/* Feature 2 */}
+          <div className="flex flex-col items-start text-left">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+              <Zap className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <div className="flex-[1] bg-white/5 rounded-2xl border border-white/5 p-6 opacity-60">
-              <div className="w-16 h-4 bg-white/20 rounded mb-4" />
-              <div className="w-full h-12 bg-white/10 rounded mb-4" />
-              <div className="w-full h-12 bg-white/10 rounded" />
+            <div className="flex items-center gap-2 mb-3">
+              <h3 className="text-xl font-black text-white">Smart Routing</h3>
+              <span className="bg-[#B1FA41]/10 text-[#B1FA41] border border-[#B1FA41]/20 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                -0.2% Slippage
+              </span>
             </div>
+            <p className="text-zinc-500 font-medium text-sm leading-relaxed">
+              Our advanced routing algorithm hunts for the best local liquidity pools to minimize slippage in your market.
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="flex flex-col items-start text-left">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+              <Wallet className="w-6 h-6 text-[#B1FA41]" />
+            </div>
+            <h3 className="text-xl font-black text-white mb-3">Local Payment Routes</h3>
+            <p className="text-zinc-500 font-medium text-sm leading-relaxed">
+              We directly integrate the most popular regional payment methods so you can on-ramp and off-ramp effortlessly.
+            </p>
+          </div>
+
+          {/* Feature 4 */}
+          <div className="flex flex-col items-start text-left">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+              <ShieldCheck className="w-6 h-6 text-[#B1FA41]" />
+            </div>
+            <h3 className="text-xl font-black text-white mb-3">Compliance First</h3>
+            <p className="text-zinc-500 font-medium text-sm leading-relaxed">
+              We automatically filter out restricted assets and enforce specific compliance rules for your jurisdiction.
+            </p>
           </div>
 
         </div>
