@@ -145,7 +145,7 @@ export function useNadoEdgeTicker(productIds?: number[]) {
 
       let binanceData: any[] = [];
       try {
-        const binanceRes = await fetch('https://api.binance.com/api/v3/ticker/24hr');
+        const binanceRes = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr');
         if (binanceRes.ok) {
           binanceData = await binanceRes.json();
         }
