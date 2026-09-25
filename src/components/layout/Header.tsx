@@ -142,8 +142,8 @@ export function Header() {
           )}
         </div>
         
-        {/* Custom style for the wallet button to match the neon theme */}
-        <div className="[&_button]:!bg-white [&_button]:!text-black [&_button]:hover:!bg-zinc-200 [&_button]:!font-bold [&_button]:!rounded-full">
+        {/* Custom style for the wallet button to match the dark neon theme */}
+        <div className="[&_button]:!bg-black [&_button]:!text-white [&_button]:hover:!bg-[#121824] [&_button]:!font-bold [&_button]:!rounded-full">
           <ConnectWalletButton />
         </div>
       </div>
