@@ -23,15 +23,22 @@ createAppKit({
   networks,
   projectId,
   metadata: {
-    name: 'TradeNexa',
-    description: 'The decentralized exchange for everyone.',
-    url: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
+    name: 'TradeNexa DEX',
+    description: 'Institutional-Grade Decentralized Exchange',
+    url: typeof window !== 'undefined' ? window.location.origin : 'https://tradenexa.com',
     icons: ['https://avatars.githubusercontent.com/u/37784886']
+  },
+  features: {
+    analytics: false,
+    email: false,
+    socials: []
   },
   defaultNetwork: ink,
   themeMode: 'dark',
   themeVariables: {
-    '--w3m-accent': '#2563eb',
+    '--w3m-accent': '#B1FA41',
+    '--w3m-color-mix': '#000000',
+    '--w3m-color-mix-strength': 40
   }
 });
 
