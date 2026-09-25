@@ -62,9 +62,9 @@ export function ConnectWalletButton() {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-3 pr-5 pl-1.5 py-1.5 bg-[#0a0a0c] hover:bg-[#121824] border border-[#085a5a] rounded-full transition-all text-left group"
+        className="flex items-center gap-3 pr-5 pl-1.5 py-1.5 bg-[#08080a] hover:bg-[#121824] border border-[#B1FA41]/40 rounded-full transition-all text-left group shadow-[0_0_15px_rgba(177,250,65,0.05)]"
       >
-        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#3bf0e4] to-[#7f56f8] flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-full bg-[#B1FA41] flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(177,250,65,0.3)]">
           <Wallet className="w-4 h-4 text-black" strokeWidth={2.5} />
         </div>
         <div className="flex flex-col justify-center">

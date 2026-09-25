@@ -23,7 +23,7 @@ export function PositionsPanel() {
           >
             {tab}
             {activeTab === tab && (
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-500" />
+              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#B1FA41]" />
             )}
           </button>
         ))}

@@ -80,9 +80,9 @@ export function Header() {
           <button 
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
             aria-label="Settings"
-            className={`p-2 rounded-full transition-colors ${isSettingsOpen ? 'bg-white/20 text-white' : 'bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10'} h-[38px] w-[38px] flex items-center justify-center`}
+            className={`transition-all rounded-full border ${isSettingsOpen ? 'bg-[#121824] border-white/20 text-white' : 'bg-[#08080a] border-white/5 text-zinc-400 hover:text-white hover:bg-[#121824] hover:border-white/10'} h-[52px] px-4 flex items-center justify-center`}
           >
-            <Settings className="w-[18px] h-[18px]" />
+            <Settings className="w-5 h-5" />
           </button>
           
           {isSettingsOpen && (

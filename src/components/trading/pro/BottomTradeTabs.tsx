@@ -14,7 +14,7 @@ export function BottomTradeTabs() {
             onClick={() => setActiveTab(tab)}
             className={`px-6 py-3 font-semibold transition-colors ${
               activeTab === tab 
-                ? 'text-white border-b-2 border-blue-500' 
+                ? 'text-[#B1FA41] border-b-2 border-[#B1FA41]' 
                 : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >

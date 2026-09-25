@@ -61,7 +61,7 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <div className="relative mx-auto w-full max-w-7xl px-4 py-20 bg-[#08080a]">
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-20 bg-black">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-6">
             Why TradeNexa is Different

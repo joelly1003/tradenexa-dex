@@ -141,7 +141,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
     if (isSubmitting) {
       buttonText = 'Submitting...';
       buttonAction = () => {};
-      buttonClass = 'bg-[#1e293b] text-blue-400 cursor-wait animate-pulse border border-blue-900/50';
+      buttonClass = 'bg-[#B1FA41]/10 text-[#B1FA41] cursor-wait animate-pulse border border-[#B1FA41]/30';
     } else if (payNum === 0 || sizeNum === 0) {
       buttonText = 'Enter Margin';
       buttonAction = () => {};
@@ -173,8 +173,8 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
             <ChevronDown className="w-3 h-3 text-zinc-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
-        <div className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded text-[10px] font-mono text-blue-400 flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+        <div className="px-2 py-1 bg-[#B1FA41]/10 border border-[#B1FA41]/20 rounded text-[10px] font-mono text-[#B1FA41] flex items-center gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
           RPC Online
         </div>
       </div>
@@ -259,7 +259,7 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
             max="100"
             value={sliderVal}
             onChange={handleSliderChange}
-            className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white hover:accent-blue-400 transition-all"
+            className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white hover:accent-[#B1FA41] transition-all"
           />
           <div className="flex justify-between text-[10px] text-zinc-500 mt-2 font-mono">
             <span>0%</span>

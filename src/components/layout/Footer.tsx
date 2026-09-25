@@ -14,11 +14,10 @@ export function Footer() {
             <Image 
               src="/logo.png" 
               alt="TradeNexa Logo" 
-              width={160} 
-              height={40} 
-              className="w-auto h-8 object-contain"
+              width={180} 
+              height={50} 
+              className="w-auto h-12 object-contain opacity-80 hover:opacity-100 transition-opacity"
             />
-            <span className="text-[8px] font-black tracking-[0.25em] text-[#B1FA41] uppercase ml-11">Powered by Nado</span>
           </Link>
           <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs">
             Institutional-grade performance built on the Ink network.
