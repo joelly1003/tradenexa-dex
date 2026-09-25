@@ -44,12 +44,11 @@ export function Header() {
           <Image 
             src="/logo.png" 
             alt="TradeNexa Logo" 
-            width={160} 
-            height={40} 
-            className="w-auto h-8 object-contain"
+            width={180} 
+            height={50} 
+            className="w-auto h-12 object-contain"
             priority
           />
-          <span className="text-[8px] font-black tracking-[0.25em] text-[#B1FA41] uppercase ml-11">Powered by Nado</span>
         </Link>
       </div>
 
@@ -61,7 +60,7 @@ export function Header() {
             <Link 
               key={link.name} 
               href={link.href} 
-              className={`px-5 py-2 rounded-full text-xs font-semibold transition-all ${
+              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
                 isActive 
                   ? 'bg-white/10 text-white' 
                   : 'text-zinc-400 hover:text-white hover:bg-white/5'
