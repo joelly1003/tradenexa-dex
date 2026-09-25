@@ -6,8 +6,8 @@ import { useAccount, useBalance } from 'wagmi';
 import Link from 'next/link';
 
 const DEMO_POOLS = [
-  { id: 'usdc', symbol: 'USDC', name: 'USD Coin', apy: '8.2%', color: 'from-emerald-400 to-[#B1FA41]' },
-  { id: 'eth', symbol: 'ETH', name: 'Ethereum', apy: '4.5%', color: 'from-cyan-400 to-blue-500' },
+  { id: 'usdc', symbol: 'USDC', name: 'USD Coin', apy: '8.2%', color: 'from-emerald-400 to-[#B1FA41]', logo: 'https://assets.coincap.io/assets/icons/usdc@2x.png' },
+  { id: 'eth', symbol: 'ETH', name: 'Ethereum', apy: '4.5%', color: 'from-cyan-400 to-blue-500', logo: 'https://assets.coincap.io/assets/icons/eth@2x.png' },
 ];
 
 export function EarnInterface() {
@@ -65,8 +65,8 @@ export function EarnInterface() {
                 }`}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-black text-lg bg-gradient-to-br ${pool.color} shadow-sm`}>
-                    {pool.symbol[0]}
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center bg-[#0c0d10] border border-white/10 shadow-sm overflow-hidden p-2`}>
+                    <img src={pool.logo} alt={pool.symbol} className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
@@ -109,8 +109,8 @@ export function EarnInterface() {
             
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-black text-sm bg-gradient-to-br ${selectedPool.color}`}>
-                  {selectedPool.symbol[0]}
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center bg-[#0c0d10] border border-white/10 p-1`}>
+                  <img src={selectedPool.logo} alt={selectedPool.symbol} className="w-full h-full object-contain" />
                 </div>
                 <span className="font-black text-lg text-white">{selectedPool.symbol} Vault</span>
               </div>
