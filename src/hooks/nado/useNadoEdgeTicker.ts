@@ -170,8 +170,8 @@ export function useNadoEdgeTicker(productIds?: number[]) {
         
         const mMatch = marketMap.get(baseAsset + 'USDT');
         
-        // Use live market price from Binance if available to match TradingView chart, or fallback to Nado bid_x18
-        const priceX18 = mMatch?.price ? toX18(mMatch.price) : (p.bid_x18 || '0');
+        // Use strictly NADO market value (bid_x18)
+        const priceX18 = p.bid_x18 || '0';
         
         let finalChange = p.change_24h_percent;
         let finalVolX18 = p.volume_24h_x18;
