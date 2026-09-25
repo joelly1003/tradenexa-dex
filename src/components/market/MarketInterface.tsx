@@ -127,31 +127,31 @@ export function MarketInterface() {
             placeholder="Search token or pair..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white dark:bg-[#1c1c1f] border border-zinc-200 dark:border-zinc-800 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-blue-500 transition-colors placeholder:text-zinc-400 dark:placeholder:text-zinc-600 text-black dark:text-white"
+            className="w-full bg-[#111114] border border-white/10 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#B1FA41] transition-colors placeholder:text-zinc-600 text-white"
           />
         </div>
       </div>
 
       {/* Info Bar */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/50 rounded-xl mb-6 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-[#0c0d10] border border-white/5 rounded-2xl mb-6 gap-4">
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <span className="text-zinc-500 dark:text-zinc-400">Last updated: <span className="text-black dark:text-white font-mono">
+          <span className="text-zinc-400">Last updated: <span className="text-white font-mono">
             {nadoPrices && nadoPrices.length > 0 && typeof window !== 'undefined' ? new Date(nadoPrices[0].timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--'}
           </span></span>
-          <span className="text-zinc-300 dark:text-zinc-700 hidden sm:inline">|</span>
-          <div className={`flex items-center gap-1.5 font-medium ${isFetching ? 'text-yellow-500' : 'text-blue-600 dark:text-blue-400'}`}>
-            <div className={`w-2 h-2 rounded-full ${isFetching ? 'bg-yellow-500' : 'bg-blue-600 dark:bg-blue-400'} animate-pulse`} />
+          <span className="text-zinc-800 hidden sm:inline">|</span>
+          <div className={`flex items-center gap-1.5 font-medium ${isFetching ? 'text-yellow-500' : 'text-[#B1FA41]'}`}>
+            <div className={`w-2 h-2 rounded-full ${isFetching ? 'bg-yellow-500' : 'bg-[#B1FA41]'} animate-pulse`} />
             {isFetching ? 'Connecting Feed...' : 'WebSocket Live Feed'}
           </div>
-          <div className="flex items-center gap-1.5 text-green-600 dark:text-green-500 border border-green-600/20 dark:border-green-500/20 bg-green-50 dark:bg-green-500/10 px-2 py-0.5 rounded-full text-xs font-semibold">
+          <div className="flex items-center gap-1.5 text-[#B1FA41] border border-[#B1FA41]/20 bg-[#B1FA41]/10 px-2.5 py-0.5 rounded-full text-xs font-semibold">
             ✓ Live Rates
           </div>
         </div>
         <button 
           onClick={handleRefresh}
-          className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 px-4 py-2 rounded-lg text-sm font-semibold transition-colors text-blue-600 dark:text-blue-400 shrink-0"
+          className="flex items-center gap-2 border border-white/10 hover:bg-white/5 px-4 py-2 rounded-xl text-xs font-black transition-colors text-white shrink-0 hover:border-[#B1FA41]/40"
         >
-          <RefreshCcw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <RefreshCcw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
           Refresh Prices
         </button>
       </div>
@@ -162,10 +162,10 @@ export function MarketInterface() {
           <button
             key={tab.name}
             onClick={() => setActiveTab(tab.name)}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-colors border ${
+            className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-black whitespace-nowrap transition-all border ${
               activeTab === tab.name
-                ? 'bg-blue-600 text-white border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.4)]' 
-                : 'bg-white dark:bg-[#111114] text-zinc-500 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-black dark:hover:text-white'
+                ? 'bg-[#B1FA41] text-black border-[#B1FA41] shadow-[0_0_15px_rgba(177,250,65,0.25)]' 
+                : 'bg-[#0c0d10] text-zinc-400 border-white/5 hover:border-white/20 hover:text-white'
             }`}
           >
             {tab.name}

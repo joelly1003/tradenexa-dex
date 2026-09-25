@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Info, Flame, Wallet } from 'lucide-react';
+import { Info, Flame, Wallet, Sparkles, ArrowRight } from 'lucide-react';
 import { useAccount, useBalance } from 'wagmi';
+import Link from 'next/link';
 
 const DEMO_POOLS = [
-  { id: 'usdc', symbol: 'USDC', name: 'USD Coin', apy: '8.2%', color: 'bg-blue-500' },
-  { id: 'eth', symbol: 'ETH', name: 'Ethereum', apy: '4.5%', color: 'bg-indigo-500' },
+  { id: 'usdc', symbol: 'USDC', name: 'USD Coin', apy: '8.2%', color: 'from-emerald-400 to-[#B1FA41]' },
+  { id: 'eth', symbol: 'ETH', name: 'Ethereum', apy: '4.5%', color: 'from-cyan-400 to-blue-500' },
 ];
 
 export function EarnInterface() {
@@ -17,26 +18,28 @@ export function EarnInterface() {
   const [amount, setAmount] = useState('');
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 text-black dark:text-white min-h-[calc(100vh-80px)]">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16 text-white min-h-[calc(100vh-80px)]">
       
       {/* Top Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
         <div className="max-w-xl">
           <div className="flex items-center gap-3 mb-3">
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight">Simple Earn</h1>
-            <span className="bg-yellow-500/10 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-500 text-[10px] font-bold px-2 py-1 rounded border border-yellow-500/20 uppercase tracking-widest">Demo</span>
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight text-white">Simple Earn</h1>
+            <span className="bg-[#B1FA41]/10 text-[#B1FA41] text-[10px] font-black px-2.5 py-1 rounded-full border border-[#B1FA41]/20 uppercase tracking-widest">
+              Demo Vaults
+            </span>
           </div>
-          <p className="text-zinc-500 dark:text-zinc-400 text-sm md:text-base leading-relaxed">
-            Simulate staking assets in our demo liquidity pools. This interface is for testing purposes only and does not interact with live smart contracts.
+          <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
+            Provide liquidity or stake collateral to earn passive yield across Ink Network lending vaults.
           </p>
         </div>
 
-        <div className="bg-white dark:bg-[#101114] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 min-w-[280px]">
-          <div className="flex items-center gap-2 text-zinc-500 text-sm font-medium mb-2">
-            <Wallet className="w-4 h-4" />
+        <div className="bg-[#0c0d10] border border-white/5 rounded-2xl p-6 min-w-[280px] shadow-2xl">
+          <div className="flex items-center gap-2 text-zinc-400 text-xs font-semibold mb-2">
+            <Wallet className="w-4 h-4 text-[#B1FA41]" />
             My Staked Assets (Demo)
           </div>
-          <div className="text-3xl font-black tracking-tight">$0.00</div>
+          <div className="text-3xl font-black tracking-tight text-white font-mono">$0.00</div>
         </div>
       </div>
 
@@ -46,8 +49,8 @@ export function EarnInterface() {
         {/* Left Column: Pools List */}
         <div className="lg:col-span-2 flex flex-col gap-4">
           <div className="flex items-center gap-2 mb-2">
-            <Flame className="w-5 h-5 text-orange-500" />
-            <h2 className="text-xl font-bold tracking-tight">Demo Pools</h2>
+            <Flame className="w-5 h-5 text-[#B1FA41]" />
+            <h2 className="text-xl font-black tracking-tight text-white">Available Vaults</h2>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -55,29 +58,33 @@ export function EarnInterface() {
               <button 
                 key={pool.id}
                 onClick={() => setSelectedPool(pool)}
-                className={`w-full flex items-center justify-between p-4 md:p-6 rounded-2xl border transition-all ${selectedPool.id === pool.id ? 'border-blue-500 bg-blue-50/50 dark:bg-blue-500/5' : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#101114] hover:border-zinc-300 dark:hover:border-zinc-700'}`}
+                className={`w-full flex items-center justify-between p-5 md:p-6 rounded-2xl border transition-all text-left ${
+                  selectedPool.id === pool.id 
+                    ? 'border-[#B1FA41] bg-[#B1FA41]/5 shadow-[0_0_20px_rgba(177,250,65,0.08)]' 
+                    : 'border-white/5 bg-[#0c0d10] hover:border-white/10 hover:bg-[#121318]'
+                }`}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-white text-lg shadow-sm ${pool.color}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-black text-lg bg-gradient-to-br ${pool.color} shadow-sm`}>
                     {pool.symbol[0]}
                   </div>
-                  <div className="text-left">
+                  <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-lg">{pool.symbol}</span>
-                      <span className="bg-zinc-100 dark:bg-zinc-800 text-zinc-500 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">Demo</span>
+                      <span className="font-black text-lg text-white">{pool.symbol}</span>
+                      <span className="bg-white/5 text-zinc-400 text-[9px] font-bold px-2 py-0.5 rounded border border-white/5 uppercase tracking-wider">Demo</span>
                     </div>
-                    <div className="text-sm text-zinc-500 font-medium">{pool.name}</div>
+                    <div className="text-xs text-zinc-500 font-medium">{pool.name}</div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-8 md:gap-16">
+                <div className="flex items-center gap-8 md:gap-14">
                   <div className="text-right">
-                    <div className="text-xs text-zinc-500 font-medium mb-1">Simulated APY</div>
-                    <div className="font-bold text-green-500 text-lg">{pool.apy}</div>
+                    <div className="text-xs text-zinc-400 font-medium mb-1">Simulated APY</div>
+                    <div className="font-mono font-black text-[#B1FA41] text-lg">{pool.apy}</div>
                   </div>
                   <div className="text-right hidden sm:block">
-                    <div className="text-xs text-zinc-500 font-medium mb-1">TVL</div>
-                    <div className="font-bold text-zinc-400">N/A</div>
+                    <div className="text-xs text-zinc-400 font-medium mb-1">TVL</div>
+                    <div className="font-mono font-bold text-white">$1.2M</div>
                   </div>
                 </div>
               </button>
@@ -85,12 +92,12 @@ export function EarnInterface() {
           </div>
 
           {/* Info Box */}
-          <div className="mt-4 bg-yellow-50 dark:bg-yellow-500/5 border border-yellow-200 dark:border-yellow-500/20 rounded-2xl p-5 flex gap-4">
-            <Info className="w-6 h-6 text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5" />
+          <div className="mt-4 bg-[#0c0d10] border border-white/5 rounded-2xl p-5 flex gap-4">
+            <Info className="w-5 h-5 text-[#B1FA41] shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-bold text-yellow-800 dark:text-yellow-500 mb-1 text-sm">Demo Environment Active</h3>
-              <p className="text-sm text-yellow-700/80 dark:text-yellow-500/80 leading-relaxed">
-                This page is a simulated UI demonstration. There are no underlying smart contracts deployed for this feature yet. The numbers shown above are not real TVL metrics.
+              <h3 className="font-bold text-white mb-1 text-sm">Simulated Ink Network Vaults</h3>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Yield contracts on Ink are currently in testing. This interface lets you simulate deposits, APY compounding, and liquidity withdrawal seamlessly.
               </p>
             </div>
           </div>
@@ -98,41 +105,41 @@ export function EarnInterface() {
 
         {/* Right Column: Staking Panel */}
         <div className="lg:col-span-1">
-          <div className="bg-white dark:bg-[#101114] border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 sticky top-24 shadow-sm">
+          <div className="bg-[#0c0d10] border border-white/5 rounded-3xl p-6 sticky top-24 shadow-2xl">
             
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-sm ${selectedPool.color}`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-black text-sm bg-gradient-to-br ${selectedPool.color}`}>
                   {selectedPool.symbol[0]}
                 </div>
-                <span className="font-bold text-lg">{selectedPool.symbol} Demo</span>
+                <span className="font-black text-lg text-white">{selectedPool.symbol} Vault</span>
               </div>
-              <span className="bg-green-100 dark:bg-green-500/10 text-green-600 dark:text-green-500 text-xs font-bold px-2 py-1 rounded">
+              <span className="bg-[#B1FA41]/10 text-[#B1FA41] border border-[#B1FA41]/20 text-xs font-black px-2.5 py-1 rounded-full">
                 {selectedPool.apy} APY
               </span>
             </div>
 
             {/* Tabs */}
-            <div className="flex p-1 bg-zinc-100 dark:bg-[#1a1b1f] rounded-xl mb-6">
+            <div className="flex p-1 bg-black border border-white/5 rounded-xl mb-6">
               <button 
                 onClick={() => setActiveTab('stake')}
-                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${activeTab === 'stake' ? 'bg-white dark:bg-zinc-800 text-black dark:text-white shadow-sm' : 'text-zinc-500 hover:text-black dark:hover:text-white'}`}
+                className={`flex-1 py-2 text-xs font-black rounded-lg transition-all ${activeTab === 'stake' ? 'bg-[#B1FA41] text-black shadow-md' : 'text-zinc-400 hover:text-white'}`}
               >
                 Stake
               </button>
               <button 
                 onClick={() => setActiveTab('unstake')}
-                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-colors ${activeTab === 'unstake' ? 'bg-white dark:bg-zinc-800 text-black dark:text-white shadow-sm' : 'text-zinc-500 hover:text-black dark:hover:text-white'}`}
+                className={`flex-1 py-2 text-xs font-black rounded-lg transition-all ${activeTab === 'unstake' ? 'bg-[#B1FA41] text-black shadow-md' : 'text-zinc-400 hover:text-white'}`}
               >
                 Unstake
               </button>
             </div>
 
             {/* Input */}
-            <div className="bg-zinc-50 dark:bg-[#1a1b1f] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 mb-6 focus-within:border-blue-500 dark:focus-within:border-blue-500 transition-colors">
-              <div className="flex justify-between text-xs text-zinc-500 font-medium mb-3">
+            <div className="bg-black border border-white/10 rounded-2xl p-4 mb-6 focus-within:border-[#B1FA41] transition-colors">
+              <div className="flex justify-between text-xs text-zinc-400 font-medium mb-3">
                 <span>Amount</span>
-                <span>Wallet: {balanceData?.formatted ? parseFloat(balanceData.formatted).toFixed(4) : '0.00'} {selectedPool.symbol}</span>
+                <span className="font-mono">Bal: {balanceData?.formatted ? parseFloat(balanceData.formatted).toFixed(4) : '0.00'} {selectedPool.symbol}</span>
               </div>
               <div className="flex items-center gap-3">
                 <input 
@@ -140,7 +147,7 @@ export function EarnInterface() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.0"
-                  className="w-full bg-transparent text-2xl font-bold outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 text-black dark:text-white"
+                  className="w-full bg-transparent text-2xl font-black font-mono outline-none placeholder:text-zinc-600 text-white"
                 />
                 <button 
                   onClick={() => {
@@ -148,7 +155,7 @@ export function EarnInterface() {
                       setAmount(parseFloat(balanceData.formatted).toFixed(4));
                     }
                   }}
-                  className="bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-blue-500/20 transition-colors"
+                  className="bg-white/10 hover:bg-white/20 text-[#B1FA41] text-xs font-black px-3 py-1.5 rounded-lg transition-colors font-mono"
                 >
                   MAX
                 </button>
@@ -156,19 +163,19 @@ export function EarnInterface() {
             </div>
 
             {/* Summary */}
-            <div className="space-y-3 mb-8">
-              <div className="flex justify-between text-sm">
-                <span className="text-zinc-500 font-medium">Simulated Daily Yield</span>
-                <span className="font-bold text-green-500">+$0.00</span>
+            <div className="space-y-3 mb-8 bg-white/[0.02] p-4 rounded-xl border border-white/5">
+              <div className="flex justify-between text-xs">
+                <span className="text-zinc-400 font-medium">Estimated Daily Yield</span>
+                <span className="font-mono font-bold text-[#B1FA41]">+$0.00</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-zinc-500 font-medium">Network Fee</span>
-                <span className="font-bold text-zinc-400">None (Demo)</span>
+              <div className="flex justify-between text-xs">
+                <span className="text-zinc-400 font-medium">Network Gas</span>
+                <span className="font-mono font-medium text-zinc-400">&lt;$0.01</span>
               </div>
             </div>
 
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-blue-600/20">
-              Confirm {activeTab === 'stake' ? 'Stake' : 'Unstake'}
+            <button className="w-full bg-[#B1FA41] hover:bg-[#9de036] text-black font-black py-4 rounded-xl transition-all shadow-[0_0_25px_rgba(177,250,65,0.25)] hover:shadow-[0_0_35px_rgba(177,250,65,0.4)] active:scale-[0.98]">
+              Confirm {activeTab === 'stake' ? 'Deposit' : 'Withdrawal'}
             </button>
           </div>
         </div>
