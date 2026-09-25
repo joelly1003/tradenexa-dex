@@ -138,13 +138,9 @@ export function MarketInterface() {
           <span className="text-zinc-400">Last updated: <span className="text-white font-mono">
             {nadoPrices && nadoPrices.length > 0 && typeof window !== 'undefined' ? new Date(nadoPrices[0].timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--'}
           </span></span>
-          <span className="text-zinc-800 hidden sm:inline">|</span>
-          <div className={`flex items-center gap-1.5 font-medium ${isFetching ? 'text-yellow-500' : 'text-[#B1FA41]'}`}>
-            <div className={`w-2 h-2 rounded-full ${isFetching ? 'bg-yellow-500' : 'bg-[#B1FA41]'} animate-pulse`} />
-            {isFetching ? 'Connecting Feed...' : 'WebSocket Live Feed'}
-          </div>
-          <div className="flex items-center gap-1.5 text-[#B1FA41] border border-[#B1FA41]/20 bg-[#B1FA41]/10 px-2.5 py-0.5 rounded-full text-xs font-semibold">
-            ✓ Live Rates
+          <div className="flex items-center gap-2 text-[#B1FA41] border border-[#B1FA41]/30 bg-[#B1FA41]/10 px-3 py-1 rounded-full text-xs font-bold shadow-[0_0_12px_rgba(177,250,65,0.15)]">
+            <div className="w-2 h-2 rounded-full bg-[#B1FA41] animate-pulse shadow-[0_0_8px_#B1FA41]" />
+            Live Rates Active
           </div>
         </div>
         <button 
