@@ -36,7 +36,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const dynamicCoins = (tickers || []).map(t => {
+  const dynamicCoins = (tickers || []).map((t: any) => {
     const symbol = t.symbol.split('-')[0];
     return {
       symbol,

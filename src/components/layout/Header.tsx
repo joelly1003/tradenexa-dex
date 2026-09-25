@@ -44,9 +44,9 @@ export function Header() {
           <Image 
             src="/logo.png" 
             alt="TradeNexa Logo" 
-            width={240} 
-            height={70} 
-            className="w-auto h-16 object-contain"
+            width={360} 
+            height={100} 
+            className="w-auto h-20 md:h-24 object-contain"
             priority
           />
         </Link>

@@ -17,8 +17,8 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
   const symUpper = symbol.toUpperCase() === 'KPEPE' ? 'PEPE' : symbol.toUpperCase();
   const perpSymbol = `${symUpper}-PERP`;
   
-  const currentAsset = (tickers || []).find(t => t.symbol === perpSymbol || t.symbol === symUpper) || 
-    (tickers || []).find(t => t.symbol.startsWith(symUpper));
+  const currentAsset = (tickers || []).find((t: any) => t.symbol === perpSymbol || t.symbol === symUpper) || 
+    (tickers || []).find((t: any) => t.symbol.startsWith(symUpper));
     
   const currentPrice = currentAsset ? parseFloat(currentAsset.price_x18) / 1e18 : 0;
   const productId = currentAsset ? currentAsset.product_id : 1;

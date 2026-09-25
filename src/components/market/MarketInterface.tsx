@@ -39,7 +39,7 @@ export function MarketInterface() {
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
-  const assets: Asset[] = (nadoPrices || []).map(p => ({
+  const assets: Asset[] = (nadoPrices || []).map((p: any) => ({
     id: p.symbol,
     rank: '0',
     symbol: p.symbol.split('-')[0],

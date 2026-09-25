@@ -14,9 +14,9 @@ export function Footer() {
             <Image 
               src="/logo.png" 
               alt="TradeNexa Logo" 
-              width={240} 
-              height={70} 
-              className="w-auto h-16 object-contain opacity-80 hover:opacity-100 transition-opacity"
+              width={360} 
+              height={100} 
+              className="w-auto h-20 md:h-24 object-contain opacity-80 hover:opacity-100 transition-opacity"
             />
           </Link>
           <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs">

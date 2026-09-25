@@ -1,6 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { defaultNadoClient, CachedPriceItem } from '../../lib/nado';
 
+const toX18 = (numStr: string | number) => {
+  const str = numStr.toString();
+  let [intPart, fracPart = ''] = str.split('.');
+  fracPart = fracPart.padEnd(18, '0').slice(0, 18);
+  return intPart + fracPart;
+};
+
 export function useNadoEdgeTicker(productIds?: number[]) {
   return useQuery<CachedPriceItem[]>({
     queryKey: ['nadoEdgeTicker', productIds],
@@ -34,13 +41,6 @@ export function useNadoEdgeTicker(productIds?: number[]) {
           const binanceRes = await fetch('https://data-api.binance.vision/api/v3/ticker/24hr');
           const data = await binanceRes.json();
           
-          const toX18 = (numStr: string | number) => {
-            const str = numStr.toString();
-            let [intPart, fracPart = ''] = str.split('.');
-            fracPart = fracPart.padEnd(18, '0').slice(0, 18);
-            return intPart + fracPart;
-          };
-
           return data.map((d: any, index: number) => {
             const baseAsset = d.symbol.replace('USDT', '');
             return {
@@ -170,8 +170,8 @@ export function useNadoEdgeTicker(productIds?: number[]) {
         
         const mMatch = marketMap.get(baseAsset + 'USDT');
         
-        // Use strictly native Nado market price
-        const priceX18 = p.bid_x18;
+        // Use live market price from Binance if available to match TradingView chart, or fallback to Nado bid_x18
+        const priceX18 = mMatch?.price ? toX18(mMatch.price) : (p.bid_x18 || '0');
         
         let finalChange = p.change_24h_percent;
         let finalVolX18 = p.volume_24h_x18;
