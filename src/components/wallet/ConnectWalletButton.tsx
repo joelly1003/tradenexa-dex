@@ -62,18 +62,19 @@ export function ConnectWalletButton() {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-3 pr-5 pl-1.5 py-1.5 bg-black hover:bg-[#121824] border border-[#B1FA41]/40 rounded-full transition-all text-left group shadow-[0_0_15px_rgba(177,250,65,0.05)]"
+        style={{ backgroundColor: '#000000', color: '#ffffff' }}
+        className="flex items-center gap-3 pr-5 pl-1.5 py-1.5 !bg-black hover:!bg-[#121824] border border-[#B1FA41]/40 rounded-full transition-all text-left group shadow-[0_0_15px_rgba(177,250,65,0.05)]"
       >
         <div className="w-10 h-10 rounded-full bg-[#B1FA41] flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(177,250,65,0.3)]">
           <Wallet className="w-4 h-4 text-black" strokeWidth={2.5} />
         </div>
         <div className="flex flex-col justify-center">
-          <span className="font-mono font-black text-white text-[14px] leading-tight mb-0.5 tracking-wide">
+          <span className="font-mono font-black !text-white text-[14px] leading-tight mb-0.5 tracking-wide">
             {truncatedAddress}
           </span>
           <span className="font-semibold text-[11px] leading-tight">
             <span className="text-zinc-400">Nado: </span>
-            <span className="text-white">${balanceValue}</span>
+            <span className="!text-white font-bold">${balanceValue}</span>
           </span>
         </div>
       </button>
