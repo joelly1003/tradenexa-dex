@@ -4,6 +4,16 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
 
+export const getLogoUrl = (symbol: string) => {
+  const overrides: Record<string, string> = {
+    'PENGU': 'https://coin-images.coingecko.com/coins/images/52622/large/PUDGY_PENGUINS_PENGU_PFP.png',
+    'ASTR': 'https://coin-images.coingecko.com/coins/images/22617/large/astr.png',
+    'PUMP': 'https://coin-images.coingecko.com/coins/images/67164/large/pump.jpg',
+    'HYPE': 'https://coin-images.coingecko.com/coins/images/50882/large/hyperliquid.jpg',
+  };
+  return overrides[symbol.toUpperCase()] || `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${symbol.toLowerCase()}.png`;
+};
+
 interface TopTickerBarProps {
   selectedSymbol: string;
   onSelectSymbol: (symbol: string) => void;
@@ -95,7 +105,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
           <div className="flex items-center gap-2 md:gap-3">
             <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
                <img 
-                 src={`https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${currentCoin.symbol.toLowerCase()}.png`} 
+                 src={getLogoUrl(currentCoin.symbol)} 
                  alt={currentCoin.symbol}
                  onError={(e) => { e.currentTarget.src = 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/generic.png'; }}
                  className="w-full h-full object-cover"
@@ -150,7 +160,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
                   <div className="col-span-2 flex items-center gap-3">
                     <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center overflow-hidden shrink-0">
                        <img 
-                         src={`https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/${c.symbol.toLowerCase()}.png`} 
+                         src={getLogoUrl(c.symbol)} 
                          alt={c.symbol}
                          onError={(e) => { e.currentTarget.src = 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/generic.png'; }}
                          className="w-full h-full object-cover"
