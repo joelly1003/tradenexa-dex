@@ -25,7 +25,7 @@ createAppKit({
   metadata: {
     name: 'TradeNexa',
     description: 'The decentralized exchange for everyone.',
-    url: 'https://tradenexa.com',
+    url: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
     icons: ['https://avatars.githubusercontent.com/u/37784886']
   },
   defaultNetwork: ink,

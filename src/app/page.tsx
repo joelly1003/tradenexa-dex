@@ -15,25 +15,25 @@ export default function Home() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-[#B1FA41]/10 rounded-full blur-[150px] pointer-events-none -z-10" />
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center text-center max-w-5xl mx-auto space-y-8 min-h-[70vh] px-4 pt-10">
+      <div className="flex flex-col items-center justify-between text-center max-w-5xl mx-auto min-h-[calc(100vh-80px)] px-4 pt-16 pb-12">
         
-        {/* Mainnet Pill */}
-        <div className="inline-flex items-center gap-2 bg-[#B1FA41]/5 border border-[#B1FA41]/20 rounded-full px-4 py-1.5 text-xs font-bold text-[#B1FA41] shadow-[0_0_15px_rgba(177,250,65,0.1)]">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
-          Live on Mainnet • Block {isLoading || isError ? '...' : blockNumber?.toString() || 'Loading'}
-        </div>
-        
-        <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-black tracking-tight leading-[1.05] text-white">
-          Trade Crypto in Your <br />
-          <span className="text-[#B1FA41]">Local Currency</span>
-        </h1>
-        
-        <p className="text-lg text-zinc-400 font-medium leading-relaxed max-w-2xl mx-auto">
-          Experience lightning-fast swaps and optimal routing—all priced natively in your preferred local fiat currency.
-        </p>
+        {/* Main Content Group */}
+        <div className="flex flex-col items-center justify-center space-y-10 flex-1">
+          {/* Mainnet Pill */}
+          <div className="inline-flex items-center gap-2 bg-[#B1FA41]/5 border border-[#B1FA41]/20 rounded-full px-4 py-1.5 text-xs font-bold text-[#B1FA41] shadow-[0_0_15px_rgba(177,250,65,0.1)]">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
+            Live on Mainnet • Block {isLoading || isError ? '...' : blockNumber?.toString() || 'Loading'}
+          </div>
+          
+          <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-black tracking-tight leading-[1.25] text-white">
+            Trade Crypto in Your <br />
+            <span className="text-[#B1FA41]">Local Currency</span>
+          </h1>
+          
+          <p className="text-lg text-zinc-400 font-medium leading-relaxed max-w-2xl mx-auto">
+            Experience lightning-fast swaps and optimal routing—all priced natively in your preferred local fiat currency.
+          </p>
 
-        {/* Call to Action */}
-        <div className="pt-4 flex flex-col items-center gap-6">
           <Link 
             href="/trade" 
             className="group flex items-center justify-center gap-2 bg-[#B1FA41] hover:bg-[#9de036] text-black px-8 py-3.5 rounded-xl font-black text-lg transition-all shadow-[0_0_20px_rgba(177,250,65,0.2)] hover:shadow-[0_0_30px_rgba(177,250,65,0.4)] hover:-translate-y-0.5 w-64"
@@ -41,20 +41,21 @@ export default function Home() {
             Start Trading
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
-          
-          <div className="flex items-center justify-center flex-wrap gap-6 text-sm font-bold text-white">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
-              0% Hidden Fees
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
-              Deep Liquidity
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
-              MEV Protection
-            </div>
+        </div>
+
+        {/* Bottom Features (pushed to down) */}
+        <div className="flex items-center justify-center flex-wrap gap-8 text-sm font-bold text-white pt-10">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
+            0% Hidden Fees
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
+            Deep Liquidity
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
+            MEV Protection
           </div>
         </div>
       </div>
