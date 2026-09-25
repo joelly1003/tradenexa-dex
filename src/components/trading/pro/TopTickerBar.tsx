@@ -37,10 +37,11 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
     };
   });
   
-  // Deduplicate
+  // Deduplicate and Filter
+  const allowedSymbols = ['BTC', 'ETH', 'SOL', 'PENGU', 'ASTR', 'USDC', 'PUMP', 'HYPE', 'AVAX', 'DOGE', 'XRP', 'BNB'];
   const uniqueCoinsMap = new Map();
   for (const c of dynamicCoins) {
-    if (!uniqueCoinsMap.has(c.symbol)) {
+    if (allowedSymbols.includes(c.symbol) && !uniqueCoinsMap.has(c.symbol)) {
       uniqueCoinsMap.set(c.symbol, c);
     }
   }

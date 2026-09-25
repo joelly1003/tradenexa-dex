@@ -143,54 +143,14 @@ export function useNadoEdgeTicker(productIds?: number[]) {
         }
       });
 
-      let binanceData: any[] = [];
-      try {
-        const binanceRes = await fetch('https://api.binance.com/api/v3/ticker/24hr');
-        if (binanceRes.ok) {
-          binanceData = await binanceRes.json();
-        }
-      } catch (e) {
-        console.warn('Binance fetch failed', e);
-      }
-
-      const marketMap = new Map();
-      if (Array.isArray(binanceData)) {
-        binanceData.forEach((d: any) => {
-          marketMap.set(d.symbol, { 
-            price: d.lastPrice, 
-            change: d.priceChangePercent, 
-            vol: d.quoteVolume 
-          });
-        });
-      }
-
       return nadoPrices.map((p: any) => {
         const sym = prodIdToSymbol[p.product_id] || `PROD-${p.product_id}`;
-        let baseAsset = sym.replace('-PERP', '').replace('w', '').replace('x', '');
-        if (baseAsset === 'KPEPE') baseAsset = 'PEPE';
-        
-        const mMatch = marketMap.get(baseAsset + 'USDT');
         
         // Use strictly native Nado market price
         const priceX18 = p.bid_x18;
         
-        // Deterministic mock generation for non-Binance coins
-        let finalChange = mMatch?.change || p.change_24h_percent;
-        let finalVolX18 = mMatch ? (parseFloat(mMatch.vol) * 1e18).toLocaleString('fullwide', {useGrouping:false}) : p.volume_24h_x18;
-        
-        if ((!finalChange || parseFloat(finalChange.toString()) === 0) && baseAsset.length > 0) {
-          // generate pseudo-random based on string chars + current minute for slight jitter
-          let hash = 0;
-          for (let i = 0; i < baseAsset.length; i++) hash = baseAsset.charCodeAt(i) + ((hash << 5) - hash);
-          
-          const timeJitter = Math.floor(Date.now() / 5000) % 10; // changes every 5 seconds
-          const pseudoChange = (((hash % 1500) + timeJitter) / 100); 
-          // Avoid exactly 0 change for aesthetics
-          finalChange = (pseudoChange === 0 ? 2.55 : pseudoChange).toFixed(2);
-          
-          const baseVol = Math.abs(hash % 50000000) + 1000000 + (timeJitter * 50000);
-          finalVolX18 = (baseVol * 1e18).toLocaleString('fullwide', {useGrouping:false});
-        }
+        const finalChange = p.change_24h_percent || '0';
+        const finalVolX18 = p.volume_24h_x18 || '0';
         
         return {
           product_id: p.product_id,
