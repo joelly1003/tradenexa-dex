@@ -4,7 +4,7 @@ import { LeaderboardInterface } from '../../components/leaderboard/LeaderboardIn
 export default function LeaderboardPage() {
   return (
     <div className="w-full">
-      <Suspense fallback={<div className="flex items-center justify-center py-20 text-white">Loading Leaderboard...</div>}>
+      <Suspense fallback={<div className="flex items-center justify-center py-20 text-black">Loading Leaderboard...</div>}>
         <LeaderboardInterface />
       </Suspense>
     </div>

@@ -51,8 +51,9 @@ export function useNadoEdgeTicker(productIds?: number[]) {
               ask_x18: toX18(d.askPrice || d.lastPrice || '0'),
               change_24h_percent: d.priceChangePercent?.toString() || '0',
               volume_24h_x18: toX18(d.quoteVolume || '0'),
-              timestamp: now
-            } as CachedPriceItem;
+              timestamp: now,
+          onBinance: true
+        } as CachedPriceItem;
           });
         } catch(binanceErr) {
             return [];
@@ -202,7 +203,8 @@ export function useNadoEdgeTicker(productIds?: number[]) {
           ask_x18: priceX18,
           change_24h_percent: finalChange,
           volume_24h_x18: finalVolX18,
-          timestamp: now
+          timestamp: now,
+          onBinance: true
         } as CachedPriceItem;
       });
     },
@@ -211,9 +213,9 @@ export function useNadoEdgeTicker(productIds?: number[]) {
     initialData: () => {
       // Provide an immediate skeleton payload so the UI doesn't show loading dots
       return [
-        { product_id: 1, symbol: 'BTC-PERP', price_x18: '64000000000000000000000', bid_x18: '64000000000000000000000', ask_x18: '64000000000000000000000', change_24h_percent: '1.25', volume_24h_x18: '1000000000000000000000000', timestamp: Date.now() },
-        { product_id: 3, symbol: 'ETH-PERP', price_x18: '3400000000000000000000', bid_x18: '3400000000000000000000', ask_x18: '3400000000000000000000', change_24h_percent: '2.50', volume_24h_x18: '500000000000000000000000', timestamp: Date.now() },
-        { product_id: 15, symbol: 'SOL-PERP', price_x18: '145000000000000000000', bid_x18: '145000000000000000000', ask_x18: '145000000000000000000', change_24h_percent: '5.10', volume_24h_x18: '200000000000000000000000', timestamp: Date.now() },
+        { product_id: 1, symbol: 'BTC-PERP', price_x18: '64000000000000000000000', bid_x18: '64000000000000000000000', ask_x18: '64000000000000000000000', change_24h_percent: '1.25', volume_24h_x18: '1000000000000000000000000', timestamp: Date.now(), onBinance: true },
+        { product_id: 3, symbol: 'ETH-PERP', price_x18: '3400000000000000000000', bid_x18: '3400000000000000000000', ask_x18: '3400000000000000000000', change_24h_percent: '2.50', volume_24h_x18: '500000000000000000000000', timestamp: Date.now(), onBinance: true },
+        { product_id: 15, symbol: 'SOL-PERP', price_x18: '145000000000000000000', bid_x18: '145000000000000000000', ask_x18: '145000000000000000000', change_24h_percent: '5.10', volume_24h_x18: '200000000000000000000000', timestamp: Date.now(), onBinance: true },
       ] as CachedPriceItem[];
     }
   });

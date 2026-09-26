@@ -100,6 +100,7 @@ export interface CachedPriceItem {
   change_24h_percent: string;
   volume_24h_x18: string;
   timestamp: number;
+  onBinance?: boolean;
 }
 
 export interface CachedBboHistoryItem {

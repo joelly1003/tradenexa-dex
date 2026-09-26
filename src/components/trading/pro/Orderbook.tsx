@@ -112,17 +112,17 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
   const maxBidTotal = bids.length > 0 ? parseFloat(bids[bids.length - 1].total) : 1;
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0a0c] text-xs font-mono border-l border-r border-zinc-900 shrink-0">
-      <div className="flex gap-4 p-3 border-b border-zinc-900 text-zinc-500 font-sans font-semibold text-sm">
+    <div className="flex flex-col h-full bg-white text-xs font-mono border-l border-r border-zinc-200 shrink-0">
+      <div className="flex gap-4 p-3 border-b border-zinc-200 text-zinc-500 font-sans font-semibold text-sm">
         <button 
           onClick={() => setActiveTab('book')}
-          className={`transition-colors pb-1 -mb-[13px] ${activeTab === 'book' ? 'text-white border-b-2 border-zinc-700' : 'hover:text-white border-b-2 border-transparent'}`}
+          className={`transition-colors pb-1 -mb-[13px] ${activeTab === 'book' ? 'text-black border-b-2 border-zinc-700' : 'hover:text-black border-b-2 border-transparent'}`}
         >
           Book
         </button>
         <button 
           onClick={() => setActiveTab('trades')}
-          className={`transition-colors pb-1 -mb-[13px] ${activeTab === 'trades' ? 'text-white border-b-2 border-zinc-700' : 'hover:text-white border-b-2 border-transparent'}`}
+          className={`transition-colors pb-1 -mb-[13px] ${activeTab === 'trades' ? 'text-black border-b-2 border-zinc-700' : 'hover:text-black border-b-2 border-transparent'}`}
         >
           Trades
         </button>
@@ -130,7 +130,7 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
       
       {activeTab === 'book' ? (
         <>
-          <div className="flex justify-between px-3 py-2 text-zinc-500 border-b border-zinc-900 font-sans text-[10px] uppercase tracking-wider font-semibold">
+          <div className="flex justify-between px-3 py-2 text-zinc-500 border-b border-zinc-200 font-sans text-[10px] uppercase tracking-wider font-semibold">
             <span>Price</span>
             <span>Size</span>
             <span>Total {symbol.toUpperCase()}</span>
@@ -143,14 +143,14 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
                 <div key={i} className="flex justify-between px-3 py-[2px] hover:bg-zinc-800/50 cursor-pointer relative group">
                   <div className="absolute right-0 top-0 h-full bg-red-500/10" style={{ width: `${Math.min(100, (parseFloat(ask.total) / maxAskTotal) * 100)}%` }} />
                   <span className="text-red-500 relative z-10 w-1/3 text-left">{formatPrice(ask.price)}</span>
-                  <span className="text-zinc-300 relative z-10 w-1/3 text-right">{ask.size}</span>
+                  <span className="text-zinc-600 relative z-10 w-1/3 text-right">{ask.size}</span>
                   <span className="text-zinc-500 relative z-10 w-1/3 text-right">{ask.total}</span>
                 </div>
               ))}
             </div>
 
             {/* Current Price */}
-            <div className="py-2 px-3 border-y border-zinc-900 my-1 flex items-center justify-between font-sans">
+            <div className="py-2 px-3 border-y border-zinc-200 my-1 flex items-center justify-between font-sans">
               <span className={`text-lg font-bold flex items-center gap-2 font-mono ${isUp ? 'text-green-500' : 'text-red-500'}`}>
                 ${displayPrice} <span className="text-sm">{isUp ? '↑' : '↓'}</span>
               </span>
@@ -163,7 +163,7 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
                 <div key={i} className="flex justify-between px-3 py-[2px] hover:bg-zinc-800/50 cursor-pointer relative group">
                   <div className="absolute right-0 top-0 h-full bg-green-500/10" style={{ width: `${Math.min(100, (parseFloat(bid.total) / maxBidTotal) * 100)}%` }} />
                   <span className="text-green-500 relative z-10 w-1/3 text-left">{formatPrice(bid.price)}</span>
-                  <span className="text-zinc-300 relative z-10 w-1/3 text-right">{bid.size}</span>
+                  <span className="text-zinc-600 relative z-10 w-1/3 text-right">{bid.size}</span>
                   <span className="text-zinc-500 relative z-10 w-1/3 text-right">{bid.total}</span>
                 </div>
               ))}
@@ -172,7 +172,7 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
         </>
       ) : (
         <>
-          <div className="flex justify-between px-3 py-2 text-zinc-500 border-b border-zinc-900 font-sans text-[10px] uppercase tracking-wider font-semibold">
+          <div className="flex justify-between px-3 py-2 text-zinc-500 border-b border-zinc-200 font-sans text-[10px] uppercase tracking-wider font-semibold">
             <span className="w-1/3 text-left">Price</span>
             <span className="w-1/3 text-right">Size</span>
             <span className="w-1/3 text-right">Time</span>
@@ -184,7 +184,7 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
                 <span className={`w-1/3 text-left ${trade.isBuy ? 'text-green-500' : 'text-red-500'}`}>
                   {formatPrice(trade.price)}
                 </span>
-                <span className="text-zinc-300 w-1/3 text-right">{trade.size}</span>
+                <span className="text-zinc-600 w-1/3 text-right">{trade.size}</span>
                 <span className="text-zinc-500 w-1/3 text-right">{trade.time}</span>
               </div>
             ))}

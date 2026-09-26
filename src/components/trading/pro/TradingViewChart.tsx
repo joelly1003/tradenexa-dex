@@ -29,7 +29,7 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
       symbol: symbol,
       interval: "1", // 1m lowest timeframe default
       timezone: "Etc/UTC",
-      theme: "dark",
+      theme: "light",
       style: "1", // Candles
       locale: "en",
       allow_symbol_change: false, // Prevents symbol from defaulting to stock ETFs like Banco De Chile
@@ -50,11 +50,11 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
   }, [symbol]);
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0a0a0c] relative group">
-      <div className="w-full flex-1 relative bg-[#0a0a0c]" ref={containerRef} />
+    <div className="w-full h-full flex flex-col bg-white relative group">
+      <div className="w-full flex-1 relative bg-white" ref={containerRef} />
       {/* Hide TradingView Logo / Watermark Overlay */}
-      <div className="absolute bottom-[30px] left-0 w-[80px] h-[45px] bg-[#0a0a0c] z-[999] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[45px] h-[30px] bg-[#0a0a0c] z-[999] pointer-events-none" />
+      <div className="absolute bottom-[30px] left-0 w-[80px] h-[45px] bg-white z-[999] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[45px] h-[30px] bg-white z-[999] pointer-events-none" />
     </div>
   );
 }
