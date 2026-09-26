@@ -94,16 +94,16 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
   const filteredCoins = coins.filter(c => c.symbol.toLowerCase().includes(search.toLowerCase()) || c.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="flex items-center px-4 md:px-6 py-2.5 bg-zinc-50 border-b border-black/5 relative shrink-0 min-h-[64px] z-20 font-sans">
+    <div className="flex items-center px-4 md:px-6 py-2.5 bg-[#0B0E14] border-b border-white/5 relative shrink-0 min-h-[64px] z-20 font-sans">
       
       {/* Coin Selector */}
       <div className="relative mr-6 md:mr-10" ref={dropdownRef}>
         <button 
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 md:gap-3 hover:bg-black/5 p-2 rounded-xl transition-colors"
+          className="flex items-center gap-2 md:gap-3 hover:bg-white/5 p-2 rounded-xl transition-colors"
         >
           <div className="flex items-center gap-2 md:gap-3">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/5 flex items-center justify-center overflow-hidden border border-black/10 shrink-0">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
                <img 
                  src={getLogoUrl(currentCoin.symbol)} 
                  alt={currentCoin.symbol}
@@ -113,10 +113,10 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
             </div>
             <div className="flex flex-col items-start">
               <div className="flex items-center gap-1.5 md:gap-2">
-                <h1 className="text-lg md:text-2xl font-black tracking-tight text-black">{currentCoin.symbol}</h1>
-                <span className="text-[10px] md:text-xs font-bold text-zinc-500 bg-black/5 px-1.5 py-0.5 rounded">PERP</span>
+                <h1 className="text-lg md:text-2xl font-black tracking-tight text-white">{currentCoin.symbol}</h1>
+                <span className="text-[10px] md:text-xs font-bold text-zinc-500 bg-white/5 px-1.5 py-0.5 rounded">PERP</span>
               </div>
-              <span className="text-[10px] md:text-xs font-semibold text-zinc-500 hover:text-black transition-colors flex items-center gap-1">
+              <span className="text-[10px] md:text-xs font-semibold text-zinc-500 hover:text-white transition-colors flex items-center gap-1">
                 Change Market <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
               </span>
             </div>
@@ -124,8 +124,8 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
         </button>
 
         {isOpen && (
-          <div className="absolute top-full left-0 mt-2 w-[280px] md:w-[320px] bg-white border border-black/10 rounded-2xl shadow-2xl overflow-hidden z-[100] flex flex-col">
-            <div className="p-3 border-b border-black/5 bg-zinc-100">
+          <div className="absolute top-full left-0 mt-2 w-[280px] md:w-[320px] bg-[#0a0a0c] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-[100] flex flex-col">
+            <div className="p-3 border-b border-white/5 bg-[#121824]">
               <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
                 <input 
@@ -133,13 +133,13 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
                   placeholder="Search markets..." 
                   value={search}
                   onChange={e => setSearch(e.target.value)}
-                  className="w-full bg-white text-black text-sm rounded-lg pl-9 pr-4 py-2 outline-none border border-black/10 focus:border-[#B1FA41] transition-colors"
+                  className="w-full bg-[#0a0a0c] text-white text-sm rounded-lg pl-9 pr-4 py-2 outline-none border border-white/10 focus:border-[#B1FA41] transition-colors"
                 />
               </div>
             </div>
             
             <div className="max-h-[400px] overflow-y-auto custom-scrollbar p-2">
-              <div className="grid grid-cols-4 gap-4 px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider sticky top-0 bg-white z-10 backdrop-blur-md">
+              <div className="grid grid-cols-4 gap-4 px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider sticky top-0 bg-[#0a0a0c] z-10 backdrop-blur-md">
                 <div className="col-span-2">Market</div>
                 <div className="text-right">Price</div>
                 <div className="text-right">24H Chg</div>
@@ -154,11 +154,11 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
                     setSearch('');
                   }}
                   className={`w-full grid grid-cols-4 gap-4 items-center px-3 py-2.5 rounded-xl transition-all ${
-                    c.symbol === selectedSymbol ? 'bg-black/10' : 'hover:bg-black/5'
+                    c.symbol === selectedSymbol ? 'bg-white/10' : 'hover:bg-white/5'
                   }`}
                 >
                   <div className="col-span-2 flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-black/5 flex items-center justify-center overflow-hidden shrink-0">
+                    <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center overflow-hidden shrink-0">
                        <img 
                          src={getLogoUrl(c.symbol)} 
                          alt={c.symbol}
@@ -167,11 +167,11 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
                        />
                     </div>
                     <div className="flex flex-col items-start">
-                      <span className="font-bold text-black text-sm">{c.symbol}</span>
+                      <span className="font-bold text-white text-sm">{c.symbol}</span>
                       <span className="text-[10px] text-zinc-500">{formatVol(c.vol)}</span>
                     </div>
                   </div>
-                  <div className="text-right font-mono text-xs text-black">
+                  <div className="text-right font-mono text-xs text-white">
                     {formatPrice(c.price)}
                   </div>
                   <div className={`text-right font-mono text-xs font-bold ${parseFloat(c.change) >= 0 ? 'text-[#B1FA41]' : 'text-red-500'}`}>
@@ -208,7 +208,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
 
         <div className="flex flex-col shrink-0">
           <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider mb-0.5">24h Volume</span>
-          <span className="text-sm md:text-base font-mono font-bold text-black">
+          <span className="text-sm md:text-base font-mono font-bold text-white">
             {isLoading ? '...' : `$${formatVol(currentCoin.vol)}`}
           </span>
         </div>

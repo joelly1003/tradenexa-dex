@@ -29,7 +29,7 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
       symbol: symbol,
       interval: "1", // 1m lowest timeframe default
       timezone: "Etc/UTC",
-      theme: "light",
+      theme: "dark",
       style: "1", // Candles
       locale: "en",
       allow_symbol_change: false, // Prevents symbol from defaulting to stock ETFs like Banco De Chile

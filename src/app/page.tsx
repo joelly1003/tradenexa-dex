@@ -9,7 +9,7 @@ export default function Home() {
   const { data: blockNumber, isError, isLoading } = useBlockNumber({ watch: true });
 
   return (
-    <div className="relative flex flex-col min-h-[calc(100vh-80px)] bg-white overflow-hidden font-sans">
+    <div className="relative flex flex-col min-h-[calc(100vh-80px)] bg-black overflow-hidden font-sans">
       
       {/* Decorative Neon Glowing Orbs */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-[#B1FA41]/10 rounded-full blur-[150px] pointer-events-none -z-10" />
@@ -25,12 +25,12 @@ export default function Home() {
             Live on Mainnet • Block {isLoading || isError ? '...' : blockNumber?.toString() || 'Loading'}
           </div>
           
-          <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-black tracking-tight leading-[1.25] text-black">
+          <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-black tracking-tight leading-[1.25] text-white">
             Trade Crypto in Your <br />
             <span className="text-[#B1FA41]">Local Currency</span>
           </h1>
           
-          <p className="text-lg text-zinc-500 font-medium leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg text-zinc-400 font-medium leading-relaxed max-w-2xl mx-auto">
             Experience lightning-fast swaps and optimal routing—all priced natively in your preferred local fiat currency.
           </p>
 
@@ -44,7 +44,7 @@ export default function Home() {
         </div>
 
         {/* Bottom Features (pushed to down) */}
-        <div className="flex items-center justify-center flex-wrap gap-8 text-sm font-bold text-black pt-10">
+        <div className="flex items-center justify-center flex-wrap gap-8 text-sm font-bold text-white pt-10">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
             0% Hidden Fees
@@ -61,19 +61,19 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <div className="relative mx-auto w-full max-w-7xl px-4 py-20 bg-white">
+      <div className="relative mx-auto w-full max-w-7xl px-4 py-20 bg-black">
         <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl md:text-5xl font-black text-black tracking-tight mb-6">
+          <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight mb-6">
             Why TradeNexa is Different
           </h2>
-          <p className="text-zinc-500 font-medium text-lg">
+          <p className="text-zinc-400 font-medium text-lg">
             Unlike generic global exchanges, we build native features specifically for your region so you never have to calculate exchange rates in your head again.
           </p>
           
           {/* Payment Pills */}
           <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
             {['PIX', 'SEPA', 'UPI', 'M-PESA', 'TRANSAK', 'STRIPE'].map((pill) => (
-              <div key={pill} className="bg-black/5 border border-black/10 text-zinc-600 font-bold text-sm px-5 py-2 rounded-xl uppercase tracking-wider">
+              <div key={pill} className="bg-white/5 border border-white/10 text-zinc-300 font-bold text-sm px-5 py-2 rounded-xl uppercase tracking-wider">
                 {pill}
               </div>
             ))}
@@ -85,10 +85,10 @@ export default function Home() {
           
           {/* Feature 1 */}
           <div className="flex flex-col items-start text-left">
-            <div className="w-12 h-12 rounded-xl bg-black/5 border border-black/10 flex items-center justify-center mb-6">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <Globe className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-black mb-3">Native Localization</h3>
+            <h3 className="text-xl font-black text-white mb-3">Native Localization</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
               Every price, fee, and chart is instantly converted to your selected local fiat currency for intuitive trading.
             </p>
@@ -96,11 +96,11 @@ export default function Home() {
 
           {/* Feature 2 */}
           <div className="flex flex-col items-start text-left">
-            <div className="w-12 h-12 rounded-xl bg-black/5 border border-black/10 flex items-center justify-center mb-6">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <Zap className="w-6 h-6 text-[#B1FA41]" />
             </div>
             <div className="flex items-center gap-2 mb-3">
-              <h3 className="text-xl font-black text-black">Smart Routing</h3>
+              <h3 className="text-xl font-black text-white">Smart Routing</h3>
               <span className="bg-[#B1FA41]/10 text-[#B1FA41] border border-[#B1FA41]/20 text-[10px] font-bold px-2 py-0.5 rounded-full">
                 -0.2% Slippage
               </span>
@@ -112,10 +112,10 @@ export default function Home() {
 
           {/* Feature 3 */}
           <div className="flex flex-col items-start text-left">
-            <div className="w-12 h-12 rounded-xl bg-black/5 border border-black/10 flex items-center justify-center mb-6">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <Wallet className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-black mb-3">Local Payment Routes</h3>
+            <h3 className="text-xl font-black text-white mb-3">Local Payment Routes</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
               We directly integrate the most popular regional payment methods so you can on-ramp and off-ramp effortlessly.
             </p>
@@ -123,10 +123,10 @@ export default function Home() {
 
           {/* Feature 4 */}
           <div className="flex flex-col items-start text-left">
-            <div className="w-12 h-12 rounded-xl bg-black/5 border border-black/10 flex items-center justify-center mb-6">
+            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <ShieldCheck className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-black mb-3">Compliance First</h3>
+            <h3 className="text-xl font-black text-white mb-3">Compliance First</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
               We automatically filter out restricted assets and enforce specific compliance rules for your jurisdiction.
             </p>

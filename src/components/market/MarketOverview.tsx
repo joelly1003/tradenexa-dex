@@ -7,8 +7,8 @@ export function MarketOverview() {
   const symbol = getSymbol();
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow-sm border border-zinc-200 dark:border-zinc-300">
-      <h2 className="text-lg font-semibold mb-4 text-black dark:text-black">Market Overview</h2>
+    <div className="bg-white dark:bg-zinc-900 rounded-xl p-4 shadow-sm border border-zinc-200 dark:border-zinc-800">
+      <h2 className="text-lg font-semibold mb-4 text-black dark:text-white">Market Overview</h2>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg">

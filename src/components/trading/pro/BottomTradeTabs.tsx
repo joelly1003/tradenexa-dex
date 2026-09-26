@@ -6,8 +6,8 @@ export function BottomTradeTabs() {
   const tabs = ['Positions', 'Open Orders', 'Order History', 'Realized PnL'];
 
   return (
-    <div className="flex flex-col h-full bg-white border-t border-zinc-200 text-sm">
-      <div className="flex border-b border-zinc-200">
+    <div className="flex flex-col h-full bg-[#0a0a0c] border-t border-zinc-900 text-sm">
+      <div className="flex border-b border-zinc-900">
         {tabs.map(tab => (
           <button
             key={tab}
@@ -15,7 +15,7 @@ export function BottomTradeTabs() {
             className={`px-6 py-3 font-semibold transition-colors ${
               activeTab === tab 
                 ? 'text-[#B1FA41] border-b-2 border-[#B1FA41]' 
-                : 'text-zinc-500 hover:text-zinc-600'
+                : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             {tab}

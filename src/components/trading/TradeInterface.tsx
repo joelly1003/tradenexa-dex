@@ -79,15 +79,15 @@ function TradeContent() {
   if (!mounted) return null;
 
   return (
-    <div className="flex flex-col h-[calc(100vh-81px)] bg-zinc-50 text-black overflow-hidden w-full">
+    <div className="flex flex-col h-[calc(100vh-81px)] bg-[#0B0E14] text-white overflow-hidden w-full">
       <TopTickerBar 
         selectedSymbol={selectedSymbol} 
         onSelectSymbol={handleSymbolChange} 
       />
       
-      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden border-t border-black/5">
+      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden border-t border-white/5">
         {/* Left column (Chart + Positions) */}
-        <div className="flex-[3] flex flex-col min-w-0 bg-zinc-50">
+        <div className="flex-[3] flex flex-col min-w-0 bg-[#0B0E14]">
            <div className="flex-[2] min-h-[400px] relative z-0">
              <TradingViewChart symbol={getTradingViewSymbol(selectedSymbol)} />
            </div>
@@ -97,12 +97,12 @@ function TradeContent() {
         </div>
 
         {/* Middle column (Orderbook) */}
-        <div className="w-full lg:w-[320px] flex flex-col min-h-[400px] lg:min-h-0 bg-zinc-50 border-l border-black/10 shrink-0">
+        <div className="w-full lg:w-[320px] flex flex-col min-h-[400px] lg:min-h-0 bg-[#0B0E14] border-l border-white/10 shrink-0">
           <Orderbook symbol={selectedSymbol} />
         </div>
 
         {/* Right column (Order Entry) */}
-        <div className="w-full lg:w-[360px] flex flex-col min-h-[400px] lg:min-h-0 bg-zinc-50 shrink-0">
+        <div className="w-full lg:w-[360px] flex flex-col min-h-[400px] lg:min-h-0 bg-[#0B0E14] shrink-0">
           <OrderEntry symbol={selectedSymbol} />
         </div>
       </div>

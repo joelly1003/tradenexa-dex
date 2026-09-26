@@ -8,17 +8,17 @@ export function PositionsPanel() {
   const tabs = ['Positions', 'Open Orders', 'Order History', 'Realized PnL'];
 
   return (
-    <div className="flex flex-col h-full bg-zinc-50 border-t border-black/10 text-black font-sans text-xs">
+    <div className="flex flex-col h-full bg-[#0B0E14] border-t border-white/10 text-white font-sans text-xs">
       {/* Tabs Header */}
-      <div className="flex border-b border-black/10">
+      <div className="flex border-b border-white/10">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-3 font-semibold transition-colors relative ${
               activeTab === tab 
-                ? 'text-black' 
-                : 'text-zinc-500 hover:text-zinc-600'
+                ? 'text-white' 
+                : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             {tab}

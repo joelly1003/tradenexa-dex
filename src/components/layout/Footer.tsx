@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-black/5 bg-white px-6 py-8 text-sm text-zinc-500">
+    <footer className="mt-auto border-t border-white/5 bg-black px-6 py-8 text-sm text-zinc-500">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
         
         {/* Left Section: Logo & Tagline */}
@@ -19,7 +19,7 @@ export function Footer() {
               className="w-auto h-8 md:h-10 object-contain opacity-80 hover:opacity-100 transition-opacity"
             />
           </Link>
-          <p className="text-zinc-500 dark:text-zinc-500 mt-2 text-xs">
+          <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs">
             Institutional-grade performance built on the Ink network.
           </p>
         </div>
@@ -27,15 +27,15 @@ export function Footer() {
         {/* Right Section: Links & Copyright */}
         <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10">
           <nav className="flex items-center gap-6 font-medium">
-            <Link href="/trade" className="text-zinc-500 hover:text-black dark:hover:text-black transition-colors">
+            <Link href="/trade" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
               Pro Trade
             </Link>
-            <Link href="/leaderboard" className="text-zinc-500 hover:text-black dark:hover:text-black transition-colors">
+            <Link href="/leaderboard" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
               Leaderboard
             </Link>
-            <div className="flex items-center gap-2 text-zinc-500 cursor-not-allowed">
+            <div className="flex items-center gap-2 text-zinc-400 cursor-not-allowed">
               <span>Documentation</span>
-              <span className="text-[10px] font-bold bg-zinc-800 text-zinc-600 px-1.5 py-0.5 rounded">Soon</span>
+              <span className="text-[10px] font-bold bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded">Soon</span>
             </div>
           </nav>
 
