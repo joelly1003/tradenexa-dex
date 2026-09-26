@@ -27,7 +27,8 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
     script.innerHTML = JSON.stringify({
       autosize: true,
       symbol: symbol,
-      interval: "1", // 1m lowest timeframe default
+      interval: "1",
+      supported_resolutions: ["1", "3", "5", "15", "30", "45", "60", "120", "D"], // 1m lowest timeframe default
       timezone: "Etc/UTC",
       theme: "dark",
       style: "1", // Candles

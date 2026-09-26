@@ -39,7 +39,8 @@ export function MarketInterface() {
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
-  const assets: Asset[] = (nadoPrices || []).filter((p: any) => p.onBinance).map((p: any) => ({
+  const ALLOWED_COINS = ['BTC', 'ETH', 'SOL', 'PENGU', 'ASTR', 'USDC', 'PUMP', 'HYPE', 'AVAX', 'DOGE', 'XRP', 'BNB'];
+  const assets: Asset[] = (nadoPrices || []).filter((p: any) => ALLOWED_COINS.includes(p.symbol.replace('-PERP', '').toUpperCase())).map((p: any) => ({
     id: p.symbol,
     rank: '0',
     symbol: p.symbol.split('-')[0],
