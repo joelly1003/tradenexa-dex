@@ -116,7 +116,7 @@ export function ConnectWalletButton() {
             </div>
 
             <button 
-              className="w-full mt-5 py-3.5 bg-[#B1FA41] hover:bg-[#a0e238] text-black font-bold text-[15px] rounded-xl transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(177,250,65,0.2)]"
+              className="w-full mt-5 py-3.5 bg-[#B1FA41] hover:bg-[#a0e238] text-black font-bold text-[15px] rounded-xl transition-colors flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(177,250,65,0.2)] cursor-pointer"
             >
               Manage & Deposit Assets &rarr;
             </button>
@@ -144,10 +144,10 @@ export function ConnectWalletButton() {
                 </div>
                 <span className="text-[15px] font-semibold text-zinc-300 group-hover:text-white transition-colors">Nado Network</span>
               </div>
-              <span className="text-[13px] font-bold text-[#B1FA41]">Ready</span>
+              
             </button>
 
-            <button className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-white/5 rounded-xl transition-colors group">
+            <button onClick={() => { window.location.href = '/profile'; }} className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-white/5 rounded-xl transition-colors group cursor-pointer">
               <div className="flex items-center gap-3.5">
                 <User className="w-[18px] h-[18px] text-zinc-400 group-hover:text-white transition-colors" strokeWidth={2} />
                 <span className="text-[15px] font-semibold text-zinc-300 group-hover:text-white transition-colors">My Profile & History</span>

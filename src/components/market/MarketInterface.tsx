@@ -39,8 +39,7 @@ export function MarketInterface() {
     setTimeout(() => setIsRefreshing(false), 800);
   };
 
-  const ALLOWED_COINS = ['BTC', 'ETH', 'SOL', 'PENGU', 'ASTR', 'USDC', 'PUMP', 'HYPE', 'AVAX', 'DOGE', 'XRP', 'BNB'];
-  const assets: Asset[] = (nadoPrices || []).filter((p: any) => ALLOWED_COINS.includes(p.symbol.replace('-PERP', '').toUpperCase())).map((p: any) => ({
+  const assets: Asset[] = (nadoPrices || []).map((p: any) => ({
     id: p.symbol,
     rank: '0',
     symbol: p.symbol.split('-')[0],
@@ -113,30 +112,30 @@ export function MarketInterface() {
   ];
 
   return (
-    <div className="w-full max-w-[1500px] mx-auto p-4 sm:p-6 lg:p-8 text-zinc-900 dark:text-black pb-20">
+    <div className="w-full max-w-[1500px] mx-auto p-4 sm:p-6 lg:p-8 text-zinc-900 dark:text-white pb-20">
       
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black mb-2 text-black dark:text-black">Perpetual Markets</h1>
-          <p className="text-zinc-500 dark:text-zinc-500">Discover, track, and trade regional and global crypto assets on Nado DEX.</p>
+          <h1 className="text-3xl md:text-4xl font-black mb-2 text-black dark:text-white">Perpetual Markets</h1>
+          <p className="text-zinc-500 dark:text-zinc-400">Discover, track, and trade regional and global crypto assets on Nado DEX.</p>
         </div>
         <div className="relative w-full md:w-72 shrink-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 dark:text-zinc-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 dark:text-zinc-500" />
           <input 
             type="text" 
             placeholder="Search token or pair..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#111114] border border-black/10 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#B1FA41] transition-colors placeholder:text-zinc-600 text-black"
+            className="w-full bg-[#111114] border border-white/10 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-[#B1FA41] transition-colors placeholder:text-zinc-600 text-white"
           />
         </div>
       </div>
 
       {/* Info Bar */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white border border-black/5 rounded-2xl mb-6 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-[#0c0d10] border border-white/5 rounded-2xl mb-6 gap-4">
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <span className="text-zinc-500">Last updated: <span className="text-black font-mono">
+          <span className="text-zinc-400">Last updated: <span className="text-white font-mono">
             {nadoPrices && nadoPrices.length > 0 && typeof window !== 'undefined' ? new Date(nadoPrices[0].timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--'}
           </span></span>
           <div className="flex items-center gap-2 text-[#B1FA41] border border-[#B1FA41]/30 bg-[#B1FA41]/10 px-3 py-1 rounded-full text-xs font-bold shadow-[0_0_12px_rgba(177,250,65,0.15)]">
@@ -146,7 +145,7 @@ export function MarketInterface() {
         </div>
         <button 
           onClick={handleRefresh}
-          className="flex items-center gap-2 border border-black/10 hover:bg-black/5 px-4 py-2 rounded-xl text-xs font-black transition-colors text-black shrink-0 hover:border-[#B1FA41]/40"
+          className="flex items-center gap-2 border border-white/10 hover:bg-white/5 px-4 py-2 rounded-xl text-xs font-black transition-colors text-white shrink-0 hover:border-[#B1FA41]/40"
         >
           <RefreshCcw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
           Refresh Prices
@@ -162,7 +161,7 @@ export function MarketInterface() {
             className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-black whitespace-nowrap transition-all border ${
               activeTab === tab.name
                 ? 'bg-[#B1FA41] text-black border-[#B1FA41] shadow-[0_0_15px_rgba(177,250,65,0.25)]' 
-                : 'bg-white text-zinc-500 border-black/5 hover:border-black/20 hover:text-black'
+                : 'bg-[#0c0d10] text-zinc-400 border-white/5 hover:border-white/20 hover:text-white'
             }`}
           >
             {tab.name}
@@ -171,10 +170,10 @@ export function MarketInterface() {
       </div>
 
       {/* Table */}
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-300/50 rounded-xl overflow-hidden overflow-x-auto">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/50 rounded-xl overflow-hidden overflow-x-auto">
         <table className="w-full text-left min-w-[1000px]">
           <thead>
-            <tr className="text-[11px] font-bold text-zinc-500 tracking-wider uppercase border-b border-zinc-200 dark:border-zinc-300/50 bg-transparent">
+            <tr className="text-[11px] font-bold text-zinc-500 tracking-wider uppercase border-b border-zinc-200 dark:border-zinc-800/50 bg-transparent">
               <th className="p-4 pl-6 w-12 rounded-tl-3xl"></th>
               <th className="p-4">Market</th>
               <th className="p-4 text-right">Price</th>
@@ -215,13 +214,12 @@ export function MarketInterface() {
                 return (
                   <tr 
                     key={asset.id} 
-                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors duration-200 group text-sm cursor-pointer" 
-                    onClick={() => router.push(`/trade?symbol=${asset.symbol}`)}
+                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors duration-200 group text-sm" 
                   >
-                    <td className="p-4 pl-6" onClick={(e) => e.stopPropagation()}>
+                    <td className="p-4 pl-6">
                       <button 
                         onClick={() => toggleWatchlist(asset.id)}
-                        className={`transition-colors ${isFavorite ? 'text-yellow-500' : 'text-zinc-600 dark:text-zinc-600 hover:text-zinc-500 dark:hover:text-zinc-500'}`}
+                        className={`transition-colors ${isFavorite ? 'text-yellow-500' : 'text-zinc-300 dark:text-zinc-600 hover:text-zinc-500 dark:hover:text-zinc-400'}`}
                       >
                         <Star className="w-4 h-4" fill={isFavorite ? "currentColor" : "none"} />
                       </button>
@@ -229,7 +227,7 @@ export function MarketInterface() {
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         {/* Circle logo fallback (as seen in screenshot) */}
-                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 border border-zinc-700/50 overflow-hidden font-bold text-xs text-black">
+                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 border border-zinc-700/50 overflow-hidden font-bold text-xs text-white">
                           <img 
                             src={primaryLogo} 
                             alt={asset.symbol}
@@ -248,7 +246,7 @@ export function MarketInterface() {
                           />
                         </div>
                         <div className="flex flex-col">
-                          <span className="font-bold text-sm text-black dark:text-black leading-tight">
+                          <span className="font-bold text-sm text-black dark:text-white leading-tight">
                             {asset.symbol}
                           </span>
                           <span className="text-xs text-zinc-500">
@@ -257,7 +255,7 @@ export function MarketInterface() {
                         </div>
                       </div>
                     </td>
-                    <td className="p-4 text-right font-mono font-bold text-black dark:text-black">
+                    <td className="p-4 text-right font-mono font-bold text-black dark:text-white">
                       {fiatSymbol}{formatPrice(asset.priceUsd)}
                     </td>
                     <td className="p-4 text-right font-mono font-bold">
@@ -266,7 +264,7 @@ export function MarketInterface() {
                         {Math.abs(change).toFixed(2)}%
                       </div>
                     </td>
-                    <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-600">
+                    <td className="p-4 text-right font-mono text-zinc-600 dark:text-zinc-300">
                       {fiatSymbol}{formatCompact(asset.volumeUsd24Hr)}
                     </td>
                     <td className="p-4 text-right font-mono font-bold">
@@ -274,7 +272,7 @@ export function MarketInterface() {
                         {isFundingPositive ? '+' : ''}{fundingRate}%
                       </span>
                     </td>
-                    <td className="p-4 pr-6 text-right font-mono text-zinc-600 dark:text-zinc-600">
+                    <td className="p-4 pr-6 text-right font-mono text-zinc-600 dark:text-zinc-300">
                       {fiatSymbol}{formatCompact(openInterestUsd)}
                     </td>
                   </tr>

@@ -27,8 +27,7 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
     script.innerHTML = JSON.stringify({
       autosize: true,
       symbol: symbol,
-      interval: "1",
-      supported_resolutions: ["1", "5", "15", "60", "240", "1D"], // 1m lowest timeframe default
+      interval: "1", // 1m lowest timeframe default
       timezone: "Etc/UTC",
       theme: "dark",
       style: "1", // Candles
@@ -51,11 +50,11 @@ export function TradingViewChart({ symbol = 'BINANCE:BTCUSDT' }: { symbol?: stri
   }, [symbol]);
 
   return (
-    <div className="w-full h-full flex flex-col bg-white relative group">
-      <div className="w-full flex-1 relative bg-white" ref={containerRef} />
-      {/* Hide TradingView Logo / Watermark Overlay */}
-      <div className="absolute bottom-[30px] left-0 w-[80px] h-[45px] bg-white z-[999] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[45px] h-[30px] bg-white z-[999] pointer-events-none" />
+    <div className="w-full h-full flex flex-col bg-[#0a0a0c] relative group">
+      <div className="w-full flex-1 relative bg-[#0a0a0c]" ref={containerRef} />
+      
+      
+      
     </div>
   );
 }
