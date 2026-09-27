@@ -1,10 +1,54 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { RefreshCw, Link as LinkIcon, Download, Upload, ArrowRightLeft, Clock } from 'lucide-react';
 
 export default function AssetsPage() {
   const [activeTab, setActiveTab] = useState('Deposit');
+  const [amount, setAmount] = useState('');
+  const [isSpinning, setIsSpinning] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Mock balance for demonstration
+  const mockBalance = 10000.00;
+
+  const handleRefresh = () => {
+    setIsSpinning(true);
+    setTimeout(() => setIsSpinning(false), 1000);
+  };
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    // Allow empty string, or numbers with up to one decimal point
+    if (val === '' || /^\d*\.?\d*$/.test(val)) {
+      setAmount(val);
+    }
+  };
+
+  const setHalf = () => {
+    setAmount((mockBalance / 2).toString());
+  };
+
+  const setMax = () => {
+    setAmount(mockBalance.toString());
+  };
+
+  const handleBannerClick = () => {
+    setActiveTab('Deposit');
+    if (inputRef.current) {
+      inputRef.current.focus();
+      window.scrollTo({ top: inputRef.current.offsetTop - 200, behavior: 'smooth' });
+    }
+  };
+
+  const handleConfirm = () => {
+    if (parseFloat(amount) > 0) {
+      alert(`${activeTab} of ${amount} USDC confirmed!`);
+      setAmount('');
+    }
+  };
+
+  const isAmountValid = parseFloat(amount) > 0;
 
   return (
     <div className="min-h-screen bg-[#050506] text-white p-6 md:p-12 lg:p-16 max-w-[1400px] mx-auto font-sans">
@@ -14,8 +58,11 @@ export default function AssetsPage() {
         <div>
           <div className="flex items-center gap-4 mb-2">
             <h1 className="text-4xl font-black tracking-tight">Asset Management</h1>
-            <button className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 transition-colors">
-              <RefreshCw className="w-3.5 h-3.5" /> Refresh
+            <button 
+              onClick={handleRefresh}
+              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 transition-colors"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSpinning ? 'animate-spin text-[#B1FA41]' : ''}`} /> Refresh
             </button>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-400">
@@ -52,10 +99,10 @@ export default function AssetsPage() {
             </div>
             <div className="bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-1 rounded-md">On-Chain</div>
           </div>
-          <div className="text-3xl font-black mb-6">$0.00</div>
+          <div className="text-3xl font-black mb-6">${mockBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-zinc-500">Available to Deposit:</span>
-            <span className="text-blue-400 font-bold">$0.00</span>
+            <span className="text-blue-400 font-bold">${mockBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
           </div>
         </div>
 
@@ -85,7 +132,10 @@ export default function AssetsPage() {
             <p className="text-sm text-zinc-400">Deposit USDC into Nado DEX to access up to 100x leverage on perpetual contracts.</p>
           </div>
         </div>
-        <button className="bg-[#B1FA41] hover:bg-[#a0e238] text-black font-bold px-6 py-3 rounded-xl whitespace-nowrap transition-colors shadow-[0_0_20px_rgba(177,250,65,0.2)]">
+        <button 
+          onClick={handleBannerClick}
+          className="bg-[#B1FA41] hover:bg-[#a0e238] text-black font-bold px-6 py-3 rounded-xl whitespace-nowrap transition-colors shadow-[0_0_20px_rgba(177,250,65,0.2)]"
+        >
           Deposit USDC to Nado
         </button>
       </div>
@@ -130,22 +180,31 @@ export default function AssetsPage() {
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
               <div className="text-sm font-semibold text-zinc-400">Amount</div>
-              <div className="text-xs font-mono text-zinc-500">MetaMask Wallet: $0.00</div>
+              <div className="text-xs font-mono text-zinc-500">
+                {activeTab === 'Deposit' ? `Wallet: $${mockBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}` : 'Available: $0.00'}
+              </div>
             </div>
             <div className="bg-[#0d0d11] border border-white/5 rounded-xl p-4 flex items-center justify-between">
               <input 
+                ref={inputRef}
                 type="text" 
+                value={amount}
+                onChange={handleAmountChange}
                 placeholder="0.0" 
                 className="bg-transparent text-3xl font-black text-white w-2/3 outline-none"
               />
               <div className="flex gap-2">
-                <button className="bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold px-3 py-1.5 rounded-md transition-colors">50%</button>
-                <button className="bg-[#B1FA41]/20 hover:bg-[#B1FA41]/30 text-[#B1FA41] text-xs font-bold px-3 py-1.5 rounded-md transition-colors">MAX</button>
+                <button onClick={setHalf} className="bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-bold px-3 py-1.5 rounded-md transition-colors active:scale-95">50%</button>
+                <button onClick={setMax} className="bg-[#B1FA41]/20 hover:bg-[#B1FA41]/30 text-[#B1FA41] text-xs font-bold px-3 py-1.5 rounded-md transition-colors active:scale-95">MAX</button>
               </div>
             </div>
           </div>
 
-          <button className="w-full bg-[#2a2a30] text-zinc-400 font-bold text-lg py-4 rounded-xl cursor-not-allowed">
+          <button 
+            onClick={handleConfirm}
+            disabled={!isAmountValid}
+            className={`w-full font-bold text-lg py-4 rounded-xl transition-all ${isAmountValid ? 'bg-[#B1FA41] hover:bg-[#a0e238] text-black shadow-[0_0_20px_rgba(177,250,65,0.3)] cursor-pointer active:scale-95' : 'bg-[#2a2a30] text-zinc-500 cursor-not-allowed'}`}
+          >
             Confirm {activeTab}
           </button>
         </div>
