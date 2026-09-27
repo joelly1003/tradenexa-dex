@@ -29,18 +29,18 @@ createAppKit({
     url: typeof window !== 'undefined' ? window.location.origin : 'https://tradenexa.com',
     icons: ['https://avatars.githubusercontent.com/u/37784886']
   },
-  // Force these wallets to appear universally, even if mobile detection hides them
-  includeWalletIds: [
-    'a797aa35c0fadbfc1a53e7f675162ed5226968b44a19ee3d24385c64d1d3c393', // Phantom
-    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
-    '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust Wallet
-    '1ae92b26df02f0abca6304df07debccd18262fdf5fe82daa81593582dac9a369', // Rainbow
+  // Ensure these always appear prominently without restricting the entire list
+  featuredWalletIds: [
+    'phantomCustom',
+    'metamaskCustom',
+    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // Official MetaMask fallback
+    'a797aa35c0fadbfc1a53e7f675162ed5226968b44a19ee3d24385c64d1d3c393', // Official Phantom fallback
   ],
   features: {
     analytics: false,
     email: true,
     socials: ['google', 'x', 'discord', 'farcaster', 'github', 'apple', 'facebook'],
-    allWallets: true // Force the 'All Wallets' list to be visible on mobile
+    allWallets: true
   },
   customWallets: [
     {
@@ -53,6 +53,17 @@ createAppKit({
       webapp_link: 'https://phantom.app',
       app_store: 'https://apps.apple.com/us/app/phantom-solana-wallet/1598432977',
       play_store: 'https://play.google.com/store/apps/details?id=app.phantom'
+    },
+    {
+      id: 'metamaskCustom',
+      name: 'MetaMask',
+      homepage: 'https://metamask.io',
+      image_url: 'https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg',
+      mobile_link: 'metamask://',
+      desktop_link: 'metamask://',
+      webapp_link: 'https://metamask.io',
+      app_store: 'https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202',
+      play_store: 'https://play.google.com/store/apps/details?id=io.metamask'
     }
   ],
   defaultNetwork: ink,
