@@ -10,7 +10,7 @@
   </defs>
 
   <!-- TRAD -->
-  <text x="20" y="120" class="text-white">TRAD</text>
+  <text x="20" y="120" class="text-white" textLength="340" lengthAdjust="spacingAndGlyphs">TRAD</text>
 
   <!-- Custom E -->
   <g transform="translate(370, 32)">
@@ -20,7 +20,7 @@
   </g>
 
   <!-- NEX -->
-  <text x="450" y="120" class="text-white">NE</text>
+  <text x="450" y="120" class="text-white" textLength="155" lengthAdjust="spacingAndGlyphs">NE</text>
 
   <!-- Custom X -->
   <g transform="translate(620, 32)">
@@ -32,8 +32,8 @@
   </g>
 
   <!-- A -->
-  <text x="705" y="120" class="text-white">A</text>
+  <text x="705" y="120" class="text-white" textLength="75" lengthAdjust="spacingAndGlyphs">A</text>
 
   <!-- POWERED BY NADO -->
-  <text x="180" y="180" class="text-small">POWERED BY NADO</text>
+  <text x="180" y="180" class="text-small" textLength="420" lengthAdjust="spacingAndGlyphs">POWERED BY NADO</text>
 </svg>

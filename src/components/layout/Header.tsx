@@ -46,7 +46,7 @@ export function Header() {
       </div>
 
       {/* Center section: Navigation (Pill-shaped like Cryptfy) */}
-      <nav className="hidden md:flex flex-shrink-0 items-center justify-center gap-2">
+      <nav className="flex w-full md:w-auto order-3 md:order-none mt-4 md:mt-0 flex-shrink-0 items-center justify-start md:justify-center gap-2 overflow-x-auto pb-1 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {navLinks.map((link) => {
           const isActive = pathname === link.href;
           return (
