@@ -30,8 +30,8 @@ createAppKit({
   },
   features: {
     analytics: false,
-    email: false,
-    socials: []
+    email: true,
+    socials: ['google', 'x', 'discord', 'farcaster', 'github', 'apple', 'facebook']
   },
   defaultNetwork: ink,
   themeMode: 'dark',
