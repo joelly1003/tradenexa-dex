@@ -44,7 +44,7 @@ export default function ProfilePage() {
                 <input 
                   type="text" 
                   value={tempUsername}
-                  onChange={(e) => setTempUsername(e.target.value)}
+                  onChange={(e) => setTempUsername(e.target.value.replace(/[^a-zA-Z0-9]/g, ''))}
                   onKeyDown={handleKeyDown}
                   onBlur={handleSave}
                   autoFocus
