@@ -12,7 +12,7 @@ export function Footer() {
         <div className="flex flex-col gap-1.5">
           <Link href="/" className="flex flex-col items-start gap-0.5 mb-1">
             <Image 
-              src="/logo.png" 
+              src="/logo.svg" 
               alt="TradeNexa Logo" 
               width={180} 
               height={50} 

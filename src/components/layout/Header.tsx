@@ -41,7 +41,7 @@ export function Header() {
       {/* Left section: Logo */}
       <div className="flex-1 flex items-center justify-start">
         <Link href="/" className="flex flex-col items-start gap-0.5">
-          <Image src="/logo.png" alt="TradeNexa Logo" width={600} height={160} quality={100} unoptimized={true} className="w-auto h-12 md:h-14 object-contain" priority />
+          <Image src="/logo.svg" alt="TradeNexa Logo" width={600} height={160} quality={100} unoptimized={true} className="w-auto h-12 md:h-14 object-contain" priority />
         </Link>
       </div>
 
