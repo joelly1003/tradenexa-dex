@@ -32,13 +32,12 @@ createAppKit({
   },
   // We use custom injected wallets to guarantee they show perfectly with logos
   featuredWalletIds: [
-    'phantomCustom',
-    'metamaskCustom',
+    'phantomCustom'
   ],
   features: {
     analytics: false,
     email: true,
-    socials: ['google', 'x', 'discord', 'farcaster', 'github', 'apple', 'facebook'],
+    socials: ['google', 'x', 'discord', 'farcaster', 'github', 'facebook'],
     allWallets: true
   },
   customWallets: [
@@ -53,18 +52,6 @@ createAppKit({
       webapp_link: 'https://phantom.app',
       app_store: 'https://apps.apple.com/us/app/phantom-solana-wallet/1598432977',
       play_store: 'https://play.google.com/store/apps/details?id=app.phantom'
-    },
-    {
-      id: 'metamaskCustom',
-      name: 'MetaMask',
-      homepage: 'https://metamask.io',
-      // Highly reliable Github Avatar URL
-      image_url: 'https://avatars.githubusercontent.com/u/11744586?s=200&v=4',
-      mobile_link: 'metamask://',
-      desktop_link: 'metamask://',
-      webapp_link: 'https://metamask.io',
-      app_store: 'https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202',
-      play_store: 'https://play.google.com/store/apps/details?id=io.metamask'
     }
   ],
   defaultNetwork: ink,
