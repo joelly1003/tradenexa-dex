@@ -7,8 +7,9 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
-// Use a highly reliable public fallback project ID for WalletConnect to ensure QR code generation works
-const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || '3fcc6bba6f1de962d911bb5b5c3dba68';
+// Hardcoding the exact working project ID. If a user's env var is invalid/unwhitelisted, 
+// the WalletConnect native option completely disappears on mobile. This guarantees it works.
+const projectId = '3fcc6bba6f1de962d911bb5b5c3dba68';
 
 // Adding mainnet alongside ink ensures WalletConnect relay namespace accepts the session
 const networks = [ink, mainnet] as any;
@@ -29,12 +30,10 @@ createAppKit({
     url: typeof window !== 'undefined' ? window.location.origin : 'https://tradenexa.com',
     icons: ['https://avatars.githubusercontent.com/u/37784886']
   },
-  // Ensure these always appear prominently without restricting the entire list
+  // We use custom injected wallets to guarantee they show perfectly with logos
   featuredWalletIds: [
     'phantomCustom',
     'metamaskCustom',
-    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // Official MetaMask fallback
-    'a797aa35c0fadbfc1a53e7f675162ed5226968b44a19ee3d24385c64d1d3c393', // Official Phantom fallback
   ],
   features: {
     analytics: false,
@@ -47,7 +46,8 @@ createAppKit({
       id: 'phantomCustom',
       name: 'Phantom',
       homepage: 'https://phantom.app',
-      image_url: 'https://play-lh.googleusercontent.com/rNXXBhkG0sW95O5vLqB3uF7R-V8HqN17wG4-G8P_u98fM5o4B5f4M7T2P_R3M_Z2',
+      // Highly reliable Github Avatar URL
+      image_url: 'https://avatars.githubusercontent.com/u/78782331?s=200&v=4',
       mobile_link: 'phantom://',
       desktop_link: 'phantom://',
       webapp_link: 'https://phantom.app',
@@ -58,7 +58,8 @@ createAppKit({
       id: 'metamaskCustom',
       name: 'MetaMask',
       homepage: 'https://metamask.io',
-      image_url: 'https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg',
+      // Highly reliable Github Avatar URL
+      image_url: 'https://avatars.githubusercontent.com/u/11744586?s=200&v=4',
       mobile_link: 'metamask://',
       desktop_link: 'metamask://',
       webapp_link: 'https://metamask.io',
