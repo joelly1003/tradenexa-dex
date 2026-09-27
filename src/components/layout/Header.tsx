@@ -40,12 +40,12 @@ export function Header() {
     <header className="flex flex-wrap items-center justify-between p-4 sm:px-8 bg-black border-b border-white/5 relative z-50 font-sans">
       {/* Left section: Logo */}
       <div className="flex-1 flex items-center justify-start shrink-0">
-        <Link href="/" className="flex flex-row items-center gap-2.5 whitespace-nowrap shrink-0">
-          <div className="w-8 h-8 rounded-md bg-gradient-to-br from-[#B1FA41] to-[#609914] flex items-center justify-center shrink-0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l9 4.9V17L12 22l-9-4.9V7z"/></svg>
-          </div>
-          <div className="text-xl md:text-2xl font-black tracking-tight text-white flex items-baseline">
+        <Link href="/" className="flex flex-col items-start justify-center gap-0 whitespace-nowrap shrink-0">
+          <div className="text-xl md:text-2xl font-black tracking-tight text-white flex items-baseline leading-none">
             Trade<span className="text-[#B1FA41]">Nexa</span>
+          </div>
+          <div className="text-[9px] md:text-[10px] font-bold tracking-[0.2em] text-zinc-400 mt-1 uppercase">
+            POWERED BY NADO
           </div>
         </Link>
       </div>
