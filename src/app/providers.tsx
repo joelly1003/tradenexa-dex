@@ -37,7 +37,7 @@ createAppKit({
   features: {
     analytics: false,
     email: true,
-    socials: ['google', 'x', 'discord', 'farcaster', 'github', 'facebook'],
+    socials: ['google', 'x', 'discord', 'farcaster', 'github'],
     allWallets: true
   },
   customWallets: [
