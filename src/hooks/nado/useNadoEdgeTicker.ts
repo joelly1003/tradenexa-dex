@@ -79,7 +79,7 @@ export function useNadoEdgeTicker() {
         }
       });
 
-      return Object.entries(currentPrices).map(([symbol, data], index) => {
+      return Object.entries(currentPrices).map(([symbol, data]: [string, any], index) => {
         // We present them as PERP pairs for the market except USDC
         const displaySymbol = symbol === 'USDC' ? 'USDC' : `${symbol}-PERP`;
         
@@ -102,7 +102,7 @@ export function useNadoEdgeTicker() {
     // Return initialData synchronously so the component NEVER shows "Loading..."
     initialData: () => {
       const now = Date.now();
-      return Object.entries(BASE_PRICES).map(([symbol, data], index) => {
+      return Object.entries(BASE_PRICES).map(([symbol, data]: [string, any], index) => {
         const displaySymbol = symbol === 'USDC' ? 'USDC' : `${symbol}-PERP`;
         return {
           product_id: index + 1,
