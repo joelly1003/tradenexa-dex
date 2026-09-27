@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
+import { useAccount, useBalance } from 'wagmi';
 import { RefreshCw, Link as LinkIcon, Download, Upload, ArrowRightLeft, Clock } from 'lucide-react';
 
 export default function AssetsPage() {
@@ -10,7 +11,9 @@ export default function AssetsPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Mock balance for demonstration
-  const mockBalance = 10000.00;
+  const { address, isConnected } = useAccount();
+  const { data: balanceData } = useBalance({ address });
+  const realBalance = (isConnected && balanceData) ? parseFloat(balanceData.formatted) : 0.00;
 
   const handleRefresh = () => {
     setIsSpinning(true);
@@ -26,11 +29,11 @@ export default function AssetsPage() {
   };
 
   const setHalf = () => {
-    setAmount((mockBalance / 2).toString());
+    setAmount((realBalance / 2).toString());
   };
 
   const setMax = () => {
-    setAmount(mockBalance.toString());
+    setAmount(realBalance.toString());
   };
 
   const handleBannerClick = () => {
@@ -99,10 +102,10 @@ export default function AssetsPage() {
             </div>
             <div className="bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-1 rounded-md">On-Chain</div>
           </div>
-          <div className="text-3xl font-black mb-6">${mockBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+          <div className="text-3xl font-black mb-6">${realBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-zinc-500">Available to Deposit:</span>
-            <span className="text-blue-400 font-bold">${mockBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+            <span className="text-blue-400 font-bold">${realBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
           </div>
         </div>
 
@@ -181,7 +184,7 @@ export default function AssetsPage() {
             <div className="flex justify-between items-center mb-2">
               <div className="text-sm font-semibold text-zinc-400">Amount</div>
               <div className="text-xs font-mono text-zinc-500">
-                {activeTab === 'Deposit' ? `Wallet: $${mockBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}` : 'Available: $0.00'}
+                {activeTab === 'Deposit' ? `Wallet: $${realBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}` : 'Available: $0.00'}
               </div>
             </div>
             <div className="bg-[#0d0d11] border border-white/5 rounded-xl p-4 flex items-center justify-between">
