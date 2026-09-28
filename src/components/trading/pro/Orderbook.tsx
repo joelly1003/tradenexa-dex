@@ -18,7 +18,7 @@ interface OrderbookEntry {
   total: string;
 }
 
-export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
+export function Orderbook({ symbol = 'BTC', onPriceUpdate }: { symbol?: string; onPriceUpdate?: (price: number) => void }) {
   const [centerPrice, setCenterPrice] = useState<number | null>(null);
   const [lastPrice, setLastPrice] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>('book');
@@ -99,6 +99,12 @@ export function Orderbook({ symbol = 'BTC' }: { symbol?: string }) {
 
   const basePrice = centerPrice || (bids.length > 0 ? bids[0].price : 0);
   const isUp = !lastPrice || !centerPrice || centerPrice >= lastPrice;
+
+  useEffect(() => {
+    if (basePrice > 0 && onPriceUpdate) {
+      onPriceUpdate(basePrice);
+    }
+  }, [basePrice, onPriceUpdate]);
 
   const formatPrice = (p: number) => {
     if (p < 0.01) return p.toFixed(6);

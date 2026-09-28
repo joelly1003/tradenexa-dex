@@ -61,6 +61,7 @@ function TradeContent() {
   const router = useRouter();
   const symbolParam = searchParams.get('symbol') || searchParams.get('coin') || 'BTC';
   const [selectedSymbol, setSelectedSymbol] = useState(symbolParam.toUpperCase());
+  const [livePrice, setLivePrice] = useState<number | null>(null);
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -68,11 +69,13 @@ function TradeContent() {
   useEffect(() => {
     if (symbolParam) {
       setSelectedSymbol(symbolParam.toUpperCase());
+      setLivePrice(null);
     }
   }, [symbolParam]);
 
   const handleSymbolChange = (newSymbol: string) => {
     setSelectedSymbol(newSymbol);
+    setLivePrice(null);
     router.push(`/trade?symbol=${newSymbol}`);
   };
 
@@ -83,6 +86,7 @@ function TradeContent() {
       <TopTickerBar 
         selectedSymbol={selectedSymbol} 
         onSelectSymbol={handleSymbolChange} 
+        livePrice={livePrice}
       />
       
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden border-t border-white/5">
@@ -98,12 +102,12 @@ function TradeContent() {
 
         {/* Middle column (Orderbook) */}
         <div className="w-full lg:w-[320px] flex flex-col min-h-[400px] lg:min-h-0 bg-[#0B0E14] border-l border-white/10 shrink-0">
-          <Orderbook symbol={selectedSymbol} />
+          <Orderbook symbol={selectedSymbol} onPriceUpdate={setLivePrice} />
         </div>
 
         {/* Right column (Order Entry) */}
         <div className="w-full lg:w-[360px] flex flex-col min-h-[400px] lg:min-h-0 bg-[#0B0E14] shrink-0">
-          <OrderEntry symbol={selectedSymbol} />
+          <OrderEntry symbol={selectedSymbol} livePrice={livePrice} />
         </div>
       </div>
     </div>

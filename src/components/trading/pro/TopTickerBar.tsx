@@ -17,14 +17,46 @@ export const getLogoUrl = (symbol: string) => {
 interface TopTickerBarProps {
   selectedSymbol: string;
   onSelectSymbol: (symbol: string) => void;
+  livePrice?: number | null;
 }
 
-export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarProps) {
+export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopTickerBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   
   const { data: tickers, isLoading } = useNadoEdgeTicker();
+  const [liveTicker, setLiveTicker] = useState<{ price: string; change: string; vol: string } | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const symUpper = selectedSymbol.toUpperCase();
+
+    const fetchLiveSymbol = async () => {
+      try {
+        const res = await fetch(`/api/binance?symbol=${symUpper}`);
+        if (res.ok && isMounted) {
+          const d = await res.json();
+          if (d && d.lastPrice) {
+            setLiveTicker({
+              price: d.lastPrice,
+              change: d.priceChangePercent ? parseFloat(d.priceChangePercent).toFixed(2) : '0.00',
+              vol: d.quoteVolume || d.volume || '0'
+            });
+          }
+        }
+      } catch (err) {
+        // Fallback silently
+      }
+    };
+
+    fetchLiveSymbol();
+    const interval = setInterval(fetchLiveSymbol, 1000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [selectedSymbol]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -76,7 +108,14 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
     vol: '--'
   };
 
-  const isPositive = currentCoin.change !== '--' && parseFloat(currentCoin.change) >= 0;
+  const activePrice = (livePrice && livePrice > 0)
+    ? livePrice.toString()
+    : (liveTicker && liveTicker.price ? liveTicker.price : currentCoin.price);
+
+  const activeChange = liveTicker && liveTicker.change ? liveTicker.change : currentCoin.change;
+  const activeVol = liveTicker && liveTicker.vol ? liveTicker.vol : currentCoin.vol;
+
+  const isPositive = activeChange !== '--' && parseFloat(activeChange) >= 0;
   
   const formatPrice = (p: string) => {
     if (p === '--') return p;
@@ -172,10 +211,18 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
                     </div>
                   </div>
                   <div className="text-right font-mono text-xs text-white">
-                    {formatPrice(c.price)}
+                    {c.symbol.toUpperCase() === selectedSymbol.toUpperCase() && activePrice !== '--'
+                      ? formatPrice(activePrice)
+                      : formatPrice(c.price)}
                   </div>
-                  <div className={`text-right font-mono text-xs font-bold ${parseFloat(c.change) >= 0 ? 'text-[#B1FA41]' : 'text-red-500'}`}>
-                    {parseFloat(c.change) > 0 ? '+' : ''}{c.change}%
+                  <div className={`text-right font-mono text-xs font-bold ${
+                    parseFloat(c.symbol.toUpperCase() === selectedSymbol.toUpperCase() && activeChange !== '--' ? activeChange : c.change) >= 0 
+                      ? 'text-[#B1FA41]' 
+                      : 'text-red-500'
+                  }`}>
+                    {c.symbol.toUpperCase() === selectedSymbol.toUpperCase() && activeChange !== '--'
+                      ? `${parseFloat(activeChange) > 0 ? '+' : ''}${activeChange}%`
+                      : `${parseFloat(c.change) > 0 ? '+' : ''}${c.change}%`}
                   </div>
                 </button>
               ))}
@@ -195,28 +242,28 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol }: TopTickerBarPro
         <div className="flex flex-col shrink-0">
           <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider mb-0.5">Mark Price</span>
           <span className={`text-sm md:text-lg font-mono font-black ${isPositive ? 'text-[#B1FA41]' : 'text-red-500'}`}>
-            {isLoading ? '...' : `$${formatPrice(currentCoin.price)}`}
+            {activePrice === '--' ? '...' : `$${formatPrice(activePrice)}`}
           </span>
         </div>
         
         <div className="flex flex-col shrink-0">
           <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider mb-0.5">24h Change</span>
           <span className={`text-sm md:text-base font-mono font-bold ${isPositive ? 'text-[#B1FA41]' : 'text-red-500'}`}>
-            {isLoading ? '...' : `${isPositive ? '+' : ''}${currentCoin.change}%`}
+            {activeChange === '--' ? '...' : `${isPositive ? '+' : ''}${activeChange}%`}
           </span>
         </div>
 
         <div className="flex flex-col shrink-0">
           <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider mb-0.5">24h Volume</span>
           <span className="text-sm md:text-base font-mono font-bold text-white">
-            {isLoading ? '...' : `$${formatVol(currentCoin.vol)}`}
+            {activeVol === '--' ? '...' : `$${formatVol(activeVol)}`}
           </span>
         </div>
         
         <div className="flex flex-col shrink-0">
           <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider mb-0.5">Funding Rate</span>
           <span className="text-sm md:text-base font-mono font-bold text-yellow-500">
-            {isLoading || currentCoin.change === '--' ? '...' : `${(parseFloat(currentCoin.change) * 0.0005).toFixed(4)}%`}
+            {activeChange === '--' ? '...' : `${(parseFloat(activeChange) * 0.0005).toFixed(4)}%`}
           </span>
         </div>
       </div>

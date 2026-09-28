@@ -7,7 +7,7 @@ import { useNadoTrade } from '../../../hooks/nado/useNadoTrade';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
 import { Settings2, ArrowRightLeft, ChevronDown, Check } from 'lucide-react';
 
-export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
+export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; livePrice?: number | null }) {
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({ address });
   const { open } = useAppKit();
@@ -20,7 +20,9 @@ export function OrderEntry({ symbol = 'BTC' }: { symbol?: string }) {
   const currentAsset = (tickers || []).find((t: any) => t.symbol === perpSymbol || t.symbol === symUpper) || 
     (tickers || []).find((t: any) => t.symbol.startsWith(symUpper));
     
-  const currentPrice = currentAsset ? parseFloat(currentAsset.price_x18) / 1e18 : 0;
+  const currentPrice = (livePrice && livePrice > 0)
+    ? livePrice
+    : (currentAsset ? parseFloat(currentAsset.price_x18) / 1e18 : 0);
   const productId = currentAsset ? currentAsset.product_id : 1;
   const availableMargin = balanceData ? parseFloat(balanceData.formatted) : 0;
 

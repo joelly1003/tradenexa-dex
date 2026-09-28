@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 export function Footer() {
@@ -10,14 +9,13 @@ export function Footer() {
         
         {/* Left Section: Logo & Tagline */}
         <div className="flex flex-col gap-1.5">
-          <Link href="/" className="flex flex-col items-start gap-0.5 mb-1">
-            <Image 
-              src="/logo.svg" 
-              alt="TradeNexa Logo" 
-              width={180} 
-              height={50} 
-              className="w-auto h-8 md:h-10 object-contain opacity-80 hover:opacity-100 transition-opacity"
-            />
+          <Link href="/" className="flex flex-col items-start justify-center gap-0 whitespace-nowrap shrink-0 group">
+            <div className="text-xl md:text-2xl font-black tracking-tight text-white flex items-baseline leading-none">
+              Trade<span className="text-[#B1FA41]">Nexa</span>
+            </div>
+            <div className="text-[9px] md:text-[10px] font-bold tracking-[0.2em] text-zinc-400 mt-1 uppercase">
+              POWERED BY NADO
+            </div>
           </Link>
           <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs">
             Institutional-grade performance built on the Ink network.
