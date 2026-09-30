@@ -1,7 +1,7 @@
 /**
- * TradeNexa Compliance & Jurisdiction Engine
+ * Multi-Layer Compliance & Sanctions Screening Engine
  * 
- * Implements client-side geofencing, OFAC/FATF sanction screening, 
+ * Provides defense-in-depth jurisdiction verification, OFAC/FATF sanction screening, 
  * and wallet address verification in accordance with non-custodial DEX best practices.
  */
 
@@ -95,7 +95,7 @@ export function getJurisdictionPolicy(countryCode?: string | null): Jurisdiction
 }
 
 /**
- * Client-side jurisdiction detection with fallback.
+ * Browser-level jurisdiction fallback check.
  * Checks for IP geolocation headers, client timezone heuristics, and public endpoint.
  */
 export async function detectUserJurisdiction(): Promise<{

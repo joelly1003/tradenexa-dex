@@ -60,7 +60,7 @@ export function useComplianceCheck(): ComplianceState {
       }
     }
 
-    // 2. Client-side geofencing verification
+    // 2. Multi-layer browser-level fallback geofencing check
     try {
       const geo = await detectUserJurisdiction();
       setCountryCode(geo.countryCode);
