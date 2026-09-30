@@ -2,13 +2,11 @@
 
 import Link from 'next/link';
 import { ArrowRight, Globe, Zap, Wallet, ShieldCheck, CheckCircle2, ExternalLink } from 'lucide-react';
-import { useAccount, useBlockNumber } from 'wagmi';
 import { ArchitectureOverview } from '../components/ArchitectureOverview';
+import { NetworkStatusBadge } from '../components/NetworkStatusBadge';
 import { useRampStore } from '../store/rampStore';
 
 export default function Home() {
-  const { isConnected } = useAccount();
-  const { data: blockNumber, isError, isLoading } = useBlockNumber({ watch: true });
   const { openRamp } = useRampStore();
 
   return (
@@ -23,10 +21,7 @@ export default function Home() {
         {/* Main Content Group */}
         <div className="flex flex-col items-center justify-center space-y-10 flex-1">
           {/* Mainnet Pill */}
-          <div className="inline-flex items-center gap-2 bg-[#B1FA41]/5 border border-[#B1FA41]/20 rounded-full px-4 py-1.5 text-xs font-bold text-[#B1FA41] shadow-[0_0_15px_rgba(177,250,65,0.1)]">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
-            Live on Ink Mainnet • Block {isLoading || isError ? '763373' : blockNumber?.toString() || '763373'}
-          </div>
+          <NetworkStatusBadge />
           
           <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-black tracking-tight leading-[1.25] text-white">
             Trade Crypto in Your <br />
@@ -149,9 +144,9 @@ export default function Home() {
             <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <ShieldCheck className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-white mb-3">Compliance & Sanctions Screening</h3>
+            <h3 className="text-xl font-black text-white mb-3">Multi-Layer Compliance & Sanctions Screening</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
-              Automated client-side OFAC SDN address screening and geofencing safeguards protocol integrity and regulatory compliance.
+              Automated edge geofencing, real-time oracle address screening, and solver-level verification safeguard protocol integrity.
             </p>
           </div>
 

@@ -2,92 +2,84 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 /**
- * TradeNexa Public Access & Compliance Routing Middleware
+ * TradeNexa Multi-Layer Edge Geofencing & Compliance Middleware
  *
- * Ensures all public trading, market, documentation, and compliance routes
- * bypass restrictive authentication gates and never return raw 403 Forbidden 
- * errors that crash client navigation.
+ * Implements defense-in-depth:
+ * 1. Preliminary edge-level geofencing against comprehensive OFAC/FATF sanctioned countries.
+ * 2. Redirects restricted regions away from transaction execution routes (/trade) to a clean,
+ *    branded /restricted-jurisdiction notice without raw 403 crashes.
+ * 3. Keeps documentation, terms, privacy, and educational pages globally accessible for transparency.
  */
 
-// Explicitly defined public routes that must always be openly accessible
-const PUBLIC_PATHS = [
-  '/',
-  '/trade',
-  '/market',
-  '/earn',
-  '/leaderboard',
-  '/docs',
-  '/terms',
-  '/privacy',
-  '/fees',
-  '/assets',
-  '/bounty',
-  '/contact',
-  '/cookies',
-  '/guides',
-  '/profile',
-];
+// OFAC / FATF High-Risk & Embargoed Country ISO Codes
+const OFAC_RESTRICTED_COUNTRIES = new Set([
+  'CU', // Cuba
+  'IR', // Iran
+  'KP', // North Korea
+  'SY', // Syria
+  'RU', // Russia
+  'BY', // Belarus
+  'MM', // Myanmar
+]);
+
+// Routes involving transaction execution or trading capabilities
+const TRANSACTION_ROUTES = ['/trade'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Allow static assets and Next.js internals unconditionally
+  // 1. Allow static assets, images, and Next.js internals unconditionally
   if (
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/api') ||
-    pathname.includes('.') || // static files like favicon.ico, images, svgs
+    pathname.includes('.') ||
     pathname.startsWith('/favicon')
   ) {
     return NextResponse.next();
   }
 
-  // 2. Check if requested path is a known public page or subpath
-  const isPublicRoute = PUBLIC_PATHS.some(
-    (p) => pathname === p || pathname.startsWith(`${p}/`)
+  // 2. Extract edge geolocation signal (Vercel, Cloudflare, or mock headers)
+  const countryHeader = 
+    request.headers.get('x-vercel-ip-country') || 
+    request.headers.get('cf-ipcountry') || 
+    '';
+  const country = countryHeader.toUpperCase().trim();
+
+  // Clone headers for downstream propagation
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-tradenexa-country', country || 'UNKNOWN');
+  requestHeaders.set('x-tradenexa-edge-verified', 'true');
+
+  // 3. Edge-level geofencing check for restricted transaction execution
+  const isRestrictedCountry = country && OFAC_RESTRICTED_COUNTRIES.has(country);
+  const isAttemptingTrade = TRANSACTION_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
 
-  // Clone headers to pass geolocation or downstream access flags
-  const requestHeaders = new Headers(request.headers);
-  const country = request.headers.get('x-vercel-ip-country') || 
-                  request.headers.get('cf-ipcountry') || 
-                  'UNKNOWN';
-  
-  requestHeaders.set('x-tradenexa-country', country);
-  requestHeaders.set('x-tradenexa-route-access', 'public');
-
-  // Even if a compliance or geofence condition is evaluated at edge,
-  // we do NOT return a raw 403/PERMISSION_DENIED response that breaks SPA hydration.
-  // Instead, pass the country header downstream for graceful in-app handling.
-  if (isPublicRoute) {
-    const response = NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-
-    // Add security headers that ensure no cross-origin or client script blocking
-    response.headers.set('X-Content-Type-Options', 'nosniff');
-    response.headers.set('X-Frame-Options', 'SAMEORIGIN');
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-
-    return response;
+  if (isRestrictedCountry && isAttemptingTrade) {
+    // Instead of throwing an uncaught 403 server error, rewrite/redirect to branded notice
+    const restrictedUrl = new URL('/restricted-jurisdiction', request.url);
+    return NextResponse.redirect(restrictedUrl);
   }
 
-  // Fallback for any unknown route: pass through so Next.js not-found.tsx can handle it
-  return NextResponse.next({
+  // 4. Default: allow request through with security headers
+  const response = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
+
+  // Security Headers
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+  return response;
 }
 
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * Match all request paths except for static files and favicon:
      */
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],

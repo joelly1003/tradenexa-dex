@@ -2,10 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAccount } from 'wagmi';
-import { 
-  isSanctionedAddress, 
-  detectUserJurisdiction 
-} from '../lib/compliance';
+import { detectUserJurisdiction } from '../lib/compliance';
 
 export type RestrictionType = 'SANCTIONED_ADDRESS' | 'SANCTIONED_JURISDICTION' | null;
 
@@ -17,6 +14,7 @@ export interface ComplianceState {
   countryName: string;
   countryCode: string;
   showModal: boolean;
+  oracleChecked: boolean;
   dismissModal: () => void;
   recheck: () => Promise<void>;
 }
@@ -30,19 +28,39 @@ export function useComplianceCheck(): ComplianceState {
   const [countryName, setCountryName] = useState<string>('');
   const [countryCode, setCountryCode] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [oracleChecked, setOracleChecked] = useState<boolean>(false);
 
-  const executeComplianceEvaluation = useCallback(async () => {
+  const evaluateCompliance = useCallback(async (activeWallet?: string): Promise<void> => {
     setIsChecking(true);
 
-    if (address && isSanctionedAddress(address)) {
-      setIsBlocked(true);
-      setRestrictionType('SANCTIONED_ADDRESS');
-      setDetails(`Connected wallet address ${address.slice(0, 8)}... is flagged on the OFAC Specially Designated Nationals (SDN) registry.`);
-      setShowModal(true);
-      setIsChecking(false);
-      return;
+    // 1. If wallet address is connected, screen via the Serverless API Route (Chainalysis Oracle + SDN)
+    if (activeWallet) {
+      try {
+        const res = await fetch('/api/compliance/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: activeWallet }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setOracleChecked(Boolean(data.oracleChecked));
+
+          if (!data.allowed) {
+            setIsBlocked(true);
+            setRestrictionType('SANCTIONED_ADDRESS');
+            setDetails(data.reason || 'Address flagged under international sanctions regulations.');
+            setShowModal(true);
+            setIsChecking(false);
+            return;
+          }
+        }
+      } catch (apiErr) {
+        console.warn('Backend compliance verification warning:', apiErr);
+      }
     }
 
+    // 2. Client-side geofencing verification
     try {
       const geo = await detectUserJurisdiction();
       setCountryCode(geo.countryCode);
@@ -51,7 +69,9 @@ export function useComplianceCheck(): ComplianceState {
       if (geo.isRestricted) {
         setIsBlocked(true);
         setRestrictionType('SANCTIONED_JURISDICTION');
-        setDetails(`Connection originated from ${geo.countryName} (${geo.countryCode}), which is subject to international financial sanctions (${geo.reason || 'Restricted Jurisdiction'}).`);
+        setDetails(
+          `Connection originated from ${geo.countryName} (${geo.countryCode}), which is subject to international financial sanctions (${geo.reason || 'Restricted Jurisdiction'}).`
+        );
         setShowModal(true);
       } else {
         setIsBlocked(false);
@@ -63,56 +83,22 @@ export function useComplianceCheck(): ComplianceState {
     } finally {
       setIsChecking(false);
     }
-  }, [address]);
+  }, []);
 
   useEffect(() => {
     let active = true;
 
-    async function evaluate() {
-      // Asynchronous non-blocking evaluation
-      if (address && isSanctionedAddress(address)) {
-        if (active) {
-          setIsBlocked(true);
-          setRestrictionType('SANCTIONED_ADDRESS');
-          setDetails(`Connected wallet address ${address.slice(0, 8)}... is flagged on the OFAC Specially Designated Nationals (SDN) registry.`);
-          setShowModal(true);
-          setIsChecking(false);
-        }
-        return;
-      }
+    const run = async () => {
+      if (!active) return;
+      await evaluateCompliance(address);
+    };
 
-      try {
-        const geo = await detectUserJurisdiction();
-        if (active) {
-          setCountryCode(geo.countryCode);
-          setCountryName(geo.countryName);
-
-          if (geo.isRestricted) {
-            setIsBlocked(true);
-            setRestrictionType('SANCTIONED_JURISDICTION');
-            setDetails(`Connection originated from ${geo.countryName} (${geo.countryCode}), which is subject to international financial sanctions (${geo.reason || 'Restricted Jurisdiction'}).`);
-            setShowModal(true);
-          } else {
-            setIsBlocked(false);
-            setRestrictionType(null);
-            setDetails(null);
-          }
-        }
-      } catch (err) {
-        console.warn('Compliance jurisdiction check warning:', err);
-      } finally {
-        if (active) {
-          setIsChecking(false);
-        }
-      }
-    }
-
-    evaluate();
+    run();
 
     return () => {
       active = false;
     };
-  }, [address]);
+  }, [address, evaluateCompliance]);
 
   const dismissModal = () => {
     setShowModal(false);
@@ -126,7 +112,8 @@ export function useComplianceCheck(): ComplianceState {
     countryName,
     countryCode,
     showModal,
+    oracleChecked,
     dismissModal,
-    recheck: executeComplianceEvaluation,
+    recheck: () => evaluateCompliance(address),
   };
 }

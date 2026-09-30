@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShieldCheck, Scale, ExternalLink } from 'lucide-react';
+import { ShieldCheck, Scale } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -78,7 +78,7 @@ export function Footer() {
           <div className="flex items-center gap-4 text-[11px] font-mono">
             <span className="flex items-center gap-1.5 text-zinc-400">
               <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41]" />
-              OFAC / Sanction Screening Active
+              Edge & Oracle Sanction Screening Active
             </span>
             <span className="text-zinc-600">|</span>
             <span className="text-zinc-400">Ink Network L2</span>
