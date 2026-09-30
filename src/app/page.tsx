@@ -1,13 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Globe, Zap, Wallet, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Globe, Zap, Wallet, ShieldCheck, CheckCircle2, ExternalLink } from 'lucide-react';
 import { useAccount, useBlockNumber } from 'wagmi';
 import { ArchitectureOverview } from '../components/ArchitectureOverview';
+import { useRampStore } from '../store/rampStore';
 
 export default function Home() {
   const { isConnected } = useAccount();
   const { data: blockNumber, isError, isLoading } = useBlockNumber({ watch: true });
+  const { openRamp } = useRampStore();
 
   return (
     <div className="relative flex flex-col min-h-[calc(100vh-80px)] bg-black overflow-hidden font-sans">
@@ -35,16 +37,26 @@ export default function Home() {
             Experience institutional-speed swaps and solver-optimized routing—powered by NADO and settled on Ink Network.
           </p>
 
-          <Link 
-            href="/trade" 
-            className="group flex items-center justify-center gap-2 bg-[#B1FA41] hover:bg-[#9de036] text-black px-8 py-3.5 rounded-xl font-black text-lg transition-all shadow-[0_0_20px_rgba(177,250,65,0.2)] hover:shadow-[0_0_30px_rgba(177,250,65,0.4)] hover:-translate-y-0.5 w-64"
-          >
-            Start Trading
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <Link 
+              href="/trade" 
+              className="group flex items-center justify-center gap-2 bg-[#B1FA41] hover:bg-[#9de036] text-black px-8 py-3.5 rounded-xl font-black text-lg transition-all shadow-[0_0_20px_rgba(177,250,65,0.2)] hover:shadow-[0_0_30px_rgba(177,250,65,0.4)] hover:-translate-y-0.5 w-60"
+            >
+              Start Trading
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            <button
+              onClick={() => openRamp()}
+              className="flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-3.5 rounded-xl font-bold text-sm transition-all hover:border-white/20 w-60"
+            >
+              <Wallet className="w-4 h-4 text-[#B1FA41]" />
+              Buy / Sell Crypto
+            </button>
+          </div>
         </div>
 
-        {/* Bottom Features (pushed to down) */}
+        {/* Bottom Features */}
         <div className="flex items-center justify-center flex-wrap gap-8 text-sm font-bold text-white pt-10">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
@@ -71,13 +83,23 @@ export default function Home() {
             Unlike generic global exchanges, we build native features specifically for your region so you never have to calculate exchange rates in your head again.
           </p>
           
-          {/* Payment Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            {['PIX', 'SEPA', 'UPI', 'M-PESA', 'TRANSAK', 'STRIPE'].map((pill) => (
-              <div key={pill} className="bg-white/5 border border-white/10 text-zinc-300 font-bold text-sm px-5 py-2 rounded-xl uppercase tracking-wider">
-                {pill}
-              </div>
-            ))}
+          {/* Interactive Payment Pills */}
+          <div className="flex flex-col items-center gap-2 mt-8">
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {['PIX', 'SEPA', 'UPI', 'M-PESA', 'TRANSAK', 'STRIPE'].map((pill) => (
+                <button
+                  key={pill}
+                  onClick={() => openRamp({ rail: pill })}
+                  className="bg-white/5 hover:bg-[#B1FA41]/10 border border-white/10 hover:border-[#B1FA41]/30 text-zinc-300 hover:text-white font-bold text-sm px-5 py-2.5 rounded-xl uppercase tracking-wider transition-all flex items-center gap-1.5 group cursor-pointer shadow-sm hover:scale-105"
+                >
+                  <span>{pill}</span>
+                  <ExternalLink className="w-3 h-3 text-zinc-500 group-hover:text-[#B1FA41] transition-colors" />
+                </button>
+              ))}
+            </div>
+            <span className="text-xs text-zinc-500 font-medium mt-1">
+              Select any regional rail to open licensed third-party on/off-ramp gateway. Direct non-custodial delivery.
+            </span>
           </div>
         </div>
 
@@ -107,7 +129,7 @@ export default function Home() {
               </span>
             </div>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
-              Dynamic slippage minimization and price improvement via NADO's liquidity engine and solver execution.
+              Dynamic slippage minimization and price improvement via NADO&apos;s liquidity engine and solver execution.
             </p>
           </div>
 
@@ -116,9 +138,9 @@ export default function Home() {
             <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <Wallet className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-white mb-3">Local Payment Routes</h3>
+            <h3 className="text-xl font-black text-white mb-3">Regional Payment Rails</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
-              We directly integrate the most popular regional payment methods so you can on-ramp and off-ramp effortlessly.
+              Direct routing to licensed on-ramp partners (PIX, SEPA, UPI, M-PESA). TradeNexa is non-custodial and never holds fiat currency.
             </p>
           </div>
 
@@ -127,9 +149,9 @@ export default function Home() {
             <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <ShieldCheck className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-white mb-3">Compliance First</h3>
+            <h3 className="text-xl font-black text-white mb-3">Compliance & Sanctions Screening</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
-              We automatically filter out restricted assets and enforce specific compliance rules for your jurisdiction.
+              Automated client-side OFAC SDN address screening and geofencing safeguards protocol integrity and regulatory compliance.
             </p>
           </div>
 

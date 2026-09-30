@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useCurrencyStore, FiatCurrency, FIAT_RATES } from '../../store/currencyStore';
+import { FiatRampModal } from '../ramp/FiatRampModal';
+import { ComplianceGuard } from '../compliance/ComplianceGuard';
 
 type Language = 'EN' | 'ES' | 'FR' | 'DE';
 type Region = 'US' | 'EU' | 'NG' | 'UK';
@@ -44,6 +46,12 @@ export function RegionalProvider({ children }: { children: ReactNode }) {
       getSymbol 
     }}>
       {children}
+      {mounted && (
+        <>
+          <FiatRampModal />
+          <ComplianceGuard />
+        </>
+      )}
     </RegionalContext.Provider>
   );
 }

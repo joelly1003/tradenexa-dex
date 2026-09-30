@@ -1,4 +1,4 @@
-﻿import { Globe2, MapPin } from 'lucide-react';
+import { Globe2, MapPin } from 'lucide-react';
 
 export default function GuidesPage() {
   return (
@@ -13,10 +13,10 @@ export default function GuidesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
         {[
-          { region: 'Europe (SEPA)', desc: 'How to on-ramp EUR and trade with zero fees.', flag: '🇪🇺' },
-          { region: 'United Kingdom (FPS)', desc: 'Connecting your bank for instant GBP deposits.', flag: '🇬🇧' },
-          { region: 'Brazil (PIX)', desc: 'Fast, secure BRL transfers directly to your wallet.', flag: '🇧🇷' },
-          { region: 'Nigeria (P2P)', desc: 'Navigating NGN liquidity and safe P2P settlement.', flag: '🇳🇬' },
+          { region: 'Europe (SEPA)', desc: 'How to on-ramp EUR via licensed SEPA gateways directly to your wallet.', flag: '🇪🇺' },
+          { region: 'United Kingdom (FPS)', desc: 'Connecting your bank for instant GBP transfers via registered providers.', flag: '🇬🇧' },
+          { region: 'Brazil (PIX)', desc: 'Fast, secure BRL transfers directly to your non-custodial wallet.', flag: '🇧🇷' },
+          { region: 'Nigeria & Kenya (Mobile Money)', desc: 'Navigating local currency liquidity and direct wallet settlement.', flag: '🌍' },
         ].map((item, i) => (
           <div key={i} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-2xl flex items-start gap-4 hover:border-emerald-500 transition-all cursor-pointer group shadow-sm">
             <div className="text-4xl">{item.flag}</div>

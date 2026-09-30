@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, Search, Info } from 'lucide-react';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
+import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
 
 export const getLogoUrl = (symbol: string) => {
   const overrides: Record<string, string> = {
@@ -21,6 +22,7 @@ interface TopTickerBarProps {
 }
 
 export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopTickerBarProps) {
+  const { fiat } = useCurrencyStore();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -258,10 +260,28 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopT
       {/* Stats row */}
       <div className="flex-1 flex items-center gap-6 md:gap-10 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div className="flex flex-col shrink-0">
-          <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider mb-0.5">Mark Price</span>
-          <span className={`text-sm md:text-lg font-mono font-black ${isPositive ? 'text-[#B1FA41]' : 'text-red-500'}`}>
-            {activePrice === '--' ? '...' : `$${formatPrice(activePrice)}`}
-          </span>
+          <div className="flex items-center gap-1 mb-0.5">
+            <span className="text-[10px] md:text-xs font-bold text-zinc-500 uppercase tracking-wider">Mark Price</span>
+            {fiat !== 'USD' && (
+              <div className="relative group/oracle cursor-help">
+                <Info className="w-3 h-3 text-zinc-500 hover:text-[#B1FA41] transition-colors" />
+                <div className="absolute top-full left-0 mt-1 hidden group-hover/oracle:flex flex-col w-60 p-2 bg-[#121824] border border-white/10 rounded-lg text-[9px] text-zinc-300 shadow-xl z-50 pointer-events-none">
+                  <span className="font-bold text-white mb-0.5">Live Oracle Feed</span>
+                  <span>Fiat values are estimates based on live oracle reference rates (Chainlink / Pyth benchmarks).</span>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className={`text-sm md:text-lg font-mono font-black ${isPositive ? 'text-[#B1FA41]' : 'text-red-500'}`}>
+              {activePrice === '--' ? '...' : `$${formatPrice(activePrice)}`}
+            </span>
+            {fiat !== 'USD' && activePrice !== '--' && (
+              <span className="text-xs font-mono text-zinc-400">
+                ≈ {formatFiat(parseFloat(activePrice), fiat)}
+              </span>
+            )}
+          </div>
         </div>
         
         <div className="flex flex-col shrink-0">

@@ -6,6 +6,8 @@ import { useAppKit } from '@reown/appkit/react';
 import { useNadoTrade } from '../../../hooks/nado/useNadoTrade';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
 import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X } from 'lucide-react';
+import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
+import { getTokenRiskProfile } from '../../../lib/tokens';
 
 export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; livePrice?: number | null }) {
   const { address, isConnected } = useAccount();
@@ -25,6 +27,8 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
     : (currentAsset ? parseFloat(currentAsset.price_x18) / 1e18 : 0);
   const productId = currentAsset ? currentAsset.product_id : 1;
   const availableMargin = balanceData ? parseFloat(balanceData.formatted) : 0;
+  const { fiat } = useCurrencyStore();
+  const tokenRisk = getTokenRiskProfile(symUpper);
 
   // Local State
   const [marginMode, setMarginMode] = useState('Cross');
@@ -177,9 +181,21 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
             <ChevronDown className="w-3 h-3 text-zinc-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
-        <div className="px-2 py-1 bg-[#B1FA41]/10 border border-[#B1FA41]/20 rounded text-[10px] font-mono text-[#B1FA41] flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
-          RPC Online
+        <div className="flex items-center gap-2">
+          {tokenRisk.isHighVolatility && (
+            <span className="px-2 py-0.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded text-[9px] font-bold uppercase tracking-wider">
+              Volatile
+            </span>
+          )}
+          {tokenRisk.isExperimental && (
+            <span className="px-2 py-0.5 bg-purple-500/10 border border-purple-500/30 text-purple-400 rounded text-[9px] font-bold uppercase tracking-wider">
+              Experimental
+            </span>
+          )}
+          <div className="px-2 py-1 bg-[#B1FA41]/10 border border-[#B1FA41]/20 rounded text-[10px] font-mono text-[#B1FA41] flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
+            RPC Online
+          </div>
         </div>
       </div>
 
@@ -382,6 +398,25 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
         <div className="flex justify-between items-center text-zinc-400">
           <span>Notional Total</span>
           <span className="font-mono text-white">${nominalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+        </div>
+        {/* Localized Oracle Fiat Equivalent Tooltip */}
+        <div className="flex justify-between items-center text-zinc-400">
+          <div className="flex items-center gap-1">
+            <span>Est. Local ({fiat})</span>
+            <div className="relative group/oracle cursor-help">
+              <Info className="w-3 h-3 text-zinc-500 hover:text-[#B1FA41] transition-colors" />
+              <div className="absolute bottom-full left-0 mb-1.5 hidden group-hover/oracle:flex flex-col w-64 p-2.5 bg-[#121824] border border-white/10 rounded-xl text-[10px] text-zinc-300 shadow-2xl z-30 pointer-events-none">
+                <span className="font-bold text-white mb-1 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41]" />
+                  Live Oracle Reference Feed
+                </span>
+                <span className="text-zinc-400 leading-tight">
+                  Fiat values are estimates based on live oracle reference rates (Chainlink / Pyth benchmarks). Actual execution occurs in crypto/stablecoins on Ink Network.
+                </span>
+              </div>
+            </div>
+          </div>
+          <span className="font-mono text-[#B1FA41] font-semibold">{formatFiat(nominalUsd, fiat)}</span>
         </div>
         <div className="flex justify-between items-center text-zinc-400">
           <span>Est. Execution Price</span>
