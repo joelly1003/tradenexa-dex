@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Search, Info } from 'lucide-react';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
 import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
+import { useRampStore } from '../../../store/rampStore';
 
 export const getLogoUrl = (symbol: string) => {
   const overrides: Record<string, string> = {
@@ -23,11 +24,12 @@ interface TopTickerBarProps {
 
 export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopTickerBarProps) {
   const { fiat } = useCurrencyStore();
+  const { openRamp } = useRampStore();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   
-  const { data: tickers, isLoading } = useNadoEdgeTicker();
+  const { data: tickers } = useNadoEdgeTicker();
   const [liveTicker, setLiveTicker] = useState<{
     price: string;
     change: string;
@@ -62,7 +64,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopT
             });
           }
         }
-      } catch (err) {
+      } catch {
         // Fallback silently
       }
     };
@@ -85,7 +87,14 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopT
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const dynamicCoins = (tickers || []).map((t: any) => {
+  interface NadoRawTicker {
+    symbol: string;
+    price_x18: string;
+    change_24h_percent: string;
+    volume_24h_x18: string;
+  }
+
+  const dynamicCoins = ((tickers as NadoRawTicker[]) || []).map((t) => {
     const symbol = t.symbol.split('-')[0];
     return {
       symbol,
@@ -104,7 +113,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopT
       uniqueCoinsMap.set(c.symbol, c);
     }
   }
-  let coins = Array.from(uniqueCoinsMap.values());
+  const coins = Array.from(uniqueCoinsMap.values());
 
   // Sort: Majors first (BTC, ETH, SOL), then by volume
   const MAJORS = ['BTC', 'ETH', 'SOL'];
@@ -324,6 +333,21 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopT
           <span className="text-sm md:text-base font-mono font-bold text-yellow-500">
             {activeChange === '--' ? '...' : `${(parseFloat(activeChange) * 0.0005).toFixed(4)}%`}
           </span>
+        </div>
+
+        {/* Regional Fiat Rails Quick Deposit */}
+        <div className="hidden xl:flex items-center gap-1.5 shrink-0 pl-4 border-l border-white/10">
+          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Deposit Rails:</span>
+          {(['PIX', 'SEPA', 'UPI', 'M-PESA'] as const).map((rail) => (
+            <button
+              key={rail}
+              onClick={() => openRamp({ rail })}
+              className="px-2 py-1 rounded-lg bg-white/5 hover:bg-[#B1FA41]/10 border border-white/10 hover:border-[#B1FA41]/30 text-zinc-300 hover:text-[#B1FA41] text-[10px] font-bold font-mono transition-all cursor-pointer shadow-sm"
+              title={`Deposit via ${rail}`}
+            >
+              +{rail}
+            </button>
+          ))}
         </div>
       </div>
       

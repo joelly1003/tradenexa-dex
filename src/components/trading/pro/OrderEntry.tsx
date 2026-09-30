@@ -1,13 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAccount, useBalance } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
 import { useNadoTrade } from '../../../hooks/nado/useNadoTrade';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
-import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X } from 'lucide-react';
+import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X, CreditCard } from 'lucide-react';
 import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
+import { useRampStore } from '../../../store/rampStore';
 import { getTokenRiskProfile } from '../../../lib/tokens';
+
+interface NadoTickerItem {
+  symbol: string;
+  price_x18: string;
+  product_id: number;
+}
 
 export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; livePrice?: number | null }) {
   const { address, isConnected } = useAccount();
@@ -19,8 +26,9 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   const symUpper = symbol.toUpperCase() === 'KPEPE' ? 'PEPE' : symbol.toUpperCase();
   const perpSymbol = `${symUpper}-PERP`;
   
-  const currentAsset = (tickers || []).find((t: any) => t.symbol === perpSymbol || t.symbol === symUpper) || 
-    (tickers || []).find((t: any) => t.symbol.startsWith(symUpper));
+  const currentAsset = (tickers as NadoTickerItem[] | undefined)?.find(
+    (t) => t.symbol === perpSymbol || t.symbol === symUpper
+  ) || (tickers as NadoTickerItem[] | undefined)?.find((t) => t.symbol.startsWith(symUpper));
     
   const currentPrice = (livePrice && livePrice > 0)
     ? livePrice
@@ -28,6 +36,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   const productId = currentAsset ? currentAsset.product_id : 1;
   const availableMargin = balanceData ? parseFloat(balanceData.formatted) : 0;
   const { fiat } = useCurrencyStore();
+  const { openRamp } = useRampStore();
   const tokenRisk = getTokenRiskProfile(symUpper);
 
   // Local State
@@ -128,7 +137,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
         },
       });
       alert('Order successfully signed via EIP-712 and submitted to Nado Gateway!');
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Nado order placement error:', e);
     }
   };
@@ -136,7 +145,6 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   // Calculated Order Data
   const sizeNum = parseFloat(sizeAmount) || 0;
   const nominalUsd = isSizeInUSD ? sizeNum : sizeNum * tradePrice;
-  const nominalToken = isSizeInUSD && tradePrice > 0 ? sizeNum / tradePrice : sizeNum;
   const takerFee = nominalUsd * 0.0005; // 0.05% taker fee mock
   const estLiqPrice = tradePrice > 0 ? (isLong ? tradePrice * (1 - 0.9 / leverage) : tradePrice * (1 + 0.9 / leverage)) : 0;
 
@@ -287,6 +295,27 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
             <span>50%</span>
             <span>75%</span>
             <span>100%</span>
+          </div>
+        </div>
+
+        {/* Quick Deposit via Regional Rails */}
+        <div className="flex items-center justify-between text-[11px] text-zinc-500 mt-2.5 px-1 pt-2 border-t border-white/5">
+          <span className="flex items-center gap-1 text-zinc-400 text-[10px]">
+            <CreditCard className="w-3 h-3 text-[#B1FA41]" />
+            Deposit Rails:
+          </span>
+          <div className="flex items-center gap-1">
+            {(['PIX', 'SEPA', 'UPI', 'M-PESA'] as const).map((rail) => (
+              <button
+                key={rail}
+                type="button"
+                onClick={() => openRamp({ rail })}
+                className="px-1.5 py-0.5 rounded bg-white/5 hover:bg-[#B1FA41]/10 hover:text-[#B1FA41] text-[10px] font-mono font-bold text-zinc-400 border border-white/5 transition-all cursor-pointer"
+                title={`Deposit via ${rail}`}
+              >
+                +{rail}
+              </button>
+            ))}
           </div>
         </div>
       </div>

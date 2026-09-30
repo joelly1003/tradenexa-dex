@@ -1,12 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { Settings, CreditCard } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-import { useDisconnect, useAccount } from 'wagmi';
-import { ConnectWalletButton } from '../wallet/ConnectWalletButton';
+import { useAccount } from 'wagmi';
+import { WalletConnectButton } from '../WalletConnectButton';
 import { useCurrencyStore, FIAT_RATES, FiatCurrency } from '../../store/currencyStore';
 import { useRampStore } from '../../store/rampStore';
 
@@ -14,7 +13,6 @@ export function Header() {
   const pathname = usePathname();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
-  const { disconnect } = useDisconnect();
   const { chain } = useAccount();
   const { fiat, setFiat } = useCurrencyStore();
   const { openRamp } = useRampStore();
@@ -109,7 +107,7 @@ export function Header() {
                   <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2 block">Currency</label>
                   <select 
                     value={fiat} 
-                    onChange={(e) => setFiat(e.target.value as any)}
+                    onChange={(e) => setFiat(e.target.value as FiatCurrency)}
                     className="w-full bg-[#121824] border border-white/10 rounded-lg p-2 text-sm text-white focus:outline-none focus:border-[#B1FA41]"
                   >
                     {currencies.map(c => (
@@ -141,9 +139,9 @@ export function Header() {
           )}
         </div>
         
-        {/* Custom style for the wallet button to match the dark neon theme */}
-        <div className="[&_button]:!bg-black [&_button]:!text-white [&_button]:hover:!bg-[#121824] [&_button]:!font-bold [&_button]:!rounded-full">
-          <ConnectWalletButton />
+        {/* Web3 Wallet Connect Button */}
+        <div>
+          <WalletConnectButton />
         </div>
       </div>
     </header>
