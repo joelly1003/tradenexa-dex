@@ -5,7 +5,7 @@ import { useAccount, useBalance } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
 import { useNadoTrade } from '../../../hooks/nado/useNadoTrade';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
-import { Settings2, ArrowRightLeft, ChevronDown, Check } from 'lucide-react';
+import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X } from 'lucide-react';
 
 export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; livePrice?: number | null }) {
   const { address, isConnected } = useAccount();
@@ -43,6 +43,8 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   const [slPrice, setSlPrice] = useState('');
   
   const [slippage, setSlippage] = useState('0.5');
+  const [showSlippageModal, setShowSlippageModal] = useState(false);
+  const [customSlippage, setCustomSlippage] = useState('');
 
   const tradePrice = orderType === 'Limit' || orderType === 'Stop / Trigger' ? (parseFloat(limitPrice) || currentPrice) : currentPrice;
   
@@ -135,7 +137,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   const estLiqPrice = tradePrice > 0 ? (isLong ? tradePrice * (1 - 0.9 / leverage) : tradePrice * (1 + 0.9 / leverage)) : 0;
 
   // Button States
-  let buttonText = 'Connect Wallet';
+  let buttonText = 'Connect Wallet to Trade';
   let buttonAction: () => void = () => open();
   let buttonClass = 'bg-[#1e293b] hover:bg-[#334155] text-white'; // Disabled/Disconnected default
 
@@ -371,6 +373,13 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
       {/* 8. Summary & Risk Data Card */}
       <div className="bg-white/5 rounded-lg p-3 space-y-2 text-[11px] font-sans mb-5 border border-white/5">
         <div className="flex justify-between items-center text-zinc-400">
+          <span>Execution Route</span>
+          <span className="font-mono text-[10px] text-[#B1FA41] bg-[#B1FA41]/10 px-2 py-0.5 rounded border border-[#B1FA41]/20 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
+            NADO Solver → Ink L2 (763373)
+          </span>
+        </div>
+        <div className="flex justify-between items-center text-zinc-400">
           <span>Notional Total</span>
           <span className="font-mono text-white">${nominalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
@@ -388,11 +397,80 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
           <span>Est. Taker Fee</span>
           <span className="font-mono text-white">${takerFee.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
         </div>
-        <div className="flex justify-between items-center text-zinc-400 mt-2 pt-2 border-t border-white/5">
-          <div className="flex items-center gap-1 cursor-pointer hover:text-zinc-200">
-            Slippage <Settings2 className="w-3 h-3" />
+
+        {/* Slippage Row & Interactive Toggle */}
+        <div className="mt-2 pt-2 border-t border-white/5">
+          <div 
+            onClick={() => setShowSlippageModal(!showSlippageModal)}
+            className="flex justify-between items-center text-zinc-400 cursor-pointer hover:text-white transition-colors"
+          >
+            <div className="flex items-center gap-1">
+              <span>Slippage Tolerance</span>
+              <Settings2 className="w-3 h-3 text-zinc-400" />
+            </div>
+            <span className="font-mono text-white font-bold bg-white/5 px-1.5 py-0.5 rounded text-[10px]">
+              {slippage}%
+            </span>
           </div>
-          <span className="font-mono text-white">{slippage}%</span>
+
+          {/* Interactive Slippage Configuration Panel */}
+          {showSlippageModal && (
+            <div className="mt-2.5 p-2.5 bg-[#121824] border border-white/10 rounded-lg space-y-2">
+              <div className="flex items-center justify-between text-[10px] text-zinc-400">
+                <span className="font-semibold text-white">Slippage Tolerance</span>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowSlippageModal(false); }}
+                  className="text-zinc-500 hover:text-white"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-4 gap-1.5">
+                {['0.1', '0.5', '1.0'].map((val) => (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSlippage(val);
+                      setCustomSlippage('');
+                    }}
+                    className={`py-1 rounded text-[10px] font-mono font-bold transition-all ${
+                      slippage === val && !customSlippage
+                        ? 'bg-[#B1FA41] text-black'
+                        : 'bg-white/5 text-zinc-300 hover:bg-white/10'
+                    }`}
+                  >
+                    {val}%
+                  </button>
+                ))}
+                <div className="relative">
+                  <input
+                    type="number"
+                    placeholder="Custom"
+                    value={customSlippage}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setCustomSlippage(val);
+                      if (val && parseFloat(val) > 0) {
+                        setSlippage(val);
+                      }
+                    }}
+                    className="w-full bg-white/5 border border-white/10 focus:border-[#B1FA41]/50 rounded px-1.5 py-1 text-[10px] font-mono text-white placeholder:text-zinc-600 outline-none text-center"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-start gap-1.5 text-[9px] text-zinc-500 leading-tight pt-1 border-t border-white/5">
+                <Info className="w-3 h-3 text-[#B1FA41] shrink-0 mt-0.5" />
+                <span>
+                  Orders are routed through NADO&apos;s off-chain solver and settled on Ink L2. Dynamic slippage protection minimizes MEV impact.
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

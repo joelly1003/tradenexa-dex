@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight, Globe, Zap, Wallet, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { useAccount, useBlockNumber } from 'wagmi';
+import { ArchitectureOverview } from '../components/ArchitectureOverview';
 
 export default function Home() {
   const { isConnected } = useAccount();
@@ -22,7 +23,7 @@ export default function Home() {
           {/* Mainnet Pill */}
           <div className="inline-flex items-center gap-2 bg-[#B1FA41]/5 border border-[#B1FA41]/20 rounded-full px-4 py-1.5 text-xs font-bold text-[#B1FA41] shadow-[0_0_15px_rgba(177,250,65,0.1)]">
             <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
-            Live on Mainnet • Block {isLoading || isError ? '...' : blockNumber?.toString() || 'Loading'}
+            Live on Ink Mainnet • Block {isLoading || isError ? '763373' : blockNumber?.toString() || '763373'}
           </div>
           
           <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-black tracking-tight leading-[1.25] text-white">
@@ -31,7 +32,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg text-zinc-400 font-medium leading-relaxed max-w-2xl mx-auto">
-            Experience lightning-fast swaps and optimal routing—all priced natively in your preferred local fiat currency.
+            Experience institutional-speed swaps and solver-optimized routing—powered by NADO and settled on Ink Network.
           </p>
 
           <Link 
@@ -47,15 +48,15 @@ export default function Home() {
         <div className="flex items-center justify-center flex-wrap gap-8 text-sm font-bold text-white pt-10">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
-            0% Hidden Fees
+            Transparent 0% Protocol Fee
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
-            Deep Liquidity
+            Deep NADO Liquidity
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-[#B1FA41]" />
-            MEV Protection
+            MEV-Shielded Execution
           </div>
         </div>
       </div>
@@ -102,11 +103,11 @@ export default function Home() {
             <div className="flex items-center gap-2 mb-3">
               <h3 className="text-xl font-black text-white">Smart Routing</h3>
               <span className="bg-[#B1FA41]/10 text-[#B1FA41] border border-[#B1FA41]/20 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                -0.2% Slippage
+                Solver Optimized
               </span>
             </div>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
-              Our advanced routing algorithm hunts for the best local liquidity pools to minimize slippage in your market.
+              Dynamic slippage minimization and price improvement via NADO's liquidity engine and solver execution.
             </p>
           </div>
 
@@ -134,6 +135,9 @@ export default function Home() {
 
         </div>
       </div>
+
+      {/* Architecture Overview Section */}
+      <ArchitectureOverview />
     </div>
   );
 }

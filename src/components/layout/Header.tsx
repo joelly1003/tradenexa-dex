@@ -34,6 +34,7 @@ export function Header() {
     { name: 'Market', href: '/market' },
     { name: 'Earn', href: '/earn' },
     { name: 'Leaderboard', href: '/leaderboard' },
+    { name: 'Docs', href: '/docs' },
   ];
 
   return (

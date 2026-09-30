@@ -18,7 +18,7 @@ export function Footer() {
             </div>
           </Link>
           <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-xs">
-            Institutional-grade performance built on the Ink network.
+            Powered by NADO Liquidity Engine • Settled on Ink Network.
           </p>
         </div>
 
@@ -31,10 +31,9 @@ export function Footer() {
             <Link href="/leaderboard" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
               Leaderboard
             </Link>
-            <div className="flex items-center gap-2 text-zinc-400 cursor-not-allowed">
-              <span>Documentation</span>
-              <span className="text-[10px] font-bold bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded">Soon</span>
-            </div>
+            <Link href="/docs" className="text-zinc-400 hover:text-black dark:hover:text-white transition-colors">
+              Documentation
+            </Link>
           </nav>
 
           <div className="text-zinc-500 dark:text-zinc-600 hidden md:block">|</div>
