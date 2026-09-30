@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Settings, CreditCard } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { useAccount } from 'wagmi';
@@ -73,16 +73,6 @@ export function Header() {
 
       {/* Right section: Icons, Wallet */}
       <div className="flex-1 flex items-center gap-3 sm:gap-4 justify-end relative">
-        
-        {/* Buy / Sell Crypto Button */}
-        <button
-          onClick={() => openRamp()}
-          className="hidden md:flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#B1FA41]/10 hover:bg-[#B1FA41]/20 border border-[#B1FA41]/30 text-[#B1FA41] text-xs font-bold transition-all shadow-[0_0_15px_rgba(177,250,65,0.1)] hover:scale-105"
-        >
-          <CreditCard className="w-3.5 h-3.5" />
-          Buy Crypto
-        </button>
-
         {/* Action Icons */}
         <div className="hidden sm:flex items-center gap-1 relative" ref={settingsRef}>
           <button 

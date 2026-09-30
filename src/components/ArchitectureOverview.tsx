@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Layers, Cpu, Shield, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
+import { Layers, Cpu, Shield, Zap, CheckCircle2 } from 'lucide-react';
 
 export function ArchitectureOverview() {
   const steps = [
@@ -78,9 +78,6 @@ export function ArchitectureOverview() {
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#B1FA41]" />
                 Verified Protocol Path
               </span>
-              {index < steps.length - 1 && (
-                <ArrowRight className="w-4 h-4 text-zinc-600 hidden md:block" />
-              )}
             </div>
           </div>
         ))}
