@@ -1,10 +1,7 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useAccount } from 'wagmi';
-import { useAppKit } from '@reown/appkit/react';
-import { Wallet } from 'lucide-react';
 import { TopTickerBar } from './pro/TopTickerBar';
 import { TradingViewChart } from './pro/TradingViewChart';
 import { Orderbook } from './pro/Orderbook';
@@ -59,27 +56,13 @@ function getTradingViewSymbol(symbol: string): string {
 function TradeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const symbolParam = searchParams.get('symbol') || searchParams.get('coin') || 'BTC';
-  const [selectedSymbol, setSelectedSymbol] = useState(symbolParam.toUpperCase());
+  const selectedSymbol = (searchParams.get('symbol') || searchParams.get('coin') || 'BTC').toUpperCase();
   const [livePrice, setLivePrice] = useState<number | null>(null);
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  useEffect(() => {
-    if (symbolParam) {
-      setSelectedSymbol(symbolParam.toUpperCase());
-      setLivePrice(null);
-    }
-  }, [symbolParam]);
-
   const handleSymbolChange = (newSymbol: string) => {
-    setSelectedSymbol(newSymbol);
     setLivePrice(null);
     router.push(`/trade?symbol=${newSymbol}`);
   };
-
-  if (!mounted) return null;
 
   return (
     <div className="flex flex-col h-[calc(100vh-81px)] bg-[#0B0E14] text-white overflow-hidden w-full">

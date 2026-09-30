@@ -1,9 +1,24 @@
-import { Suspense } from 'react';
+'use client';
+
+import React, { useSyncExternalStore, Suspense } from 'react';
 import { TradeInterface } from '../../components/trading/TradeInterface';
+import TradeLoading from './loading';
+
+const emptySubscribe = () => () => {};
 
 export default function TradePage() {
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+
+  if (!isMounted) {
+    return <TradeLoading />;
+  }
+
   return (
-    <Suspense fallback={<div className="flex h-screen items-center justify-center text-white">Loading Trade Interface...</div>}>
+    <Suspense fallback={<TradeLoading />}>
       <TradeInterface />
     </Suspense>
   );

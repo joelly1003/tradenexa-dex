@@ -7,9 +7,11 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
-// Hardcoding the exact working project ID. If a user's env var is invalid/unwhitelisted, 
-// the WalletConnect native option completely disappears on mobile. This guarantees it works.
-const projectId = '3fcc6bba6f1de962d911bb5b5c3dba68';
+// Project ID for Reown / Web3Modal. Supports environment variable or default fallback.
+const projectId = 
+  process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || 
+  process.env.NEXT_PUBLIC_PROJECT_ID || 
+  '3fcc6bba6f1de962d911bb5b5c3dba68';
 
 // Adding mainnet alongside ink ensures WalletConnect relay namespace accepts the session
 const networks = [ink, mainnet] as any;
