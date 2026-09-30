@@ -47,7 +47,7 @@ export default function TermsPage() {
             <h2>1. Non-Custodial Protocol Interface Nature</h2>
           </div>
           <p>
-            TradeNexa is a decentralized, non-custodial graphical user interface (&quot;Interface&quot;) that facilitates interaction with autonomous, open-source smart contracts deployed on the Ink Network (Chain ID: 763373) and off-chain orderbook solvers operated by NADO.
+            TradeNexa is a decentralized, non-custodial graphical user interface (&quot;Interface&quot;) that facilitates interaction with autonomous, open-source smart contracts deployed on the Ink Network (Chain ID: 57073) and off-chain orderbook solvers operated by NADO.
           </p>
           <p>
             At no point does TradeNexa, its developers, or its affiliates take custody, possession, control, or management of your private cryptographic keys, digital assets, or funds. All trades and orders are executed directly through your own self-custodial Web3 wallet via cryptographic signatures (EIP-712 / EIP-191).

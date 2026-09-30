@@ -421,7 +421,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
           <span>Execution Route</span>
           <span className="font-mono text-[10px] text-[#B1FA41] bg-[#B1FA41]/10 px-2 py-0.5 rounded border border-[#B1FA41]/20 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
-            NADO Solver → Ink L2 (763373)
+            NADO Solver → Ink L2 (57073)
           </span>
         </div>
         <div className="flex justify-between items-center text-zinc-400">

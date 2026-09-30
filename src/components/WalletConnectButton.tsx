@@ -108,8 +108,8 @@ export function WalletConnectButton() {
     );
   }
 
-  // Check network: Ink Mainnet Chain ID is 763373
-  const isWrongNetwork = chainId !== undefined && chainId !== 763373;
+  // Check network: Ink Mainnet Chain ID is 57073
+  const isWrongNetwork = chainId !== undefined && chainId !== 57073;
   const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
   const displayLabel = ensName || truncatedAddress;
 
@@ -125,7 +125,7 @@ export function WalletConnectButton() {
       {/* Network indicator pill or Network Warning Switcher */}
       {isWrongNetwork ? (
         <button
-          onClick={() => switchChain ? switchChain({ chainId: 763373 }) : open({ view: 'Networks' })}
+          onClick={() => switchChain ? switchChain({ chainId: 57073 }) : open({ view: 'Networks' })}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold transition-all shadow-[0_0_12px_rgba(245,158,11,0.15)] cursor-pointer"
         >
           <AlertTriangle className="w-3.5 h-3.5" />
@@ -135,7 +135,7 @@ export function WalletConnectButton() {
         <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-zinc-300">
           <span className="w-2 h-2 rounded-full bg-[#B1FA41] shadow-[0_0_8px_rgba(177,250,65,0.8)] animate-pulse" />
           <span>Ink Network</span>
-          <span className="text-[10px] text-zinc-500 font-mono">763373</span>
+          <span className="text-[10px] text-zinc-500 font-mono">57073</span>
         </div>
       )}
 
@@ -177,7 +177,7 @@ export function WalletConnectButton() {
               <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">Connected Account</span>
               <div className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41]" />
-                <span className="text-[11px] font-mono text-[#B1FA41]">Ink L2 (763373)</span>
+                <span className="text-[11px] font-mono text-[#B1FA41]">Ink L2 (57073)</span>
               </div>
             </div>
 

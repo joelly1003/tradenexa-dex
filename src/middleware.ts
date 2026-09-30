@@ -37,7 +37,20 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Extract edge geolocation signal (Vercel, Cloudflare, or mock headers)
+  // 2. Canonical Apex Domain Routing (redirect www.tradenexa.com or previews in production to tradenexa.com)
+  const host = request.headers.get('host') || '';
+  if (
+    process.env.NODE_ENV === 'production' &&
+    (host === 'www.tradenexa.com' || (host.endsWith('.vercel.app') && !host.includes('localhost')))
+  ) {
+    const canonicalUrl = new URL(request.url);
+    canonicalUrl.hostname = 'tradenexa.com';
+    canonicalUrl.port = '';
+    canonicalUrl.protocol = 'https:';
+    return NextResponse.redirect(canonicalUrl, { status: 308 });
+  }
+
+  // 3. Extract edge geolocation signal (Vercel, Cloudflare, or mock headers)
   const countryHeader = 
     request.headers.get('x-vercel-ip-country') || 
     request.headers.get('cf-ipcountry') || 
@@ -49,7 +62,7 @@ export function middleware(request: NextRequest) {
   requestHeaders.set('x-tradenexa-country', country || 'UNKNOWN');
   requestHeaders.set('x-tradenexa-edge-verified', 'true');
 
-  // 3. Edge-level geofencing check for restricted transaction execution
+  // 4. Edge-level geofencing check for restricted transaction execution
   const isRestrictedCountry = country && OFAC_RESTRICTED_COUNTRIES.has(country);
   const isAttemptingTrade = TRANSACTION_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
@@ -61,7 +74,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(restrictedUrl);
   }
 
-  // 4. Default: allow request through with security headers
+  // 5. Default: allow request through with security headers
   const response = NextResponse.next({
     request: {
       headers: requestHeaders,
@@ -70,7 +83,7 @@ export function middleware(request: NextRequest) {
 
   // Security Headers
   response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('X-Frame-Options', 'SAMEORIGIN');
+  response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
   return response;

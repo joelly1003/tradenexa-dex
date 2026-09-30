@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Trophy, TrendingUp, Award, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { Trophy, ArrowUpRight, ShieldCheck } from 'lucide-react';
 
 interface TraderRank {
   rank: number;
@@ -145,7 +145,7 @@ export function LeaderboardInterface() {
         <div className="p-6 bg-white/[0.01] border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-zinc-400">
             <ShieldCheck className="w-4 h-4 text-[#B1FA41]" />
-            Rankings verified via on-chain events on Ink Network (Chain ID: 763373)
+            Rankings verified via on-chain events on Ink Network (Chain ID: 57073)
           </div>
           <Link
             href="/trade"

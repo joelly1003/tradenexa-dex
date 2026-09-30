@@ -22,7 +22,7 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-zinc-400 text-xs">
-              Powered by NADO Liquidity Engine • Settled on Ink Network (Chain ID: 763373).
+              Powered by NADO Liquidity Engine • Settled on Ink Network (Chain ID: 57073).
             </p>
           </div>
 

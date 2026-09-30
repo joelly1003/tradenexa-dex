@@ -1,4 +1,4 @@
-export const INK_MAINNET_CHAIN_ID = 763373;
+export const INK_MAINNET_CHAIN_ID = 57073;
 
 export interface GatewayEndpoints {
   queryUrl: string;

@@ -1,6 +1,6 @@
 /**
  * TradeNexa Verified Token Registry
- * Follows the Uniswap Token List standard (v1.0) with risk profiling for Ink Network (Chain ID: 763373).
+ * Follows the Uniswap Token List standard (v1.0) with risk profiling for Ink Network (Chain ID: 57073).
  */
 
 export type TokenTag = 
@@ -43,7 +43,7 @@ export const TRADENEXA_TOKEN_LIST: TokenList = {
   keywords: ['tradenexa', 'ink', 'nado', 'perps', 'l2'],
   tokens: [
     {
-      chainId: 763373,
+      chainId: 57073,
       address: '0x0000000000000000000000000000000000000000',
       name: 'Ethereum',
       symbol: 'ETH',
@@ -55,7 +55,7 @@ export const TRADENEXA_TOKEN_LIST: TokenList = {
       isRestricted: false,
     },
     {
-      chainId: 763373,
+      chainId: 57073,
       address: '0x2D2702154460773B4D7895e78696F638A0D97D9b',
       name: 'USD Coin',
       symbol: 'USDC',
@@ -67,7 +67,7 @@ export const TRADENEXA_TOKEN_LIST: TokenList = {
       isRestricted: false,
     },
     {
-      chainId: 763373,
+      chainId: 57073,
       address: '0x1F9840a85d5aF5bf1D1762F925BDADdC4201F984',
       name: 'Wrapped Bitcoin',
       symbol: 'WBTC',
@@ -79,8 +79,8 @@ export const TRADENEXA_TOKEN_LIST: TokenList = {
       isRestricted: false,
     },
     {
-      chainId: 763373,
-      address: '0x7633730000000000000000000000000000000001',
+      chainId: 57073,
+      address: '0x5707300000000000000000000000000000000001',
       name: 'Ink Governance Token',
       symbol: 'INK',
       decimals: 18,
@@ -90,7 +90,7 @@ export const TRADENEXA_TOKEN_LIST: TokenList = {
       isRestricted: false,
     },
     {
-      chainId: 763373,
+      chainId: 57073,
       address: '0x0000000000000000000000000000000000000002',
       name: 'Solana',
       symbol: 'SOL',
@@ -102,7 +102,7 @@ export const TRADENEXA_TOKEN_LIST: TokenList = {
       isRestricted: false,
     },
     {
-      chainId: 763373,
+      chainId: 57073,
       address: '0x0000000000000000000000000000000000000003',
       name: 'Pepe',
       symbol: 'PEPE',
@@ -114,7 +114,7 @@ export const TRADENEXA_TOKEN_LIST: TokenList = {
       isRestricted: false,
     },
     {
-      chainId: 763373,
+      chainId: 57073,
       address: '0x0000000000000000000000000000000000000004',
       name: 'Hyperliquid Perps Index',
       symbol: 'HYPE',

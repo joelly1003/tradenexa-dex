@@ -438,7 +438,7 @@ function FiatRampModalContent({
             <div className="bg-[#121824] border border-white/10 rounded-2xl p-4">
               <div className="flex justify-between text-xs text-zinc-400 mb-2">
                 <span>You {userMode === 'buy' ? 'Receive (Est.)' : 'Deliver'}</span>
-                <span className="text-[#B1FA41] font-mono text-[11px]">Ink L2 (763373)</span>
+                <span className="text-[#B1FA41] font-mono text-[11px]">Ink L2 (57073)</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xl font-mono font-bold text-[#B1FA41]">

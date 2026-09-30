@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ShieldCheck, Scale, ExternalLink, AlertTriangle } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export function LegalFooter() {
   return (
@@ -32,7 +32,7 @@ export function LegalFooter() {
           </Link>
           <span className="text-zinc-600 hidden sm:inline">|</span>
           <span className="text-zinc-400 font-mono text-[10px]">
-            Ink L2 (763373)
+            Ink L2 (57073)
           </span>
         </div>
 

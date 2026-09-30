@@ -25,7 +25,7 @@ export function ArchitectureOverview() {
       step: '03',
       title: 'Ink Network Settlement',
       subtitle: 'On-Chain Verifiable Finality',
-      desc: 'Matched trades and position states settle deterministically on the Ink Network (Chain ID: 763373) with sub-second L2 finality, minimal gas overhead, and cryptographic EIP-712 security.',
+      desc: 'Matched trades and position states settle deterministically on the Ink Network (Chain ID: 57073) with sub-second L2 finality, minimal gas overhead, and cryptographic EIP-712 security.',
       badge: 'Ink L2 Settlement',
       icon: <Shield className="w-5 h-5 text-[#B1FA41]" />
     }
@@ -98,7 +98,7 @@ export function ArchitectureOverview() {
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <span className="text-xs font-mono text-[#B1FA41] bg-[#B1FA41]/10 border border-[#B1FA41]/20 px-3 py-1.5 rounded-lg font-bold">
-            Ink Chain ID: 763373
+            Ink Chain ID: 57073
           </span>
         </div>
       </div>

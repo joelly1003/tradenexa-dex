@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Terminal, Code, Shield, Layers, ArrowUpRight, Cpu, Zap, CheckCircle2 } from 'lucide-react';
+import { BookOpen, Terminal, Code, Shield, Layers, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { ArchitectureOverview } from '../../components/ArchitectureOverview';
 
 export default function DocsPage() {
@@ -14,7 +14,7 @@ export default function DocsPage() {
       points: [
         'Local Fiat Oracle: Instant conversions for BRL, EUR, INR, NGN, and USD',
         'NADO Liquidity Engine: Intent-based batch auctions shielding orders from MEV',
-        'Ink Network L2: Sub-second finality on Chain ID 763373 with EIP-712 security'
+        'Ink Network L2: Sub-second finality on Chain ID 57073 with EIP-712 security'
       ]
     },
     {
@@ -23,7 +23,7 @@ export default function DocsPage() {
       desc: 'Transparent core smart contracts deployed on the Ink Network settlement layer.',
       points: [
         'Settlement Chain: Ink Network Mainnet (EVM L2)',
-        'Chain ID: 763373',
+        'Chain ID: 57073',
         'Native Token: ETH (L2 Gas)',
         'Signer Standard: EIP-712 Typed Structured Data'
       ]

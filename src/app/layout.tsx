@@ -17,6 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tradenexa.com'),
   title: "TradeNexa | Localized Decentralized Exchange",
   description: "Trade crypto seamlessly priced natively in your local currency.",
   openGraph: {

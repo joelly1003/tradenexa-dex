@@ -60,7 +60,7 @@ export default function PrivacyPage() {
             <h2>2. Public Blockchain Records & Wallet Addresses</h2>
           </div>
           <p>
-            When connecting your self-custodial Web3 wallet, your public EVM address is read by your client-side browser to populate your account balance, position details, and trade history directly from the Ink Network blockchain (Chain ID: 763373) and the NADO orderbook API.
+            When connecting your self-custodial Web3 wallet, your public EVM address is read by your client-side browser to populate your account balance, position details, and trade history directly from the Ink Network blockchain (Chain ID: 57073) and the NADO orderbook API.
           </p>
           <p>
             Please note that all blockchain transactions, smart contract approvals, deposits, and transfers are inherently public, permanent, and visible on public blockchain explorers (e.g., Inkscan).
