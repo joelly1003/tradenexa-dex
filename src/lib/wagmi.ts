@@ -26,7 +26,7 @@ export const inkChain = inkMainnet;
 export const projectId = 
   process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || 
   process.env.NEXT_PUBLIC_PROJECT_ID || 
-  '3fcc6bba6f1de962d911bb5b5c3dba68';
+  'b56e18d47c72ab683b10814fe9495694'; // Updated from the previously flagged generic tutorial ID
 
 export const networks = [inkMainnet, mainnet] as any;
 
