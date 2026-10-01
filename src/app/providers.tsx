@@ -11,10 +11,10 @@ createAppKit({
   networks,
   projectId,
   metadata: {
-    name: 'TradeNexa DEX',
-    description: 'Institutional-Grade Decentralized Exchange',
-    url: typeof window !== 'undefined' ? window.location.origin : 'https://tradenexa.com',
-    icons: ['https://avatars.githubusercontent.com/u/37784886']
+    name: 'TradeNexa',
+    description: 'Decentralized Trading Interface on Ink Network',
+    url: 'https://tradenexa.com',
+    icons: ['https://tradenexa.com/favicon.ico']
   },
   // We use custom injected wallets to guarantee they show perfectly with logos
   featuredWalletIds: [

@@ -37,15 +37,19 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Production Canonical Apex Domain Routing
+  // 2. Vercel Preview & Staging Domain Handling
   const host = (request.headers.get('host') || '').toLowerCase();
+  const isVercelPreview = host.includes('vercel.app');
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   if (
-    process.env.NODE_ENV === 'production' &&
-    (host === 'www.tradenexa.com' || (process.env.ENFORCE_CANONICAL_HOST === 'true' && host.includes('.vercel.app')))
+    isProduction &&
+    (host === 'www.tradenexa.com' || (process.env.ENFORCE_CANONICAL_DOMAIN === 'true' && isVercelPreview))
   ) {
     const canonicalUrl = new URL(request.url);
     canonicalUrl.host = 'tradenexa.com';
-    canonicalUrl.protocol = 'https';
+    canonicalUrl.protocol = 'https:';
+    canonicalUrl.port = '';
     return NextResponse.redirect(canonicalUrl, 308);
   }
 
@@ -74,18 +78,22 @@ export function middleware(request: NextRequest) {
   }
 
   // 5. Default: allow request through with security headers
-  const response = NextResponse.next({
+  const finalResponse = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
 
   // Security Headers
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  finalResponse.headers.set('X-Content-Type-Options', 'nosniff');
+  finalResponse.headers.set('X-Frame-Options', 'DENY');
+  finalResponse.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
-  return response;
+  if (isVercelPreview) {
+    finalResponse.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  }
+
+  return finalResponse;
 }
 
 export const config = {

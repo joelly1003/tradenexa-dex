@@ -17,14 +17,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://tradenexa.com';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tradenexa.com'),
+  metadataBase: new URL(BASE_URL),
   title: 'TradeNexa | Institutional Decentralized Trading on Ink Network',
   description: 'Trade crypto with institutional speed and solver-optimized execution, powered by NADO and settled on Ink Network.',
   openGraph: {
     title: 'TradeNexa | Sub-Second Decentralized Trading',
     description: 'Solver-optimized execution settled on Ink Network L2 (Chain ID: 57073).',
-    url: 'https://tradenexa.com',
+    url: BASE_URL,
     siteName: 'TradeNexa',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'TradeNexa Interface' }],
     type: 'website',
@@ -36,7 +38,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   alternates: {
-    canonical: 'https://tradenexa.com',
+    canonical: '/',
   },
 };
 
