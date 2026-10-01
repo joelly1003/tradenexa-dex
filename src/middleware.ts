@@ -37,18 +37,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Canonical Apex Domain Routing (redirect www.tradenexa.com or previews in production to tradenexa.com)
-  const host = request.headers.get('host') || '';
-  if (
-    process.env.NODE_ENV === 'production' &&
-    (host === 'www.tradenexa.com' || (host.endsWith('.vercel.app') && !host.includes('localhost')))
-  ) {
-    const canonicalUrl = new URL(request.url);
-    canonicalUrl.hostname = 'tradenexa.com';
-    canonicalUrl.port = '';
-    canonicalUrl.protocol = 'https:';
-    return NextResponse.redirect(canonicalUrl, { status: 308 });
-  }
+  // 2. Canonical Apex Domain Routing removed (Apex domain not configured yet)
 
   // 3. Extract edge geolocation signal (Vercel, Cloudflare, or mock headers)
   const countryHeader = 
