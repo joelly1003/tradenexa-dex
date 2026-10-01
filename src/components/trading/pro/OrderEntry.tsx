@@ -418,10 +418,26 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
       {/* 8. Summary & Risk Data Card */}
       <div className="bg-white/5 rounded-lg p-3 space-y-2 text-[11px] font-sans mb-5 border border-white/5">
         <div className="flex justify-between items-center text-zinc-400">
-          <span>Execution Route</span>
-          <span className="font-mono text-[10px] text-[#B1FA41] bg-[#B1FA41]/10 px-2 py-0.5 rounded border border-[#B1FA41]/20 flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
+            <span>Execution Route</span>
+            <div className="relative group/mev cursor-help">
+              <span className="font-mono text-[9px] text-[#B1FA41] bg-[#B1FA41]/10 px-1 py-0.5 rounded border border-[#B1FA41]/20 ml-1 uppercase tracking-wider font-bold">
+                MEV-Shielded
+              </span>
+              <div className="absolute bottom-full left-0 mb-1.5 hidden group-hover/mev:flex flex-col w-64 p-2.5 bg-[#121824] border border-[#B1FA41]/30 rounded-xl text-[10px] text-zinc-300 shadow-[0_0_15px_rgba(177,250,65,0.1)] z-30 pointer-events-none">
+                <span className="font-bold text-white mb-1 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41]" />
+                  MEV-Shielded Routing
+                </span>
+                <span className="text-zinc-400 leading-tight">
+                  Orders bypass the public mempool by submitting signed EIP-712 intents directly through private solver RPC endpoints. Transactions cannot be front-run, back-run, or sandwich-attacked by public searchers prior to batch settlement on Ink.
+                </span>
+              </div>
+            </div>
+          </div>
+          <span className="font-mono text-[10px] text-white flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
-            NADO Solver → Ink L2 (57073)
+            NADO → Ink L2 (57073)
           </span>
         </div>
         <div className="flex justify-between items-center text-zinc-400">

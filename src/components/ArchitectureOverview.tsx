@@ -15,18 +15,18 @@ export function ArchitectureOverview() {
     },
     {
       step: '02',
-      title: 'NADO Liquidity & Solver Routing',
-      subtitle: 'Off-Chain High-Speed Matching',
-      desc: 'Orders are matched via NADO’s low-latency liquidity engine using intent-based batch auctions. Private RPC submission shields every order against MEV front-running and sandwich attacks.',
-      badge: 'MEV-Shielded Execution',
+      title: 'NADO CLOB & Solver Batch Auctions',
+      subtitle: 'High-Throughput Order Intent Matching',
+      desc: "Traders sign non-custodial EIP-712 trade intents. Orders are matched off-chain via NADO's central limit order book (CLOB) and competitive solver auctions, preventing mempool exposure and front-running before settlement.",
+      badge: 'Off-Chain Matching',
       icon: <Zap className="w-5 h-5 text-[#B1FA41]" />
     },
     {
       step: '03',
-      title: 'Ink Network Settlement',
-      subtitle: 'On-Chain Verifiable Finality',
-      desc: 'Matched trades and position states settle deterministically on the Ink Network (Chain ID: 57073) with sub-second L2 finality, minimal gas overhead, and cryptographic EIP-712 security.',
-      badge: 'Ink L2 Settlement',
+      title: 'Ink Network Verifiable Settlement',
+      subtitle: 'Sub-Second L2 Cryptographic Finality',
+      desc: 'Matched batches and state updates are submitted deterministically to verified settlement contracts on Ink Network (Chain ID: 57073). Funds remain strictly non-custodial, backed by Ethereum L1 security via OP Stack fraud proofs.',
+      badge: 'On-Chain Settlement',
       icon: <Shield className="w-5 h-5 text-[#B1FA41]" />
     }
   ];

@@ -75,13 +75,21 @@ export function Footer() {
           <div>
             &copy; {new Date().getFullYear()} TradeNexa Non-Custodial Interface. All rights reserved.
           </div>
-          <div className="flex items-center gap-4 text-[11px] font-mono">
-            <span className="flex items-center gap-1.5 text-zinc-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41]" />
-              Edge & Oracle Sanction Screening Active
-            </span>
-            <span className="text-zinc-600">|</span>
-            <span className="text-zinc-400">Ink Network L2</span>
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-4 text-[11px] font-mono">
+              <span className="flex items-center gap-1.5 text-zinc-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41]" />
+                Settlement: Ink Mainnet (57073) • Matching: NADO Engine • Audited Settlement Contracts
+              </span>
+            </div>
+            <Link 
+              href="https://explorer.inkonchain.com/address/0x3bB11C18bC6a22D77fD6cE87A4F8b40E600021b3" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[10px] text-zinc-500 hover:text-[#B1FA41] transition-colors font-mono underline underline-offset-2"
+            >
+              View Settlement Router Contract
+            </Link>
           </div>
         </div>
         
