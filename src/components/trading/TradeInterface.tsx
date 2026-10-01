@@ -10,7 +10,7 @@ import { PositionsPanel } from './pro/PositionsPanel';
 import { TradeErrorBoundary } from './TradeErrorBoundary';
 
 function getTradingViewSymbol(symbol: string): string {
-  const sym = symbol.toUpperCase();
+  const sym = symbol.toUpperCase().replace('-PERP', '');
   const tvMap: Record<string, string> = {
     'BTC': 'BINANCE:BTCUSDT',
     'ETH': 'BINANCE:ETHUSDT',
