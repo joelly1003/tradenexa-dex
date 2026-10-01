@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { WalletConnectButton } from '../WalletConnectButton';
-import { BlockCounter } from '../BlockCounter';
 import { useCurrencyStore, FIAT_RATES, FiatCurrency } from '../../store/currencyStore';
 import { useRampStore } from '../../store/rampStore';
 
@@ -74,8 +73,6 @@ export function Header() {
 
       {/* Right section: Icons, Wallet */}
       <div className="flex-1 flex items-center gap-3 sm:gap-4 justify-end relative">
-        <BlockCounter className="hidden xl:inline-flex" />
-
         {/* Action Icons */}
         <div className="hidden sm:flex items-center gap-1 relative" ref={settingsRef}>
           <button 

@@ -110,13 +110,14 @@ export function WalletConnectButton() {
 
   // Check network: Ink Mainnet Chain ID is 57073
   const isWrongNetwork = chainId !== undefined && chainId !== 57073;
-  const truncatedAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
+  const truncatedAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '';
   const displayLabel = ensName || truncatedAddress;
 
-  // Calculate balances
+  // Calculate balances & Nado equity
   const ethBalanceNum = balance ? parseFloat(balance.formatted) : 0;
   const ethFormatted = ethBalanceNum.toFixed(4);
   const approxUsd = ethBalanceNum * 3100; // Benchmark approx ETH/USD
+  const nadoBalanceFormatted = approxUsd > 0 ? `$${approxUsd.toFixed(2)}` : '$0.00';
   const localFiatFormatted = formatFiat(approxUsd, fiat);
 
   return (
@@ -126,45 +127,39 @@ export function WalletConnectButton() {
       {isWrongNetwork ? (
         <button
           onClick={() => switchChain ? switchChain({ chainId: 57073 }) : open({ view: 'Networks' })}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold transition-all shadow-[0_0_12px_rgba(245,158,11,0.15)] cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 text-xs font-bold transition-all shadow-[0_0_12px_rgba(245,158,11,0.15)] cursor-pointer"
         >
           <AlertTriangle className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Switch to</span> Ink Network
         </button>
       ) : (
-        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-zinc-300">
+        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-zinc-300">
           <span className="w-2 h-2 rounded-full bg-[#B1FA41] shadow-[0_0_8px_rgba(177,250,65,0.8)] animate-pulse" />
           <span>Ink Network</span>
           <span className="text-[10px] text-zinc-500 font-mono">57073</span>
         </div>
       )}
 
-      {/* Account Pill button */}
+      {/* Account Pill button matching Image 2 with TradeNexa Theme */}
       <button 
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-2.5 px-3.5 py-1.5 bg-black hover:bg-[#121824] border border-[#B1FA41]/40 rounded-xl transition-all text-left group shadow-[0_0_15px_rgba(177,250,65,0.06)] cursor-pointer"
+        className="flex items-center gap-3 pl-1.5 pr-4 py-1.5 bg-[#08090C] hover:bg-[#12161f] border border-[#B1FA41]/40 hover:border-[#B1FA41] rounded-full transition-all text-left group shadow-[0_0_15px_rgba(177,250,65,0.08)] hover:shadow-[0_0_20px_rgba(177,250,65,0.25)] cursor-pointer select-none"
         aria-expanded={dropdownOpen}
       >
-        <div className="w-7 h-7 rounded-lg bg-[#B1FA41] flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(177,250,65,0.3)]">
-          <Wallet className="w-3.5 h-3.5 text-black" strokeWidth={2.5} />
+        {/* Circular Avatar matching theme gradient */}
+        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#38BDF8] via-[#7ae61e] to-[#B1FA41] flex items-center justify-center flex-shrink-0 shadow-[0_0_12px_rgba(177,250,65,0.35)]">
+          <Wallet className="w-4 h-4 text-black" strokeWidth={2.4} />
         </div>
 
         <div className="flex flex-col justify-center">
-          <div className="flex items-center gap-1">
-            <span className="font-mono font-bold text-white text-xs tracking-wide">
-              {displayLabel}
-            </span>
-          </div>
-          <span className="text-[10px] font-semibold text-zinc-400 leading-tight">
-            {ethFormatted} ETH <span className="text-[#B1FA41]">({localFiatFormatted})</span>
+          <span className="font-mono font-bold text-white text-xs tracking-tight leading-none mb-1">
+            {displayLabel}
+          </span>
+          <span className="text-[11px] font-mono leading-none">
+            <span className="text-zinc-400">Nado: </span>
+            <span className="text-white font-bold">{nadoBalanceFormatted}</span>
           </span>
         </div>
-
-        <ChevronDown 
-          className={`w-3.5 h-3.5 text-zinc-400 group-hover:text-white transition-transform duration-200 ${
-            dropdownOpen ? 'rotate-180' : ''
-          }`} 
-        />
       </button>
 
       {/* 3. Account Dropdown Menu */}

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { ArrowRight, Globe, Zap, Wallet, ShieldCheck, CheckCircle2, ExternalLink } from 'lucide-react';
 import { ArchitectureOverview } from '../components/ArchitectureOverview';
-import { NetworkStatusBadge } from '../components/NetworkStatusBadge';
 import { useRampStore } from '../store/rampStore';
 
 export default function Home() {
@@ -20,9 +19,6 @@ export default function Home() {
         
         {/* Main Content Group */}
         <div className="flex flex-col items-center justify-center space-y-10 flex-1">
-          {/* Mainnet Pill */}
-          <NetworkStatusBadge />
-          
           <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-black tracking-tight leading-[1.25] text-white">
             Trade Crypto in Your <br />
             <span className="text-[#B1FA41]">Local Currency</span>
