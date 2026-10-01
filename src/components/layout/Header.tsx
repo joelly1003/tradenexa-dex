@@ -7,7 +7,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { useCurrencyStore, FIAT_RATES, FiatCurrency } from '../../store/currencyStore';
-import { useRampStore } from '../../store/rampStore';
+
 
 export function Header() {
   const pathname = usePathname();
@@ -15,7 +15,6 @@ export function Header() {
   const settingsRef = useRef<HTMLDivElement>(null);
   const { chain } = useAccount();
   const { fiat, setFiat } = useCurrencyStore();
-  const { openRamp } = useRampStore();
   const currencies = Object.keys(FIAT_RATES) as FiatCurrency[];
 
   useEffect(() => {

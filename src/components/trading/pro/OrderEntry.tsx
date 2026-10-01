@@ -7,7 +7,6 @@ import { useTradeExecution } from '../../../hooks/useTradeExecution';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
 import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X, CreditCard, AlertTriangle, RefreshCw } from 'lucide-react';
 import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
-import { useRampStore } from '../../../store/rampStore';
 import { getTokenRiskProfile } from '../../../lib/tokens';
 
 interface NadoTickerItem {
@@ -55,7 +54,6 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   const productId = currentAsset ? currentAsset.product_id : 1;
   const availableMargin = balanceData ? parseFloat(balanceData.formatted) : 0;
   const { fiat } = useCurrencyStore();
-  const { openRamp } = useRampStore();
   const tokenRisk = getTokenRiskProfile(symUpper);
 
   // Local State
@@ -331,23 +329,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
           </div>
         </div>
 
-        {/* Quick Deposit via Gateway */}
-        <div className="flex items-center justify-between text-[11px] text-zinc-500 mt-2.5 px-1 pt-2 border-t border-white/5">
-          <span className="flex items-center gap-1 text-zinc-400 text-[10px]">
-            <CreditCard className="w-3 h-3 text-[#B1FA41]" />
-            Fiat Gateways:
-          </span>
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => openRamp()}
-              className="px-2 py-0.5 rounded bg-white/5 hover:bg-[#B1FA41]/10 hover:text-[#B1FA41] text-[10px] font-mono font-bold text-zinc-400 border border-white/5 transition-all cursor-pointer"
-              title="Deposit via Licensed Gateway"
-            >
-              +Instant Ramp
-            </button>
-          </div>
-        </div>
+
       </div>
 
       {/* 5. Input 2: Position Size */}

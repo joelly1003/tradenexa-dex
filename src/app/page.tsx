@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import { ArrowRight, Globe, Zap, Wallet, ShieldCheck, CheckCircle2, ExternalLink } from 'lucide-react';
 import { ArchitectureOverview } from '../components/ArchitectureOverview';
-import { useRampStore } from '../store/rampStore';
 
 export default function Home() {
-  const { openRamp } = useRampStore();
 
   return (
     <div className="relative flex flex-col min-h-[calc(100vh-80px)] bg-black overflow-hidden font-sans">
@@ -66,23 +64,7 @@ export default function Home() {
             Unlike legacy perpetual exchanges, we build high-performance infrastructure specifically designed for decentralized execution, zero spread markups, and true non-custodial custody.
           </p>
           
-          {/* Interactive Gateway Pills */}
-          <div className="flex flex-col items-center gap-2 mt-8">
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              {['CARDS', 'BANK TRANSFERS', 'INSTANT ON-RAMP', 'TRANSAK', 'STRIPE'].map((pill) => (
-                <button
-                  key={pill}
-                  onClick={() => openRamp()}
-                  className="bg-white/5 hover:bg-[#B1FA41]/10 border border-white/10 hover:border-[#B1FA41]/30 text-zinc-300 hover:text-white font-bold text-sm px-5 py-2.5 rounded-xl uppercase tracking-wider transition-all flex items-center gap-1.5 group cursor-pointer shadow-sm hover:scale-105"
-                >
-                  <span>{pill}</span>
-                </button>
-              ))}
-            </div>
-            <span className="text-xs text-zinc-500 font-medium mt-1">
-              Direct non-custodial gateway: on-ramp directly to your Ink L2 address via licensed payment partners with zero protocol custody.
-            </span>
-          </div>
+
         </div>
 
         {/* 4 Column Grid */}

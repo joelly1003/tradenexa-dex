@@ -19,7 +19,6 @@ import {
   CreditCard
 } from 'lucide-react';
 import { useCurrencyStore, formatFiat } from '../store/currencyStore';
-import { useRampStore } from '../store/rampStore';
 
 const emptySubscribe = () => () => {};
 
@@ -37,7 +36,6 @@ export function WalletConnectButton() {
 
   // Store hooks
   const { fiat } = useCurrencyStore();
-  const { openRamp } = useRampStore();
 
   // Local state
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -230,17 +228,7 @@ export function WalletConnectButton() {
               </div>
             </div>
 
-            {/* Quick Action: Buy Crypto via Fiat Gateway */}
-            <button
-              onClick={() => {
-                setDropdownOpen(false);
-                openRamp({ mode: 'buy' });
-              }}
-              className="w-full py-2.5 px-3 bg-[#B1FA41]/10 hover:bg-[#B1FA41]/20 border border-[#B1FA41]/30 text-[#B1FA41] text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_12px_rgba(177,250,65,0.1)]"
-            >
-              <CreditCard className="w-3.5 h-3.5" />
-              <span>Buy / Deposit via Licensed Gateway</span>
-            </button>
+
           </div>
 
           {/* Navigation & Asset Links */}

@@ -4,8 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Search, Info } from 'lucide-react';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
 import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
-import { useRampStore } from '../../../store/rampStore';
-
 export const getLogoUrl = (symbol: string) => {
   const overrides: Record<string, string> = {
     'PENGU': 'https://coin-images.coingecko.com/coins/images/52622/large/PUDGY_PENGUINS_PENGU_PFP.png',
@@ -24,7 +22,6 @@ interface TopTickerBarProps {
 
 export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopTickerBarProps) {
   const { fiat } = useCurrencyStore();
-  const { openRamp } = useRampStore();
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -335,16 +332,7 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopT
           </span>
         </div>
 
-        {/* Instant Gateway Quick Deposit */}
-        <div className="hidden xl:flex items-center gap-1.5 shrink-0 pl-4 border-l border-white/10">
-          <button
-            onClick={() => openRamp()}
-            className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-[#B1FA41]/10 border border-white/10 hover:border-[#B1FA41]/30 text-zinc-300 hover:text-[#B1FA41] text-[10px] font-bold font-mono transition-all cursor-pointer shadow-sm flex items-center gap-1"
-            title="Instant Deposit via Licensed Gateway"
-          >
-            <span>+Instant Ramp</span>
-          </button>
-        </div>
+
       </div>
       
     </div>
