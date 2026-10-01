@@ -19,32 +19,24 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tradenexa.com'),
-  title: "TradeNexa | Localized Decentralized Exchange",
-  description: "Trade crypto seamlessly priced natively in your local currency.",
+  title: 'TradeNexa | Institutional Decentralized Trading on Ink Network',
+  description: 'Trade crypto in your local currency with MEV-shielded solver execution powered by NADO and settled on Ink Network.',
   openGraph: {
-    title: "TradeNexa | Localized Decentralized Exchange",
-    description: "Trade crypto seamlessly priced natively in your local currency.",
-    url: "https://tradenexa.com",
-    siteName: "TradeNexa",
-    images: [
-      {
-        url: "https://tradenexa.com/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "TradeNexa Platform",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
+    title: 'TradeNexa | Local Currency Crypto Trading',
+    description: 'Solver-optimized execution settled on Ink Network L2 (Chain ID: 57073).',
+    url: 'https://tradenexa.com',
+    siteName: 'TradeNexa',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'TradeNexa Interface' }],
+    type: 'website',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "TradeNexa | Localized Decentralized Exchange",
-    description: "Trade crypto seamlessly priced natively in your local currency.",
-    images: ["https://tradenexa.com/og-image.jpg"],
+    card: 'summary_large_image',
+    title: 'TradeNexa | Local Currency Crypto Trading',
+    description: 'Deep NADO liquidity with sub-second Ink L2 settlement.',
+    images: ['/og-image.png'],
   },
   alternates: {
-    canonical: "https://tradenexa.com",
+    canonical: 'https://tradenexa.com',
   },
 };
 

@@ -14,9 +14,12 @@ import {
   CheckCircle2,
   Clock,
   Percent,
-  AlertCircle
+  AlertCircle,
+  AlertTriangle
 } from 'lucide-react';
 import { useRampStore } from '../store/rampStore';
+import { useGeoGuard } from '../lib/GeoGuard';
+import { useRampStatus } from '../hooks/useRampStatus';
 
 export interface RailOption {
   id: string;
@@ -195,6 +198,8 @@ function FiatRampModalContent({
   // Wagmi & AppKit
   const { address, isConnected } = useAccount();
   const { open: openWalletModal } = useAppKit();
+  const { isRestricted, countryName } = useGeoGuard();
+  const { toastMessage, clearToast } = useRampStatus();
 
   const [overrideMode, setOverrideMode] = useState<'buy' | 'sell' | null>(null);
   const [userRailId, setUserRailId] = useState<string | null>(null);
@@ -260,6 +265,11 @@ function FiatRampModalContent({
   const handleLaunchGateway = () => {
     setWalletError(null);
 
+    if (isRestricted) {
+      setWalletError('Fiat gateway rails are currently restricted in your jurisdiction under protocol compliance policies.');
+      return;
+    }
+
     if (!destinationAddress) {
       setWalletError('Please connect a Web3 wallet or enter an EVM recipient address.');
       return;
@@ -278,19 +288,40 @@ function FiatRampModalContent({
       const params = new URLSearchParams({
         apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY || 'demo-partner-key',
         walletAddress: destinationAddress,
+        disableWalletAddressForm: isConnected ? 'true' : 'false',
         fiatCurrency: activeRail.currency,
+        defaultFiatAmount: fiatAmount,
         fiatAmount: fiatAmount,
         cryptoCurrency: cryptoAsset,
+        cryptoCurrencyList: 'ETH,USDC',
+        defaultCryptoCurrency: cryptoAsset,
         network: network,
         themeColor: 'B1FA41',
         productsAvailed: userMode === 'buy' ? 'BUY' : 'SELL',
       });
+
+      // Provider routing by rail
+      if (activeRail.id === 'PIX') {
+        params.set('paymentMethod', 'pix');
+        params.set('defaultPaymentMethod', 'pix');
+      } else if (activeRail.id === 'UPI') {
+        params.set('paymentMethod', 'upi');
+        params.set('defaultPaymentMethod', 'upi');
+      } else if (activeRail.id === 'M-PESA') {
+        params.set('paymentMethod', 'mpesa');
+        params.set('defaultPaymentMethod', 'mpesa');
+      } else if (activeRail.id === 'SEPA') {
+        params.set('paymentMethod', 'sepa_instant');
+        params.set('defaultPaymentMethod', 'sepa_instant');
+      }
+
       targetUrl = `${baseUrl}?${params.toString()}`;
     } else if (selectedProvider === 'Stripe') {
       const baseUrl = 'https://crypto.stripe.com/onramp';
       const params = new URLSearchParams({
         destination_wallet_address: destinationAddress,
         destination_currency: cryptoAsset.toLowerCase(),
+        destination_network: 'ink',
         source_currency: activeRail.currency.toLowerCase(),
         source_amount: fiatAmount,
       });
@@ -303,6 +334,8 @@ function FiatRampModalContent({
         currencyCode: cryptoAsset.toLowerCase(),
         baseCurrencyCode: activeRail.currency.toLowerCase(),
         baseCurrencyAmount: fiatAmount,
+        lockAmount: 'false',
+        showOnlyCurrencies: 'eth_ink,usdc_ink,eth,usdc',
       });
       targetUrl = `${baseUrl}?${params.toString()}`;
     }
@@ -347,6 +380,30 @@ function FiatRampModalContent({
 
         {/* Modal Scrollable Body */}
         <div className="p-6 overflow-y-auto space-y-5 custom-scrollbar">
+
+          {/* Real-Time Ramp Event Toast */}
+          {toastMessage && (
+            <div className="bg-[#B1FA41]/10 border border-[#B1FA41]/30 rounded-2xl p-3.5 text-xs text-[#B1FA41] flex items-center justify-between shadow-[0_0_20px_rgba(177,250,65,0.15)] animate-in fade-in duration-200">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-[#B1FA41] shrink-0" />
+                <span className="font-semibold text-white">{toastMessage}</span>
+              </div>
+              <button onClick={clearToast} className="text-zinc-400 hover:text-white font-bold ml-2 text-sm">×</button>
+            </div>
+          )}
+
+          {/* Upfront Regional Restriction Banner */}
+          {isRestricted && (
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-xs text-amber-200 space-y-1">
+              <div className="flex items-center gap-2 font-bold text-amber-300">
+                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>Regional Restriction Detected ({countryName})</span>
+              </div>
+              <p className="text-[11px] text-amber-200/90 leading-relaxed">
+                Fiat gateway rails are currently restricted in your jurisdiction under protocol compliance policies.
+              </p>
+            </div>
+          )}
           
           {/* Mode Selector: Buy vs Sell */}
           <div className="flex bg-white/5 p-1 rounded-xl">
@@ -575,10 +632,10 @@ function FiatRampModalContent({
               <span>Non-Custodial Disclosure & Licensing Notice</span>
             </div>
             <p className="leading-relaxed text-[11px] text-zinc-300">
-              You will complete this purchase through our licensed partner. TradeNexa never handles or stores your payment details or fiat balance.
+              Fiat gateway processing is conducted independently by licensed third-party providers. TradeNexa never receives or custodies fiat funds.
             </p>
             <p className="leading-relaxed text-[10px] text-zinc-500">
-              Fiat transactions are executed by {selectedProvider} under applicable FinCEN, FCA, or EU VASP authorizations. Assets are delivered directly to your destination Web3 address.
+              Fiat transactions are executed by {selectedProvider} under applicable FinCEN, FCA, or EU VASP authorizations. Assets are delivered directly to your destination Web3 address on Ink L2.
             </p>
           </div>
 
@@ -595,10 +652,16 @@ function FiatRampModalContent({
 
           <button
             onClick={handleLaunchGateway}
-            className="flex-1 py-3 px-6 rounded-xl bg-[#B1FA41] hover:bg-[#9de036] text-black font-black text-sm flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(177,250,65,0.2)] cursor-pointer"
+            disabled={isRestricted}
+            title={isRestricted ? "Fiat gateway rails are currently restricted in your jurisdiction under protocol compliance policies." : undefined}
+            className={`flex-1 py-3 px-6 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${
+              isRestricted
+                ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed border border-white/5'
+                : 'bg-[#B1FA41] hover:bg-[#9de036] text-black shadow-[0_0_20px_rgba(177,250,65,0.2)] cursor-pointer'
+            }`}
           >
-            <span>Proceed to Gateway ({selectedProvider})</span>
-            <ExternalLink className="w-4 h-4" />
+            <span>{isRestricted ? 'Restricted in Your Region' : `Proceed to Gateway (${selectedProvider})`}</span>
+            {!isRestricted && <ExternalLink className="w-4 h-4" />}
           </button>
         </div>
 

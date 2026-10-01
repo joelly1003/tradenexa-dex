@@ -37,7 +37,17 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Canonical Apex Domain Routing removed (Apex domain not configured yet)
+  // 2. Production Canonical Apex Domain Routing
+  const host = (request.headers.get('host') || '').toLowerCase();
+  if (
+    process.env.NODE_ENV === 'production' &&
+    (host === 'www.tradenexa.com' || (process.env.ENFORCE_CANONICAL_HOST === 'true' && host.includes('.vercel.app')))
+  ) {
+    const canonicalUrl = new URL(request.url);
+    canonicalUrl.host = 'tradenexa.com';
+    canonicalUrl.protocol = 'https';
+    return NextResponse.redirect(canonicalUrl, 308);
+  }
 
   // 3. Extract edge geolocation signal (Vercel, Cloudflare, or mock headers)
   const countryHeader = 
