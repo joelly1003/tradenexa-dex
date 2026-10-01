@@ -63,7 +63,7 @@ export default function Home() {
             Why TradeNexa is Different
           </h2>
           <p className="text-zinc-400 font-medium text-lg">
-            Engineered for high-frequency precision: tap into solver-optimized intent matching, deep orderbook depth, and zero protocol markup spreads.
+            Unlike legacy perpetual exchanges, we build high-performance infrastructure specifically designed for decentralized execution, zero spread markups, and true non-custodial custody.
           </p>
           
           {/* Interactive Gateway Pills */}
@@ -80,7 +80,7 @@ export default function Home() {
               ))}
             </div>
             <span className="text-xs text-zinc-500 font-medium mt-1">
-              Non-custodial architecture: trade directly from your wallet with verifiable on-chain L2 settlement and zero intermediary custody.
+              Direct non-custodial gateway: on-ramp directly to your Ink L2 address via licensed payment partners with zero protocol custody.
             </span>
           </div>
         </div>
@@ -93,9 +93,9 @@ export default function Home() {
             <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <Globe className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-white mb-3">Transparent Execution</h3>
+            <h3 className="text-xl font-black text-white mb-3">Real-Time Precision</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
-              Real-time mark prices, tight spreads, and instant PnL tracking across all active pairs with zero hidden spreads or protocol markups.
+              Transparent mark prices, millisecond index updates, and dynamic PnL tracking evaluated with zero hidden spreads.
             </p>
           </div>
 

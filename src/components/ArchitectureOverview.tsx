@@ -7,10 +7,10 @@ export function ArchitectureOverview() {
   const steps = [
     {
       step: '01',
-      title: 'High-Frequency Price Discovery',
-      subtitle: 'Real-Time Index Feeds',
-      desc: 'All trading pairs, collateral limits, and position valuations are evaluated against low-latency decentralized oracle feeds for millisecond-grade mark price accuracy.',
-      badge: 'Zero-Latency Oracle Feeds',
+      title: 'High-Frequency Oracle Routing',
+      subtitle: 'Decentralized Price Discovery',
+      desc: 'All trading pairs, collateral margins, and real-time PnL are evaluated against multi-source decentralized oracle feeds for reliable, manipulation-resistant mark pricing.',
+      badge: 'Sub-Second Index Feeds',
       icon: <Cpu className="w-5 h-5 text-[#B1FA41]" />
     },
     {

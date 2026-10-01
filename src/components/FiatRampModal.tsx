@@ -109,7 +109,7 @@ export const REGIONAL_RAILS: RailOption[] = [
   },
   {
     id: 'TRANSAK',
-    name: 'Direct Local Bank Rail',
+    name: 'Direct Non-Custodial Rail',
     region: 'Global Multi-Rail',
     currency: 'USD',
     flag: '🌐',
@@ -148,10 +148,10 @@ export interface ProviderMeta {
 export const PROVIDERS_META: Record<'Transak' | 'Stripe' | 'MoonPay', ProviderMeta> = {
   Transak: {
     name: 'Transak',
-    badge: 'Direct Local Rails',
+    badge: 'Direct Non-Custodial Rails',
     settlement: '< 2 - 5 mins',
     fees: '0.99% - 1.5%',
-    description: 'Specialized in PIX, SEPA, UPI, and M-PESA native bank transfers.',
+    description: 'Specialized in global non-custodial fiat-to-crypto gateways.',
   },
   Stripe: {
     name: 'Stripe',

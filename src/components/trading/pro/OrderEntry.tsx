@@ -458,10 +458,10 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
           <span>Notional Total</span>
           <span className="font-mono text-white">${nominalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
-        {/* Localized Oracle Fiat Equivalent Tooltip */}
+        {/* Oracle Equivalent Tooltip */}
         <div className="flex justify-between items-center text-zinc-400">
           <div className="flex items-center gap-1">
-            <span>Est. Local ({fiat})</span>
+            <span>Est. Value ({fiat})</span>
             <div className="relative group/oracle cursor-help">
               <Info className="w-3 h-3 text-zinc-500 hover:text-[#B1FA41] transition-colors" />
               <div className="absolute bottom-full left-0 mb-1.5 hidden group-hover/oracle:flex flex-col w-64 p-2.5 bg-[#121824] border border-white/10 rounded-xl text-[10px] text-zinc-300 shadow-2xl z-30 pointer-events-none">

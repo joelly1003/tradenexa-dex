@@ -35,7 +35,7 @@ export default function DocsPage() {
       icon: <Layers className="w-5 h-5 text-[#B1FA41]" />,
       desc: 'How orders travel from client-side fiat discovery to off-chain NADO matching and final settlement on the Ink Network rollup.',
       points: [
-        'Local Fiat Oracle: Instant conversions for BRL, EUR, INR, NGN, and USD',
+        'Decentralized Oracle Feeds: Institutional-grade real-time index feeds',
         'NADO Liquidity Engine: Intent-based batch auctions shielding orders from MEV',
         'Ink Network L2: Sub-second finality on Chain ID 57073 with EIP-712 security'
       ]
@@ -310,7 +310,7 @@ export default function DocsPage() {
       <div className="bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
         <div>
           <h4 className="text-lg font-bold text-white mb-1">Ready to start trading?</h4>
-          <p className="text-xs text-zinc-400">Launch the decentralized terminal and trade perpetuals with local fiat pricing.</p>
+          <p className="text-xs text-zinc-400">Launch the decentralized terminal and trade perpetuals with sub-second mark pricing.</p>
         </div>
         <Link 
           href="/trade"
