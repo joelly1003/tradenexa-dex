@@ -273,38 +273,7 @@ export default function DocsPage() {
         </div>
       </div>
 
-      {/* Security Disclosure & Bug Bounty Banner */}
-      <div className="border-t border-white/10 pt-12 mb-12">
-        <div className="bg-gradient-to-r from-white/[0.03] to-[#B1FA41]/5 border border-white/10 rounded-3xl p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 bg-[#B1FA41]/10 border border-[#B1FA41]/20 text-[#B1FA41] rounded-full px-3 py-1 text-xs font-bold mb-3">
-              <Bug className="w-3.5 h-3.5" />
-              Responsible Security Disclosure
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">
-              Bug Bounty & Vulnerability Reporting
-            </h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              We operate an active protocol bug bounty program for vulnerabilities discovered across our smart contracts and solver APIs. Reports are evaluated under responsible disclosure guidelines.
-            </p>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-3 shrink-0">
-            <Link
-              href="/bounty"
-              className="bg-[#B1FA41] hover:bg-[#9de036] text-black font-black text-xs px-6 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(177,250,65,0.2)]"
-            >
-              Bug Bounty Program
-            </Link>
-            <a
-              href="mailto:security@tradenexa.com"
-              className="bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-6 py-3 rounded-xl border border-white/10 transition-all"
-            >
-              security@tradenexa.com
-            </a>
-          </div>
-        </div>
-      </div>
 
       {/* Quick Action CTA */}
       <div className="bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
