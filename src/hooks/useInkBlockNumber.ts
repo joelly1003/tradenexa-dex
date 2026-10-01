@@ -15,7 +15,8 @@ export interface InkBlockNumberState {
 
 const INK_RPC_ENDPOINTS = [
   'https://rpc-gel.inkonchain.com',
-  'https://rpc-mainnet.inkonchain.com',
+  'https://rpc-qnd.inkonchain.com',
+  'https://rpc.inkonchain.com',
 ];
 
 export function useInkBlockNumber(): InkBlockNumberState {

@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import { RegionalProvider } from "../components/providers/RegionalProvider";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
+import { NetworkGuard } from "../components/NetworkGuard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           <RegionalProvider>
             <Header />
+            <NetworkGuard />
             <main className="flex-1 flex flex-col w-full">
               {children}
             </main>
