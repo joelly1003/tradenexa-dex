@@ -7,10 +7,10 @@ export function ArchitectureOverview() {
   const steps = [
     {
       step: '01',
-      title: 'Local Price Discovery & Oracle',
-      subtitle: 'Client-Side Real-Time Conversion',
-      desc: 'All trading pairs, collateral amounts, and PnL are evaluated natively against regional fiat currency feeds for seamless local pricing without mental FX conversion.',
-      badge: 'Zero Latency Oracle',
+      title: 'High-Frequency Price Discovery',
+      subtitle: 'Real-Time Index Feeds',
+      desc: 'All trading pairs, collateral limits, and position valuations are evaluated against low-latency decentralized oracle feeds for millisecond-grade mark price accuracy.',
+      badge: 'Zero-Latency Oracle Feeds',
       icon: <Cpu className="w-5 h-5 text-[#B1FA41]" />
     },
     {

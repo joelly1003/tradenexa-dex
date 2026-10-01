@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Markets & Local Currency Quotations | TradeNexa',
-  description: 'Real-time crypto asset market overviews and 24h volumes priced natively in regional fiat currencies.',
+  title: 'Markets & Real-Time Price Discovery | TradeNexa',
+  description: 'Real-time crypto asset market overviews, 24h volumes, and low-latency oracle price discovery on Ink Network.',
   alternates: {
     canonical: 'https://tradenexa.com/market',
   },

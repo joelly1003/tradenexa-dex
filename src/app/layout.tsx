@@ -20,9 +20,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://tradenexa.com'),
   title: 'TradeNexa | Institutional Decentralized Trading on Ink Network',
-  description: 'Trade crypto in your local currency with MEV-shielded solver execution powered by NADO and settled on Ink Network.',
+  description: 'Trade crypto with sub-second precision and MEV-shielded solver execution powered by NADO and settled on Ink Network.',
   openGraph: {
-    title: 'TradeNexa | Local Currency Crypto Trading',
+    title: 'TradeNexa | Sub-Second Decentralized Trading',
     description: 'Solver-optimized execution settled on Ink Network L2 (Chain ID: 57073).',
     url: 'https://tradenexa.com',
     siteName: 'TradeNexa',
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TradeNexa | Local Currency Crypto Trading',
+    title: 'TradeNexa | Sub-Second Decentralized Trading',
     description: 'Deep NADO liquidity with sub-second Ink L2 settlement.',
     images: ['/og-image.png'],
   },

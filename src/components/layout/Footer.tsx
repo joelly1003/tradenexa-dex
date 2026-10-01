@@ -65,7 +65,7 @@ export function Footer() {
               Third-Party Fiat Gateway Notice
             </div>
             <p>
-              Fiat on/off-ramp rails (PIX, SEPA, UPI, M-PESA, cards) are facilitated solely by independent, licensed third-party providers (including Transak and Stripe). TradeNexa does not custody fiat or provide banking services.
+              Fiat on/off-ramp gateways (cards, bank wires, third-party transfers) are facilitated solely by independent, licensed third-party providers. TradeNexa is a non-custodial software interface and never holds, custodies, or processes fiat currency.
             </p>
           </div>
         </div>

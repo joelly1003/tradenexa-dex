@@ -20,12 +20,12 @@ export default function Home() {
         {/* Main Content Group */}
         <div className="flex flex-col items-center justify-center space-y-10 flex-1">
           <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-black tracking-tight leading-[1.25] text-white">
-            Trade Crypto in Your <br />
-            <span className="text-[#B1FA41]">Local Currency</span>
+            Trade Crypto with <br />
+            <span className="text-[#B1FA41]">Sub-Second Precision</span>
           </h1>
           
           <p className="text-lg text-zinc-400 font-medium leading-relaxed max-w-2xl mx-auto">
-            Experience institutional-speed swaps and solver-optimized routing—powered by NADO and settled on Ink Network.
+            Experience institutional-speed swaps and solver-optimized orderbook liquidity—powered by NADO and settled with deterministic finality on Ink Network.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -63,16 +63,16 @@ export default function Home() {
             Why TradeNexa is Different
           </h2>
           <p className="text-zinc-400 font-medium text-lg">
-            Unlike generic global exchanges, we build native features specifically for your region so you never have to calculate exchange rates in your head again.
+            Engineered for high-frequency precision: tap into solver-optimized intent matching, deep orderbook depth, and zero protocol markup spreads.
           </p>
           
-          {/* Interactive Payment Pills */}
+          {/* Interactive Gateway Pills */}
           <div className="flex flex-col items-center gap-2 mt-8">
             <div className="flex flex-wrap items-center justify-center gap-3">
-              {['PIX', 'SEPA', 'UPI', 'M-PESA', 'TRANSAK', 'STRIPE'].map((pill) => (
+              {['CARDS', 'BANK TRANSFERS', 'INSTANT ON-RAMP', 'TRANSAK', 'STRIPE'].map((pill) => (
                 <button
                   key={pill}
-                  onClick={() => openRamp({ rail: pill })}
+                  onClick={() => openRamp()}
                   className="bg-white/5 hover:bg-[#B1FA41]/10 border border-white/10 hover:border-[#B1FA41]/30 text-zinc-300 hover:text-white font-bold text-sm px-5 py-2.5 rounded-xl uppercase tracking-wider transition-all flex items-center gap-1.5 group cursor-pointer shadow-sm hover:scale-105"
                 >
                   <span>{pill}</span>
@@ -80,7 +80,7 @@ export default function Home() {
               ))}
             </div>
             <span className="text-xs text-zinc-500 font-medium mt-1">
-              Select any regional rail to open licensed third-party on/off-ramp gateway. Direct non-custodial delivery.
+              Non-custodial architecture: trade directly from your wallet with verifiable on-chain L2 settlement and zero intermediary custody.
             </span>
           </div>
         </div>
@@ -93,9 +93,9 @@ export default function Home() {
             <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <Globe className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-white mb-3">Native Localization</h3>
+            <h3 className="text-xl font-black text-white mb-3">Transparent Execution</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
-              Every price, fee, and chart is instantly converted to your selected local fiat currency for intuitive trading.
+              Real-time mark prices, tight spreads, and instant PnL tracking across all active pairs with zero hidden spreads or protocol markups.
             </p>
           </div>
 
@@ -120,9 +120,9 @@ export default function Home() {
             <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
               <Wallet className="w-6 h-6 text-[#B1FA41]" />
             </div>
-            <h3 className="text-xl font-black text-white mb-3">Regional Payment Rails</h3>
+            <h3 className="text-xl font-black text-white mb-3">Direct Non-Custodial Gateways</h3>
             <p className="text-zinc-500 font-medium text-sm leading-relaxed">
-              Direct routing to licensed on-ramp partners (PIX, SEPA, UPI, M-PESA). TradeNexa is non-custodial and never holds fiat currency.
+              Seamless integration with licensed third-party on-ramps for instant, non-custodial deposits and withdrawals directly to your Ink L2 address.
             </p>
           </div>
 

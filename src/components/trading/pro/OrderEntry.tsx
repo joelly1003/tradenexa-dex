@@ -331,24 +331,21 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
           </div>
         </div>
 
-        {/* Quick Deposit via Regional Rails */}
+        {/* Quick Deposit via Gateway */}
         <div className="flex items-center justify-between text-[11px] text-zinc-500 mt-2.5 px-1 pt-2 border-t border-white/5">
           <span className="flex items-center gap-1 text-zinc-400 text-[10px]">
             <CreditCard className="w-3 h-3 text-[#B1FA41]" />
-            Deposit Rails:
+            Fiat Gateways:
           </span>
           <div className="flex items-center gap-1">
-            {(['PIX', 'SEPA', 'UPI', 'M-PESA'] as const).map((rail) => (
-              <button
-                key={rail}
-                type="button"
-                onClick={() => openRamp({ rail })}
-                className="px-1.5 py-0.5 rounded bg-white/5 hover:bg-[#B1FA41]/10 hover:text-[#B1FA41] text-[10px] font-mono font-bold text-zinc-400 border border-white/5 transition-all cursor-pointer"
-                title={`Deposit via ${rail}`}
-              >
-                +{rail}
-              </button>
-            ))}
+            <button
+              type="button"
+              onClick={() => openRamp()}
+              className="px-2 py-0.5 rounded bg-white/5 hover:bg-[#B1FA41]/10 hover:text-[#B1FA41] text-[10px] font-mono font-bold text-zinc-400 border border-white/5 transition-all cursor-pointer"
+              title="Deposit via Licensed Gateway"
+            >
+              +Instant Ramp
+            </button>
           </div>
         </div>
       </div>

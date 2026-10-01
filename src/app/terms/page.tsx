@@ -70,7 +70,7 @@ export default function TermsPage() {
             <strong>Mandatory Custodial Disclaimer:</strong> TradeNexa is not a bank, money services business (MSB), virtual asset service provider (VASP), or payment processor. We do not custody, transfer, or intermediate fiat currencies.
           </div>
           <p>
-            All fiat on-ramp and off-ramp operations—including regional rails such as PIX (Brazil), SEPA (European Union), UPI (India), M-PESA (Kenya), and credit/debit card processing—are operated entirely and independently by licensed third-party providers (including Transak, Stripe, and MoonPay).
+            All fiat on-ramp and off-ramp operations—including credit/debit cards, bank wire transfers, and third-party gateways—are operated entirely and independently by licensed third-party providers (including Transak, Stripe, and MoonPay).
           </p>
           <p>
             When utilizing fiat services, you enter into a direct contractual relationship with the applicable provider. You are subject to their specific terms of service, AML/KYC procedures, fee structures, and dispute resolution processes. TradeNexa stores no banking details or payment credentials.

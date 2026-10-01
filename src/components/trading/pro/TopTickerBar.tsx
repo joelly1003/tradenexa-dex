@@ -335,19 +335,15 @@ export function TopTickerBar({ selectedSymbol, onSelectSymbol, livePrice }: TopT
           </span>
         </div>
 
-        {/* Regional Fiat Rails Quick Deposit */}
+        {/* Instant Gateway Quick Deposit */}
         <div className="hidden xl:flex items-center gap-1.5 shrink-0 pl-4 border-l border-white/10">
-          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Deposit Rails:</span>
-          {(['PIX', 'SEPA', 'UPI', 'M-PESA'] as const).map((rail) => (
-            <button
-              key={rail}
-              onClick={() => openRamp({ rail })}
-              className="px-2 py-1 rounded-lg bg-white/5 hover:bg-[#B1FA41]/10 border border-white/10 hover:border-[#B1FA41]/30 text-zinc-300 hover:text-[#B1FA41] text-[10px] font-bold font-mono transition-all cursor-pointer shadow-sm"
-              title={`Deposit via ${rail}`}
-            >
-              +{rail}
-            </button>
-          ))}
+          <button
+            onClick={() => openRamp()}
+            className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-[#B1FA41]/10 border border-white/10 hover:border-[#B1FA41]/30 text-zinc-300 hover:text-[#B1FA41] text-[10px] font-bold font-mono transition-all cursor-pointer shadow-sm flex items-center gap-1"
+            title="Instant Deposit via Licensed Gateway"
+          >
+            <span>+Instant Ramp</span>
+          </button>
         </div>
       </div>
       
