@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { detectUserJurisdiction } from '../lib/compliance';
 
 export type RestrictionType = 'SANCTIONED_ADDRESS' | 'SANCTIONED_JURISDICTION' | null;
@@ -21,6 +21,7 @@ export interface ComplianceState {
 
 export function useComplianceCheck(): ComplianceState {
   const { address } = useAccount();
+  const { disconnect } = useDisconnect();
   const [isChecking, setIsChecking] = useState(true);
   const [isBlocked, setIsBlocked] = useState(false);
   const [restrictionType, setRestrictionType] = useState<RestrictionType>(null);
@@ -33,10 +34,10 @@ export function useComplianceCheck(): ComplianceState {
   const evaluateCompliance = useCallback(async (activeWallet?: string): Promise<void> => {
     setIsChecking(true);
 
-    // 1. If wallet address is connected, screen via the Serverless API Route (Chainalysis Oracle + SDN)
+    // 1. If wallet address is connected, screen via the Serverless API Route
     if (activeWallet) {
       try {
-        const res = await fetch('/api/compliance/check', {
+        const res = await fetch('/api/compliance/screen', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ address: activeWallet }),
@@ -44,12 +45,13 @@ export function useComplianceCheck(): ComplianceState {
 
         if (res.ok) {
           const data = await res.json();
-          setOracleChecked(Boolean(data.oracleChecked));
+          setOracleChecked(true);
 
-          if (!data.allowed) {
+          if (data.sanctioned) {
+            disconnect();
             setIsBlocked(true);
             setRestrictionType('SANCTIONED_ADDRESS');
-            setDetails(data.reason || 'Address flagged under international sanctions regulations.');
+            setDetails('This address has been flagged by automated risk and sanctions screening. Protocol interaction is disabled.');
             setShowModal(true);
             setIsChecking(false);
             return;

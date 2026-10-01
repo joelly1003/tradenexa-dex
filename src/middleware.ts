@@ -22,8 +22,6 @@ const OFAC_RESTRICTED_COUNTRIES = new Set([
   'MM', // Myanmar
 ]);
 
-// Routes involving transaction execution or trading capabilities
-const TRANSACTION_ROUTES = ['/trade'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -60,22 +58,27 @@ export function middleware(request: NextRequest) {
     '';
   const country = countryHeader.toUpperCase().trim();
 
+  // 4. Edge-level geofencing check
+  if (country && OFAC_RESTRICTED_COUNTRIES.has(country)) {
+    // Return 403 JSON for API calls
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json(
+        { error: 'Access restricted under protocol compliance policies.' },
+        { status: 403 }
+      );
+    }
+    // Redirect page traffic to dedicated restricted access landing
+    if (pathname !== '/restricted') {
+      const restrictedUrl = request.nextUrl.clone();
+      restrictedUrl.pathname = '/restricted';
+      return NextResponse.rewrite(restrictedUrl);
+    }
+  }
+
   // Clone headers for downstream propagation
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-tradenexa-country', country || 'UNKNOWN');
   requestHeaders.set('x-tradenexa-edge-verified', 'true');
-
-  // 4. Edge-level geofencing check for restricted transaction execution
-  const isRestrictedCountry = country && OFAC_RESTRICTED_COUNTRIES.has(country);
-  const isAttemptingTrade = TRANSACTION_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
-  );
-
-  if (isRestrictedCountry && isAttemptingTrade) {
-    // Instead of throwing an uncaught 403 server error, rewrite/redirect to branded notice
-    const restrictedUrl = new URL('/restricted-jurisdiction', request.url);
-    return NextResponse.redirect(restrictedUrl);
-  }
 
   // 5. Default: allow request through with security headers
   const finalResponse = NextResponse.next({
