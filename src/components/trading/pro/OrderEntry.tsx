@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useAccount, useBalance } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
-import { useNadoTrade } from '../../../hooks/nado/useNadoTrade';
+import { useTradeExecution } from '../../../hooks/useTradeExecution';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
-import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X, CreditCard } from 'lucide-react';
+import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X, CreditCard, AlertTriangle, RefreshCw } from 'lucide-react';
 import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
 import { useRampStore } from '../../../store/rampStore';
 import { getTokenRiskProfile } from '../../../lib/tokens';
@@ -20,7 +20,26 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({ address });
   const { open } = useAppKit();
-  const { placeOrder, isSubmitting, error: tradeError } = useNadoTrade();
+  const {
+    executeTrade,
+    isSubmitting,
+    isQuoting,
+    quoteTimeLeft,
+    isQuoteExpired,
+    isLiquidityAvailable,
+    slippageTolerance,
+    setSlippageTolerance,
+    isSlippageBreached,
+    priceImpact,
+    usePrivateLane,
+    setUsePrivateLane,
+    privateLaneFailed,
+    error: tradeError,
+    successDigest,
+    refreshQuote,
+    retryWithStandardRoute,
+    resetError,
+  } = useTradeExecution();
   const { data: tickers } = useNadoEdgeTicker();
 
   const symUpper = symbol.toUpperCase() === 'KPEPE' ? 'PEPE' : symbol.toUpperCase();
@@ -122,23 +141,21 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
     const finalSize = parseFloat(sizeAmount) || 0;
     if (finalSize === 0) return;
     
-    // In a real app we'd convert USD size back to token size if needed
     const finalTokenAmount = isSizeInUSD && tradePrice > 0 ? finalSize / tradePrice : finalSize;
 
     try {
-      await placeOrder({
-        productId: productId,
+      await executeTrade({
+        productId,
+        symbol: symUpper,
         price: tradePrice,
-        amount: finalTokenAmount,
-        appendixOptions: {
-          isolated: marginMode === 'Isolated',
-          reduceOnly,
-          orderType: orderType === 'Limit' ? 'POST_ONLY' : 'DEFAULT',
-        },
+        amount: isLong ? finalTokenAmount : -finalTokenAmount,
+        isLong,
+        orderType,
+        marginMode,
+        leverage,
       });
-      alert('Order successfully signed via EIP-712 and submitted to Nado Gateway!');
     } catch (e: unknown) {
-      console.error('Nado order placement error:', e);
+      console.error('Nado order execution error:', e);
     }
   };
 
@@ -155,9 +172,13 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
 
   if (isConnected) {
     if (isSubmitting) {
-      buttonText = 'Submitting...';
+      buttonText = 'Signing & Submitting Intent...';
       buttonAction = () => {};
       buttonClass = 'bg-[#B1FA41]/10 text-[#B1FA41] cursor-wait animate-pulse border border-[#B1FA41]/30';
+    } else if (isQuoteExpired || !isLiquidityAvailable) {
+      buttonText = 'Refresh Quote to Trade';
+      buttonAction = refreshQuote;
+      buttonClass = 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30';
     } else if (payNum === 0 || sizeNum === 0) {
       buttonText = 'Enter Margin';
       buttonAction = () => {};
@@ -204,6 +225,18 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
             <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
             RPC Online
           </div>
+          <button
+            onClick={refreshQuote}
+            title="Refresh Solver Quote (10s window)"
+            className={`px-2 py-1 border rounded text-[10px] font-mono flex items-center gap-1 transition-all cursor-pointer ${
+              isQuoteExpired
+                ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 animate-pulse'
+                : 'bg-white/5 border-white/10 text-zinc-300 hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <RefreshCw className={`w-2.5 h-2.5 ${isQuoting ? 'animate-spin' : ''}`} />
+            <span>{isQuoteExpired ? 'Expired' : `${quoteTimeLeft}s`}</span>
+          </button>
         </div>
       </div>
 
@@ -538,18 +571,126 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
         </div>
       </div>
 
+      {/* Slippage Breach Warning */}
+      {isSlippageBreached && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 mb-3 text-xs text-amber-200">
+          <div className="flex items-center gap-2 font-bold mb-1">
+            <AlertTriangle className="w-4 h-4 text-amber-400" />
+            <span>Slippage Tolerance Exceeded</span>
+          </div>
+          <p className="text-[11px] text-amber-200/80 mb-2">
+            Price impact exceeds slippage tolerance. Update slippage to proceed.
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                setSlippageTolerance(1.0);
+                setSlippage('1.0');
+                resetError();
+              }}
+              className="bg-amber-500 text-black px-2.5 py-1 rounded font-bold text-[10px] hover:bg-amber-400 transition-colors cursor-pointer"
+            >
+              Set Slippage to 1.0%
+            </button>
+            <button
+              onClick={resetError}
+              className="bg-white/5 text-zinc-300 px-2.5 py-1 rounded text-[10px] hover:bg-white/10 transition-colors cursor-pointer"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Private MEV lane failover prompt */}
+      {privateLaneFailed && (
+        <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-3 mb-3 text-xs text-purple-200">
+          <p className="mb-2 text-[11px]">Private MEV lane unavailable. Retry with standard fallback route?</p>
+          <button
+            onClick={retryWithStandardRoute}
+            className="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-1.5 rounded text-xs transition-all cursor-pointer"
+          >
+            Retry via Standard Route
+          </button>
+        </div>
+      )}
+
+      {/* Quote Expired / Liquidity Exhaustion Alert */}
+      {isQuoteExpired && (
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 mb-3 text-xs flex items-center justify-between gap-2">
+          <span className="text-amber-200 text-[11px]">Solver liquidity unavailable for this size. Adjust amount or refresh quote.</span>
+          <button
+            onClick={refreshQuote}
+            className="bg-amber-500 text-black px-2.5 py-1 rounded text-[10px] font-bold shrink-0 hover:bg-amber-400 transition-colors cursor-pointer"
+          >
+            Refresh
+          </button>
+        </div>
+      )}
+
       {/* 9. Primary Action Button */}
       <button 
         onClick={buttonAction}
         disabled={isSubmitting || (isConnected && (payNum === 0 || sizeNum === 0))}
-        className={`w-full font-bold py-3.5 rounded-lg mb-2 text-sm ${buttonClass}`}
+        className={`w-full font-bold py-3.5 rounded-lg mb-2 text-sm transition-all cursor-pointer ${buttonClass}`}
       >
         {buttonText}
       </button>
 
+      {/* Actionable Error State with Inline Retry */}
       {tradeError && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-2 rounded mb-2 break-words">
-          {tradeError}
+        <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-xs p-3 rounded-xl mb-3">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-1.5 font-bold text-red-200">
+              <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+              <span>Execution Notice</span>
+            </div>
+            <button
+              onClick={resetError}
+              className="text-red-400 hover:text-white shrink-0 text-sm font-bold cursor-pointer"
+            >
+              ×
+            </button>
+          </div>
+          <p className="mt-1 text-[11px] leading-relaxed text-red-200/90">{tradeError}</p>
+          {tradeError.includes('Signature declined') && (
+            <button
+              onClick={handlePlaceOrder}
+              className="mt-2 w-full bg-red-500/20 hover:bg-red-500/30 text-red-200 font-bold py-1.5 rounded text-[11px] transition-all cursor-pointer border border-red-500/30"
+            >
+              Retry Signature in Wallet
+            </button>
+          )}
+          {tradeError.includes('expired') && (
+            <button
+              onClick={refreshQuote}
+              className="mt-2 w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 font-bold py-1.5 rounded text-[11px] transition-all cursor-pointer border border-amber-500/30"
+            >
+              Refresh Quote Now
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Success Confirmation Card */}
+      {successDigest && (
+        <div className="bg-[#B1FA41]/10 border border-[#B1FA41]/30 text-[#B1FA41] text-xs p-3 rounded-xl mb-3">
+          <div className="font-bold flex items-center gap-1.5 mb-1 text-white">
+            <Check className="w-4 h-4 text-[#B1FA41]" />
+            <span>Order Intent Submitted!</span>
+          </div>
+          <p className="text-[11px] text-zinc-300 mb-2">
+            Cryptographically signed and matched by NADO solvers on Ink Network.
+          </p>
+          <a
+            href={`https://explorer.inkonchain.com/tx/${successDigest}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[11px] underline hover:text-white font-mono text-[#B1FA41]"
+          >
+            <span>View on Ink Explorer</span>
+            <span>→</span>
+          </a>
         </div>
       )}
     </div>

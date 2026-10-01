@@ -7,6 +7,7 @@ import { TradingViewChart } from './pro/TradingViewChart';
 import { Orderbook } from './pro/Orderbook';
 import { OrderEntry } from './pro/OrderEntry';
 import { PositionsPanel } from './pro/PositionsPanel';
+import { TradeErrorBoundary } from './TradeErrorBoundary';
 
 function getTradingViewSymbol(symbol: string): string {
   const sym = symbol.toUpperCase();
@@ -75,22 +76,28 @@ function TradeContent() {
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden border-t border-white/5">
         {/* Left column (Chart + Positions) */}
         <div className="flex-[3] flex flex-col min-w-0 bg-[#0B0E14]">
-           <div className="flex-[2] min-h-[400px] relative z-0">
-             <TradingViewChart symbol={getTradingViewSymbol(selectedSymbol)} />
-           </div>
-           <div className="flex-1 min-h-[250px] lg:max-h-[300px]">
-             <PositionsPanel />
-           </div>
+          <TradeErrorBoundary fallbackTitle="Chart Display Interrupted">
+            <div className="flex-[2] min-h-[400px] relative z-0">
+              <TradingViewChart symbol={getTradingViewSymbol(selectedSymbol)} />
+            </div>
+            <div className="flex-1 min-h-[250px] lg:max-h-[300px]">
+              <PositionsPanel />
+            </div>
+          </TradeErrorBoundary>
         </div>
 
         {/* Middle column (Orderbook) */}
         <div className="w-full lg:w-[320px] flex flex-col min-h-[400px] lg:min-h-0 bg-[#0B0E14] border-l border-white/10 shrink-0">
-          <Orderbook symbol={selectedSymbol} onPriceUpdate={setLivePrice} />
+          <TradeErrorBoundary fallbackTitle="Orderbook Feed Interrupted">
+            <Orderbook symbol={selectedSymbol} onPriceUpdate={setLivePrice} />
+          </TradeErrorBoundary>
         </div>
 
         {/* Right column (Order Entry) */}
         <div className="w-full lg:w-[360px] flex flex-col min-h-[400px] lg:min-h-0 bg-[#0B0E14] shrink-0">
-          <OrderEntry symbol={selectedSymbol} livePrice={livePrice} />
+          <TradeErrorBoundary fallbackTitle="Order Entry Form Interrupted">
+            <OrderEntry symbol={selectedSymbol} livePrice={livePrice} />
+          </TradeErrorBoundary>
         </div>
       </div>
     </div>
