@@ -2,25 +2,9 @@
 
 import * as React from 'react';
 import { WagmiProvider } from 'wagmi';
-import { ink, mainnet } from 'wagmi/chains';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react';
-import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
-
-// Project ID for Reown / Web3Modal. Supports environment variable or default fallback.
-const projectId = 
-  process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || 
-  process.env.NEXT_PUBLIC_PROJECT_ID || 
-  '3fcc6bba6f1de962d911bb5b5c3dba68';
-
-// Adding mainnet alongside ink ensures WalletConnect relay namespace accepts the session
-const networks = [ink, mainnet] as any;
-
-const wagmiAdapter = new WagmiAdapter({
-  networks,
-  projectId,
-  ssr: true,
-});
+import { networks, projectId, wagmiAdapter, inkChain } from '../lib/wagmi';
 
 createAppKit({
   adapters: [wagmiAdapter],
@@ -56,7 +40,7 @@ createAppKit({
       play_store: 'https://play.google.com/store/apps/details?id=app.phantom'
     }
   ],
-  defaultNetwork: ink,
+  defaultNetwork: inkChain,
   themeMode: 'dark',
   themeVariables: {
     '--w3m-accent': '#B1FA41',
