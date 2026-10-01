@@ -223,18 +223,6 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
             <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
             RPC Online
           </div>
-          <button
-            onClick={refreshQuote}
-            title="Refresh Solver Quote (10s window)"
-            className={`px-2 py-1 border rounded text-[10px] font-mono flex items-center gap-1 transition-all cursor-pointer ${
-              isQuoteExpired
-                ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 animate-pulse'
-                : 'bg-white/5 border-white/10 text-zinc-300 hover:text-white hover:bg-white/10'
-            }`}
-          >
-            <RefreshCw className={`w-2.5 h-2.5 ${isQuoting ? 'animate-spin' : ''}`} />
-            <span>{isQuoteExpired ? 'Expired' : `${quoteTimeLeft}s`}</span>
-          </button>
         </div>
       </div>
 
