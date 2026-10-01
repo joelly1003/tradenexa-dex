@@ -1,10 +1,25 @@
-import { Suspense } from 'react';
+'use client';
+
+import { Suspense, useSyncExternalStore } from 'react';
 import { LeaderboardInterface } from '../../components/leaderboard/LeaderboardInterface';
+import LeaderboardLoading from './loading';
+
+const emptySubscribe = () => () => {};
 
 export default function LeaderboardPage() {
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+
+  if (!isMounted) {
+    return <LeaderboardLoading />;
+  }
+
   return (
     <div className="w-full">
-      <Suspense fallback={<div className="flex items-center justify-center py-20 text-white">Loading Leaderboard...</div>}>
+      <Suspense fallback={<LeaderboardLoading />}>
         <LeaderboardInterface />
       </Suspense>
     </div>

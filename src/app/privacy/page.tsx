@@ -1,4 +1,10 @@
 import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Notice | TradeNexa',
+  description: 'Privacy policy and data handling practices for the TradeNexa decentralized exchange protocol.',
+};
 import Link from 'next/link';
 import { 
   ShieldCheck, 

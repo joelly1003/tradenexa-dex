@@ -1,4 +1,10 @@
 import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service | TradeNexa',
+  description: 'Legal terms and conditions for using the TradeNexa non-custodial decentralized exchange protocol.',
+};
 import Link from 'next/link';
 import { 
   ShieldCheck, 
