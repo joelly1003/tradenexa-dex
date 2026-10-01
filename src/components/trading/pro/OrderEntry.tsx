@@ -375,10 +375,10 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
           className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#B1FA41] transition-all"
         />
         <div className="flex justify-between text-[10px] text-zinc-500 mt-2 font-mono">
-          <span onClick={() => handleLeverageChange(2)} className="cursor-pointer hover:text-white">2x</span>
-          <span onClick={() => handleLeverageChange(10)} className="cursor-pointer hover:text-white">10x</span>
+          <span onClick={() => handleLeverageChange(1)} className="cursor-pointer hover:text-white">1x</span>
           <span onClick={() => handleLeverageChange(25)} className="cursor-pointer hover:text-white">25x</span>
           <span onClick={() => handleLeverageChange(50)} className="cursor-pointer hover:text-white">50x</span>
+          <span onClick={() => handleLeverageChange(75)} className="cursor-pointer hover:text-white">75x</span>
           <span onClick={() => handleLeverageChange(100)} className="cursor-pointer hover:text-white">100x</span>
         </div>
       </div>
