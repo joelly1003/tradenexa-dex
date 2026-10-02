@@ -3,11 +3,13 @@
 import React, { useState, useRef } from 'react';
 import { useAccount, useBalance } from 'wagmi';
 import { RefreshCw, Link as LinkIcon, Download, Upload, ArrowRightLeft, Clock } from 'lucide-react';
+import { FiatRampModal } from '../../components/FiatRampModal';
 
 export default function AssetsPage() {
   const [activeTab, setActiveTab] = useState('Deposit');
   const [amount, setAmount] = useState('');
   const [isSpinning, setIsSpinning] = useState(false);
+  const [isRampOpen, setIsRampOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Mock balance for demonstration
@@ -66,6 +68,12 @@ export default function AssetsPage() {
               className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 transition-colors"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSpinning ? 'animate-spin text-[#B1FA41]' : ''}`} /> Refresh
+            </button>
+            <button 
+              onClick={() => setIsRampOpen(true)}
+              className="flex items-center gap-2 bg-[#B1FA41]/10 hover:bg-[#B1FA41]/20 border border-[#B1FA41]/30 text-[#B1FA41] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+            >
+              Buy Crypto
             </button>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-400">
@@ -241,6 +249,7 @@ export default function AssetsPage() {
         </div>
       </div>
 
+      <FiatRampModal isOpen={isRampOpen} onClose={() => setIsRampOpen(false)} type="buy" />
     </div>
   );
 }

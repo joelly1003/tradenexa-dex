@@ -17,7 +17,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://tradenexa.com';
+import { getBaseUrl } from '../lib/url';
+
+const BASE_URL = getBaseUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -37,9 +39,11 @@ export const metadata: Metadata = {
     description: 'Deep NADO liquidity with sub-second Ink L2 settlement.',
     images: ['/og-image.png'],
   },
-  alternates: {
-    canonical: '/',
-  },
+  robots: {
+    index: process.env.VERCEL_ENV === 'production',
+    follow: process.env.VERCEL_ENV === 'production',
+    nocache: process.env.VERCEL_ENV !== 'production',
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

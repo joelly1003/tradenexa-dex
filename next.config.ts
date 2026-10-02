@@ -24,6 +24,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // If you are deploying as a static SPA, uncomment output: 'export'
+  // output: 'export',
+  // trailingSlash: true,
+  
   async headers() {
     return [
       {

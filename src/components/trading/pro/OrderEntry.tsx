@@ -5,9 +5,12 @@ import { useAccount, useBalance } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
 import { useTradeExecution } from '../../../hooks/useTradeExecution';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
+import { useFeedHealth } from '../../../hooks/nado/useFeedHealth';
 import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X, CreditCard, AlertTriangle, RefreshCw } from 'lucide-react';
 import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
 import { getTokenRiskProfile } from '../../../lib/tokens';
+import { OracleFeedStatus } from './OracleFeedStatus';
+import { OrderExecutionModal, OrderStage } from './OrderExecutionModal';
 
 interface NadoTickerItem {
   symbol: string;
@@ -19,6 +22,11 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   const { address, isConnected } = useAccount();
   const { data: balanceData } = useBalance({ address });
   const { open } = useAppKit();
+  const { status: feedStatus, latencyMs } = useFeedHealth();
+  const [modalStage, setModalStage] = useState<OrderStage>('idle');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [txHash, setTxHash] = useState<string | undefined>(undefined);
+  
   const {
     executeTrade,
     isSubmitting,
@@ -35,6 +43,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
     privateLaneFailed,
     error: tradeError,
     successDigest,
+    executionStage,
     refreshQuote,
     retryWithStandardRoute,
     resetError,
@@ -135,12 +144,14 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
     setIsSizeInUSD(!isSizeInUSD);
   };
 
+  // Handle executing trade and opening modal
   const handlePlaceOrder = async () => {
     const finalSize = parseFloat(sizeAmount) || 0;
     if (finalSize === 0) return;
     
     const finalTokenAmount = isSizeInUSD && tradePrice > 0 ? finalSize / tradePrice : finalSize;
 
+    setModalOpen(true);
     try {
       await executeTrade({
         productId,
@@ -169,9 +180,13 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   let buttonClass = 'bg-[#1e293b] hover:bg-[#334155] text-white'; // Disabled/Disconnected default
 
   if (isConnected) {
-    if (isSubmitting) {
-      buttonText = 'Signing & Submitting Intent...';
+    if (feedStatus === 'stale' || feedStatus === 'offline') {
+      buttonText = 'Oracle Feed Stale — Trading Disabled';
       buttonAction = () => {};
+      buttonClass = 'bg-red-500/20 text-red-400 border border-red-500/30 cursor-not-allowed';
+    } else if (isSubmitting) {
+      buttonText = 'Signing & Submitting Intent...';
+      buttonAction = () => { setModalOpen(true); };
       buttonClass = 'bg-[#B1FA41]/10 text-[#B1FA41] cursor-wait animate-pulse border border-[#B1FA41]/30';
     } else if (isQuoteExpired || !isLiquidityAvailable) {
       buttonText = 'Refresh Quote to Trade';
@@ -219,10 +234,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
               Experimental
             </span>
           )}
-          <div className="px-2 py-1 bg-[#B1FA41]/10 border border-[#B1FA41]/20 rounded text-[10px] font-mono text-[#B1FA41] flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
-            RPC Online
-          </div>
+          <OracleFeedStatus status={feedStatus} latencyMs={latencyMs} />
         </div>
       </div>
 
@@ -614,68 +626,20 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
       {/* 9. Primary Action Button */}
       <button 
         onClick={buttonAction}
-        disabled={isSubmitting || (isConnected && (payNum === 0 || sizeNum === 0))}
-        className={`w-full font-bold py-3.5 rounded-lg mb-2 text-sm transition-all cursor-pointer ${buttonClass}`}
+        disabled={isSubmitting || (isConnected && (payNum === 0 || sizeNum === 0)) || feedStatus === 'stale' || feedStatus === 'offline'}
+        className={`w-full font-bold py-3.5 rounded-lg mb-2 text-sm transition-all cursor-pointer disabled:cursor-not-allowed ${buttonClass}`}
       >
         {buttonText}
       </button>
-
-      {/* Actionable Error State with Inline Retry */}
-      {tradeError && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-xs p-3 rounded-xl mb-3">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-1.5 font-bold text-red-200">
-              <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
-              <span>Execution Notice</span>
-            </div>
-            <button
-              onClick={resetError}
-              className="text-red-400 hover:text-white shrink-0 text-sm font-bold cursor-pointer"
-            >
-              ×
-            </button>
-          </div>
-          <p className="mt-1 text-[11px] leading-relaxed text-red-200/90">{tradeError}</p>
-          {tradeError.includes('Signature declined') && (
-            <button
-              onClick={handlePlaceOrder}
-              className="mt-2 w-full bg-red-500/20 hover:bg-red-500/30 text-red-200 font-bold py-1.5 rounded text-[11px] transition-all cursor-pointer border border-red-500/30"
-            >
-              Retry Signature in Wallet
-            </button>
-          )}
-          {tradeError.includes('expired') && (
-            <button
-              onClick={refreshQuote}
-              className="mt-2 w-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 font-bold py-1.5 rounded text-[11px] transition-all cursor-pointer border border-amber-500/30"
-            >
-              Refresh Quote Now
-            </button>
-          )}
-        </div>
-      )}
-
-      {/* Success Confirmation Card */}
-      {successDigest && (
-        <div className="bg-[#B1FA41]/10 border border-[#B1FA41]/30 text-[#B1FA41] text-xs p-3 rounded-xl mb-3">
-          <div className="font-bold flex items-center gap-1.5 mb-1 text-white">
-            <Check className="w-4 h-4 text-[#B1FA41]" />
-            <span>Order Intent Submitted!</span>
-          </div>
-          <p className="text-[11px] text-zinc-300 mb-2">
-            Cryptographically signed and matched by NADO solvers on Ink Network.
-          </p>
-          <a
-            href={`https://explorer.inkonchain.com/tx/${successDigest}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[11px] underline hover:text-white font-mono text-[#B1FA41]"
-          >
-            <span>View on Ink Explorer</span>
-            <span>→</span>
-          </a>
-        </div>
-      )}
+      
+      <OrderExecutionModal 
+        isOpen={modalOpen} 
+        onClose={() => setModalOpen(false)} 
+        stage={executionStage}
+        txHash={successDigest || undefined}
+        errorMessage={tradeError || undefined}
+        onRetry={handlePlaceOrder}
+      />
     </div>
   );
 }

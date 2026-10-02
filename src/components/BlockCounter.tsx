@@ -25,6 +25,9 @@ export function BlockCounter({
   const { data: currentBlockData, isError, isLoading } = useBlockNumber({
     chainId: 57073,
     watch: true,
+    query: {
+      refetchInterval: 4000,
+    }
   });
 
   // Cached last known block to prevent layout disruption during network hiccups

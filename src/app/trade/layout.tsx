@@ -1,13 +1,16 @@
-import type { Metadata } from 'next';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Trade Perpetuals & Spot | TradeNexa',
-  description: 'Trade institutional crypto perpetuals with deep NADO liquidity and sub-second settlement on Ink Network.',
+  title: 'Trade | TradeNexa',
   alternates: {
-    canonical: 'https://tradenexa.com/trade',
+    canonical: '/trade',
   },
 };
 
-export default function TradeLayout({ children }: { children: React.ReactNode }) {
+export default function TradeLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }
