@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { X, CheckCircle2, AlertCircle, Loader2, ExternalLink } from 'lucide-react';
 
 export type OrderStage = 'idle' | 'signing' | 'matching' | 'submitting' | 'settled' | 'failed';
@@ -107,7 +107,7 @@ export function OrderExecutionModal({ isOpen, onClose, stage, txHash, errorMessa
             <div className="mt-6 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-2">
               <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
               <p className="text-xs text-amber-400">
-                Network is experiencing high latency. Your order is still processing, but taking longer than usual. You can safely close this window�your intent is queued.
+                Network is experiencing high latency. Your order is still processing, but taking longer than usual. You can safely close this window—your intent is queued.
               </p>
             </div>
           )}
