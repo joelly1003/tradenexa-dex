@@ -146,11 +146,16 @@ export function Orderbook({ symbol = 'BTC', onPriceUpdate }: { symbol?: string; 
             {/* Asks (Red) */}
             <div className="flex flex-col-reverse flex-1 justify-end">
               {asks.map((ask, i) => (
-                <div key={i} className="flex justify-between px-3 py-[2px] hover:bg-zinc-800/50 cursor-pointer relative group">
+                <div 
+                  key={i} 
+                  onClick={() => onPriceUpdate && onPriceUpdate(ask.price)}
+                  className="flex justify-between px-3 py-[2px] hover:bg-red-500/10 cursor-pointer relative group transition-colors"
+                  title="Click to use price"
+                >
                   <div className="absolute right-0 top-0 h-full bg-red-500/10" style={{ width: `${Math.min(100, (parseFloat(ask.total) / maxAskTotal) * 100)}%` }} />
-                  <span className="text-red-500 relative z-10 w-1/3 text-left">{formatPrice(ask.price)}</span>
-                  <span className="text-zinc-300 relative z-10 w-1/3 text-right">{ask.size}</span>
-                  <span className="text-zinc-500 relative z-10 w-1/3 text-right">{ask.total}</span>
+                  <span className="text-red-500 relative z-10 w-1/3 text-left font-mono">{formatPrice(ask.price)}</span>
+                  <span className="text-zinc-300 relative z-10 w-1/3 text-right font-mono">{ask.size}</span>
+                  <span className="text-zinc-500 relative z-10 w-1/3 text-right font-mono">{ask.total}</span>
                 </div>
               ))}
             </div>
@@ -166,7 +171,12 @@ export function Orderbook({ symbol = 'BTC', onPriceUpdate }: { symbol?: string; 
             {/* Bids (Green) */}
             <div className="flex flex-col flex-1 justify-start">
               {bids.map((bid, i) => (
-                <div key={i} className="flex justify-between px-3 py-[2px] hover:bg-zinc-800/50 cursor-pointer relative group">
+                <div 
+                  key={i} 
+                  onClick={() => onPriceUpdate && onPriceUpdate(bid.price)}
+                  className="flex justify-between px-3 py-[2px] hover:bg-green-500/10 cursor-pointer relative group transition-colors"
+                  title="Click to use price"
+                >
                   <div className="absolute right-0 top-0 h-full bg-green-500/10" style={{ width: `${Math.min(100, (parseFloat(bid.total) / maxBidTotal) * 100)}%` }} />
                   <span className="text-green-500 relative z-10 w-1/3 text-left">{formatPrice(bid.price)}</span>
                   <span className="text-zinc-300 relative z-10 w-1/3 text-right">{bid.size}</span>

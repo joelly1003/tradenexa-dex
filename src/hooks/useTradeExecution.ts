@@ -175,14 +175,6 @@ export function useTradeExecution(): TradeExecutionState {
       throw new Error(msg);
     }
 
-    // Check gas balance
-    const userEth = balanceData ? parseFloat(balanceData.formatted) : 0;
-    if (userEth <= 0.00001) {
-      const msg = 'Insufficient ETH balance for Ink Network gas.';
-      setError(msg);
-      throw new Error(msg);
-    }
-
     setIsSubmitting(true);
     setError(null);
     setSuccessDigest(null);

@@ -106,7 +106,16 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   };
 
   const setMaxPay = () => {
-    handlePayChange((availableMargin * 0.99).toString()); // leaving tiny room for gas if needed
+    if (availableMargin <= 0) return;
+    const maxVal = availableMargin * 0.99;
+    handlePayChange(maxVal >= 1 ? maxVal.toFixed(2) : maxVal.toFixed(4));
+  };
+
+  const handleQuickPct = (pct: number) => {
+    if (availableMargin <= 0) return;
+    const multiplier = pct === 100 ? 0.99 : pct / 100;
+    const newPay = availableMargin * multiplier;
+    handlePayChange(newPay >= 1 ? newPay.toFixed(2) : (newPay > 0 ? newPay.toFixed(4) : ''));
   };
 
   // When leverage changes, keep Size fixed and update Pay (or vice-versa depending on standard UX, here we update Pay to maintain position size)
@@ -126,8 +135,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const pct = Number(e.target.value);
-    const newPay = (availableMargin * (pct / 100)).toString();
-    handlePayChange(newPay);
+    handleQuickPct(pct);
   };
 
   const toggleSizeAsset = () => {
@@ -186,6 +194,10 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
       buttonText = 'Enter Margin';
       buttonAction = () => {};
       buttonClass = 'bg-[#1e293b] text-zinc-500 cursor-not-allowed';
+    } else if (availableMargin > 0 && payNum > availableMargin) {
+      buttonText = 'Insufficient Margin';
+      buttonAction = () => {};
+      buttonClass = 'bg-red-500/10 text-red-400 border border-red-500/30 cursor-not-allowed';
     } else {
       buttonText = `Open ${isLong ? 'Long' : 'Short'} ${symUpper}`;
       buttonAction = handlePlaceOrder;
@@ -313,12 +325,12 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
             onChange={handleSliderChange}
             className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white hover:accent-[#B1FA41] transition-all"
           />
-          <div className="flex justify-between text-[10px] text-zinc-500 mt-2 font-mono">
-            <span>0%</span>
-            <span>25%</span>
-            <span>50%</span>
-            <span>75%</span>
-            <span>100%</span>
+          <div className="flex justify-between text-[10px] text-zinc-500 mt-2 font-mono select-none">
+            <span onClick={() => handleQuickPct(0)} className="cursor-pointer hover:text-white transition-colors">0%</span>
+            <span onClick={() => handleQuickPct(25)} className="cursor-pointer hover:text-white transition-colors">25%</span>
+            <span onClick={() => handleQuickPct(50)} className="cursor-pointer hover:text-white transition-colors">50%</span>
+            <span onClick={() => handleQuickPct(75)} className="cursor-pointer hover:text-white transition-colors">75%</span>
+            <span onClick={() => handleQuickPct(100)} className="cursor-pointer hover:text-white transition-colors">100%</span>
           </div>
         </div>
 
@@ -606,7 +618,7 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
       {/* 9. Primary Action Button */}
       <button 
         onClick={buttonAction}
-        disabled={isSubmitting || (isConnected && (payNum === 0 || sizeNum === 0))}
+        disabled={isSubmitting || (isConnected && (payNum === 0 || sizeNum === 0 || (availableMargin > 0 && payNum > availableMargin)))}
         className={`w-full font-bold py-3.5 rounded-lg mb-2 text-sm transition-all cursor-pointer disabled:cursor-not-allowed ${buttonClass}`}
       >
         {buttonText}
