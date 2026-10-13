@@ -18,9 +18,9 @@ export default function Home() {
         {/* Main Content Group */}
         <div className="flex flex-col items-center justify-center space-y-8 flex-1">
           {/* Mainnet Beta Live Badge */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#0a0d14] border border-white/10 shadow-[0_0_20px_rgba(0,240,255,0.12)]">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#00E599] shadow-[0_0_8px_rgba(0,229,153,0.8)]" />
-            <span className="text-[#00F0FF] text-xs md:text-sm font-black tracking-wider uppercase">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#B1FA41]/10 border border-[#B1FA41]/30 shadow-[0_0_15px_rgba(177,250,65,0.12)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] shadow-[0_0_8px_rgba(177,250,65,0.8)] animate-pulse" />
+            <span className="text-[#B1FA41] text-[11px] font-bold tracking-wider uppercase">
               MAINNET BETA IS LIVE
             </span>
           </div>
