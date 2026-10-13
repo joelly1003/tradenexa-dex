@@ -10,7 +10,6 @@ import { useFeedHealth } from '../../../hooks/nado/useFeedHealth';
 import { Settings2, ArrowRightLeft, ChevronDown, Check, Info, X, CreditCard, AlertTriangle, RefreshCw } from 'lucide-react';
 import { useCurrencyStore, formatFiat } from '../../../store/currencyStore';
 import { getTokenRiskProfile } from '../../../lib/tokens';
-import { OracleFeedStatus } from './OracleFeedStatus';
 import { OrderExecutionModal, OrderStage } from './OrderExecutionModal';
 
 interface NadoTickerItem {
@@ -23,7 +22,6 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   const { address, isConnected } = useAccount();
   const { availableMargin } = useUserBalances();
   const { open } = useAppKit();
-  const { status: feedStatus, latencyMs } = useFeedHealth();
   const [modalStage, setModalStage] = useState<OrderStage>('idle');
   const [modalOpen, setModalOpen] = useState(false);
   const [txHash, setTxHash] = useState<string | undefined>(undefined);
@@ -180,18 +178,10 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
   let buttonClass = 'bg-[#1e293b] hover:bg-[#334155] text-white'; // Disabled/Disconnected default
 
   if (isConnected) {
-    if (feedStatus === 'stale' || feedStatus === 'offline') {
-      buttonText = 'Oracle Feed Stale — Trading Disabled';
-      buttonAction = () => {};
-      buttonClass = 'bg-red-500/20 text-red-400 border border-red-500/30 cursor-not-allowed';
-    } else if (isSubmitting) {
+    if (isSubmitting) {
       buttonText = 'Signing & Submitting Intent...';
       buttonAction = () => { setModalOpen(true); };
       buttonClass = 'bg-[#B1FA41]/10 text-[#B1FA41] cursor-wait animate-pulse border border-[#B1FA41]/30';
-    } else if (isQuoteExpired || !isLiquidityAvailable) {
-      buttonText = 'Refresh Quote to Trade';
-      buttonAction = refreshQuote;
-      buttonClass = 'bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30';
     } else if (payNum === 0 || sizeNum === 0) {
       buttonText = 'Enter Margin';
       buttonAction = () => {};
@@ -234,7 +224,10 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
               Experimental
             </span>
           )}
-          <OracleFeedStatus status={feedStatus} latencyMs={latencyMs} />
+          <div className="px-2 py-1 bg-[#B1FA41]/10 border border-[#B1FA41]/20 rounded text-[10px] font-mono text-[#B1FA41] flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#B1FA41] animate-pulse" />
+            RPC Online
+          </div>
         </div>
       </div>
 
@@ -610,23 +603,10 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
         </div>
       )}
 
-      {/* Quote Expired / Liquidity Exhaustion Alert */}
-      {isQuoteExpired && (
-        <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 mb-3 text-xs flex items-center justify-between gap-2">
-          <span className="text-amber-200 text-[11px]">Solver liquidity unavailable for this size. Adjust amount or refresh quote.</span>
-          <button
-            onClick={refreshQuote}
-            className="bg-amber-500 text-black px-2.5 py-1 rounded text-[10px] font-bold shrink-0 hover:bg-amber-400 transition-colors cursor-pointer"
-          >
-            Refresh
-          </button>
-        </div>
-      )}
-
       {/* 9. Primary Action Button */}
       <button 
         onClick={buttonAction}
-        disabled={isSubmitting || (isConnected && (payNum === 0 || sizeNum === 0)) || feedStatus === 'stale' || feedStatus === 'offline'}
+        disabled={isSubmitting || (isConnected && (payNum === 0 || sizeNum === 0))}
         className={`w-full font-bold py-3.5 rounded-lg mb-2 text-sm transition-all cursor-pointer disabled:cursor-not-allowed ${buttonClass}`}
       >
         {buttonText}

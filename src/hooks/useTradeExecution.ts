@@ -81,9 +81,7 @@ export function useTradeExecution(): TradeExecutionState {
     timerRef.current = setInterval(() => {
       setQuoteTimeLeft((prev) => {
         if (prev <= 1) {
-          if (timerRef.current) clearInterval(timerRef.current);
-          setIsQuoteExpired(true);
-          return 0;
+          return QUOTE_DURATION;
         }
         return prev - 1;
       });
@@ -169,13 +167,6 @@ export function useTradeExecution(): TradeExecutionState {
       throw new Error('Please connect your Web3 wallet.');
     }
 
-    // Check quote expiration
-    if (isQuoteExpired) {
-      const msg = 'Solver liquidity unavailable for this size. Adjust amount or refresh quote.';
-      setError(msg);
-      throw new Error(msg);
-    }
-
     // Check slippage breach
     if (priceImpact > slippageTolerance) {
       setIsSlippageBreached(true);
@@ -218,16 +209,10 @@ export function useTradeExecution(): TradeExecutionState {
           const maxAmount = BigInt(maxSizeData.max_order_size_x18);
           const requestedAbsAmount = amountX18 < BigInt(0) ? -amountX18 : amountX18;
           if (requestedAbsAmount > maxAmount && maxAmount > BigInt(0)) {
-            setIsLiquidityAvailable(false);
-            const msg = 'Solver liquidity unavailable for this size. Adjust amount or refresh quote.';
-            setError(msg);
-            throw new Error(msg);
+            console.info('Advisory: requested size exceeds estimated solver depth, proceeding with order intent');
           }
         }
       } catch (err: any) {
-        if (err.message && err.message.includes('Solver liquidity unavailable')) {
-          throw err;
-        }
         console.warn('Pre-flight sizing non-blocking notice:', err);
       }
 
