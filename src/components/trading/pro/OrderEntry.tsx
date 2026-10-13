@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { useUserBalances } from '../../../hooks/useUserBalances';
 import { useAppKit } from '@reown/appkit/react';
 import { useTradeExecution } from '../../../hooks/useTradeExecution';
 import { useNadoEdgeTicker } from '../../../hooks/nado/useNadoEdgeTicker';
@@ -20,7 +21,7 @@ interface NadoTickerItem {
 
 export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; livePrice?: number | null }) {
   const { address, isConnected } = useAccount();
-  const { data: balanceData } = useBalance({ address });
+  const { availableMargin } = useUserBalances();
   const { open } = useAppKit();
   const { status: feedStatus, latencyMs } = useFeedHealth();
   const [modalStage, setModalStage] = useState<OrderStage>('idle');
@@ -61,7 +62,6 @@ export function OrderEntry({ symbol = 'BTC', livePrice }: { symbol?: string; liv
     ? livePrice
     : (currentAsset ? parseFloat(currentAsset.price_x18) / 1e18 : 0);
   const productId = currentAsset ? currentAsset.product_id : 1;
-  const availableMargin = balanceData ? parseFloat(balanceData.formatted) : 0;
   const { fiat } = useCurrencyStore();
   const tokenRisk = getTokenRiskProfile(symUpper);
 

@@ -2,11 +2,20 @@
 
 import React, { useState } from 'react';
 import { User, Edit2, Shield, Activity, ListOrdered } from 'lucide-react';
+import { useUserBalances } from '../../hooks/useUserBalances';
 
 export default function ProfilePage() {
+  const { 
+    address, 
+    isConnected, 
+    availableMargin, 
+    totalCollateralUsd 
+  } = useUserBalances();
+
   const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState('Joelly1003');
-  const [tempUsername, setTempUsername] = useState('Joelly1003');
+  const defaultName = isConnected && address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'TradeNexa Trader';
+  const [username, setUsername] = useState(defaultName);
+  const [tempUsername, setTempUsername] = useState(defaultName);
 
   const handleSave = () => {
     setUsername(tempUsername);
@@ -65,7 +74,7 @@ export default function ProfilePage() {
 
             <div className="flex flex-wrap items-center gap-3">
               <div className="bg-black/40 border border-white/5 rounded-full px-4 py-1.5 text-[13px] font-mono text-zinc-400">
-                0x20BA6f38012c8883D013a3e561f34D11E7E85e0f
+                {isConnected && address ? address : 'No Wallet Connected'}
               </div>
               <div className="bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-full px-3 py-1 text-xs font-bold">
                 Ink
@@ -78,7 +87,7 @@ export default function ProfilePage() {
             <div className="flex flex-wrap items-center gap-3 mt-2">
               <div className="bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-lg px-3 py-1.5 text-xs font-bold flex items-center gap-1.5">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                Verified
+                {isConnected ? 'Verified Wallet' : 'Unverified'}
               </div>
               <div className="bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg px-3 py-1.5 text-xs font-bold flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5" />
@@ -124,11 +133,11 @@ export default function ProfilePage() {
           <div className="bg-[#121216] border border-white/5 rounded-[20px] p-6 flex flex-col justify-center gap-6">
             <div>
               <div className="text-zinc-400 text-sm mb-1 font-semibold">Total Equity (Collateral)</div>
-              <div className="text-3xl font-black">$0.00</div>
+              <div className="text-3xl font-black">${totalCollateralUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             </div>
             <div>
               <div className="text-zinc-400 text-xs mb-1 font-semibold">Free Collateral</div>
-              <div className="text-xl font-black text-[#B1FA41]">$0.00</div>
+              <div className="text-xl font-black text-[#B1FA41]">${availableMargin.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             </div>
           </div>
         </div>

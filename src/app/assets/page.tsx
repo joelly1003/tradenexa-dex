@@ -1,25 +1,32 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { RefreshCw, Link as LinkIcon, Download, Upload, ArrowRightLeft, Clock } from 'lucide-react';
-import { FiatRampModal } from '../../components/FiatRampModal';
+import { useUserBalances } from '../../hooks/useUserBalances';
 
 export default function AssetsPage() {
   const [activeTab, setActiveTab] = useState('Deposit');
   const [amount, setAmount] = useState('');
   const [isSpinning, setIsSpinning] = useState(false);
-  const [isRampOpen, setIsRampOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Mock balance for demonstration
-  const { address, isConnected } = useAccount();
-  const { data: balanceData } = useBalance({ address });
-  const realBalance = (isConnected && balanceData) ? parseFloat(balanceData.formatted) : 0.00;
+  const { 
+    address, 
+    isConnected, 
+    ethBalance, 
+    ethFormatted, 
+    usdcBalance, 
+    usdcFormatted, 
+    availableMargin, 
+    totalCollateralUsd, 
+    refetch 
+  } = useUserBalances();
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setIsSpinning(true);
-    setTimeout(() => setIsSpinning(false), 1000);
+    await refetch();
+    setTimeout(() => setIsSpinning(false), 500);
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,12 +37,14 @@ export default function AssetsPage() {
     }
   };
 
+  const depositAvailable = usdcBalance > 0 ? usdcBalance : availableMargin;
+
   const setHalf = () => {
-    setAmount((realBalance / 2).toString());
+    setAmount((depositAvailable / 2).toFixed(2));
   };
 
   const setMax = () => {
-    setAmount(realBalance.toString());
+    setAmount(depositAvailable.toFixed(2));
   };
 
   const handleBannerClick = () => {
@@ -65,15 +74,9 @@ export default function AssetsPage() {
             <h1 className="text-4xl font-black tracking-tight">Asset Management</h1>
             <button 
               onClick={handleRefresh}
-              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 transition-colors"
+              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 transition-colors cursor-pointer"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSpinning ? 'animate-spin text-[#B1FA41]' : ''}`} /> Refresh
-            </button>
-            <button 
-              onClick={() => setIsRampOpen(true)}
-              className="flex items-center gap-2 bg-[#B1FA41]/10 hover:bg-[#B1FA41]/20 border border-[#B1FA41]/30 text-[#B1FA41] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
-            >
-              Buy Crypto
             </button>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-400">
@@ -106,14 +109,14 @@ export default function AssetsPage() {
         <div className="bg-[#121216] border border-white/5 rounded-[20px] p-6">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2 text-xs font-bold text-zinc-400">
-              <div className="w-2 h-2 rounded-full bg-blue-500" /> METAMASK WALLET USDC
+              <div className="w-2 h-2 rounded-full bg-blue-500" /> CONNECTED WALLET USDC
             </div>
             <div className="bg-blue-500/10 text-blue-400 text-[10px] font-bold px-2 py-1 rounded-md">On-Chain</div>
           </div>
-          <div className="text-3xl font-black mb-6">${realBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+          <div className="text-3xl font-black mb-6">${depositAvailable.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-zinc-500">Available to Deposit:</span>
-            <span className="text-blue-400 font-bold">${realBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+            <span className="text-blue-400 font-bold">${depositAvailable.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
 
@@ -124,10 +127,12 @@ export default function AssetsPage() {
             </div>
             <div className="bg-purple-500/10 text-purple-400 text-[10px] font-bold px-2 py-1 rounded-md">Native Gas</div>
           </div>
-          <div className="text-3xl font-black mb-6">0.0000 <span className="text-xl text-zinc-500">ETH</span></div>
+          <div className="text-3xl font-black mb-6">{ethFormatted} <span className="text-xl text-zinc-500">ETH</span></div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-zinc-500">Ink Network Fee Status:</span>
-            <span className="text-[#B1FA41] font-bold">Ready</span>
+            <span className={`font-bold ${ethBalance > 0 ? 'text-[#B1FA41]' : 'text-zinc-500'}`}>
+              {ethBalance > 0 ? 'Ready' : (isConnected ? '0 ETH' : 'Disconnected')}
+            </span>
           </div>
         </div>
       </div>
@@ -192,7 +197,7 @@ export default function AssetsPage() {
             <div className="flex justify-between items-center mb-2">
               <div className="text-sm font-semibold text-zinc-400">Amount</div>
               <div className="text-xs font-mono text-zinc-500">
-                {activeTab === 'Deposit' ? `Wallet: $${realBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}` : 'Available: $0.00'}
+                {activeTab === 'Deposit' ? `Wallet: $${depositAvailable.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : 'Available: $0.00'}
               </div>
             </div>
             <div className="bg-[#0d0d11] border border-white/5 rounded-xl p-4 flex items-center justify-between">
@@ -248,8 +253,6 @@ export default function AssetsPage() {
           </div>
         </div>
       </div>
-
-      <FiatRampModal isOpen={isRampOpen} onClose={() => setIsRampOpen(false)} type="buy" />
     </div>
   );
 }

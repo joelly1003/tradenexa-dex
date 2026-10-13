@@ -16,7 +16,15 @@ export default function Home() {
       <div className="flex flex-col items-center justify-between text-center max-w-5xl mx-auto min-h-[calc(100vh-80px)] px-4 pt-16 pb-12">
         
         {/* Main Content Group */}
-        <div className="flex flex-col items-center justify-center space-y-10 flex-1">
+        <div className="flex flex-col items-center justify-center space-y-8 flex-1">
+          {/* Mainnet Beta Live Badge */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#0a0d14] border border-white/10 shadow-[0_0_20px_rgba(0,240,255,0.12)]">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#00E599] shadow-[0_0_8px_rgba(0,229,153,0.8)]" />
+            <span className="text-[#00F0FF] text-xs md:text-sm font-black tracking-wider uppercase">
+              MAINNET BETA IS LIVE
+            </span>
+          </div>
+
           <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-black tracking-tight leading-[1.25] text-white">
             Trade Crypto with <br />
             <span className="text-[#B1FA41]">Sub-Second Precision</span>

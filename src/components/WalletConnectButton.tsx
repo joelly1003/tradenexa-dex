@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAccount, useDisconnect, useBalance, useSwitchChain, useEnsName } from 'wagmi';
+import { useAccount, useDisconnect, useSwitchChain, useEnsName } from 'wagmi';
 import { useAppKit } from '@reown/appkit/react';
+import { useUserBalances } from '../hooks/useUserBalances';
 import { 
   Wallet, 
   Loader2, 
@@ -31,8 +32,15 @@ export function WalletConnectButton() {
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
   const { open } = useAppKit();
-  const { data: balance, refetch: refetchBalance } = useBalance({ address });
   const { data: ensName } = useEnsName({ address });
+  const { 
+    ethFormatted, 
+    ethUsd, 
+    usdcBalance, 
+    usdcFormatted, 
+    availableMargin, 
+    refetch: refetchUserBalances 
+  } = useUserBalances();
 
   // Store hooks
   const { fiat } = useCurrencyStore();
@@ -67,7 +75,7 @@ export function WalletConnectButton() {
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
-      await refetchBalance();
+      await refetchUserBalances();
     } finally {
       setTimeout(() => setIsRefreshing(false), 500);
     }
@@ -112,11 +120,8 @@ export function WalletConnectButton() {
   const displayLabel = ensName || truncatedAddress;
 
   // Calculate balances & Nado equity
-  const ethBalanceNum = balance ? parseFloat(balance.formatted) : 0;
-  const ethFormatted = ethBalanceNum.toFixed(4);
-  const approxUsd = ethBalanceNum * 3100; // Benchmark approx ETH/USD
-  const nadoBalanceFormatted = approxUsd > 0 ? `$${approxUsd.toFixed(2)}` : '$0.00';
-  const localFiatFormatted = formatFiat(approxUsd, fiat);
+  const nadoBalanceFormatted = availableMargin > 0 ? `$${availableMargin.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$0.00';
+  const localFiatFormatted = formatFiat(availableMargin, fiat);
 
   return (
     <div className="relative flex items-center gap-2" ref={dropdownRef}>
@@ -223,8 +228,24 @@ export function WalletConnectButton() {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-sm font-mono font-bold text-[#B1FA41]">{localFiatFormatted}</div>
-                <div className="text-[10px] text-zinc-500 font-mono">≈ ${approxUsd.toFixed(2)} USD</div>
+                <div className="text-sm font-mono font-bold text-[#B1FA41]">{formatFiat(ethUsd, fiat)}</div>
+                <div className="text-[10px] text-zinc-500 font-mono">≈ ${ethUsd.toFixed(2)} USD</div>
+              </div>
+            </div>
+
+            <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#2775CA]/20 border border-[#2775CA]/30 flex items-center justify-center font-bold text-xs text-[#2775CA]">
+                  USDC
+                </div>
+                <div>
+                  <div className="text-sm font-mono font-bold text-white">{usdcFormatted} USDC</div>
+                  <div className="text-[11px] text-zinc-400">Trading Collateral</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-mono font-bold text-[#B1FA41]">{formatFiat(usdcBalance, fiat)}</div>
+                <div className="text-[10px] text-zinc-500 font-mono">≈ ${usdcBalance.toFixed(2)} USD</div>
               </div>
             </div>
 

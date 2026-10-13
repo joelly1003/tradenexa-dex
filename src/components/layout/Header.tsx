@@ -76,13 +76,6 @@ export function Header() {
       {/* Right section: Icons, Wallet */}
       <div className="flex-1 flex items-center gap-3 sm:gap-4 justify-end relative">
         <div className="hidden sm:flex items-center gap-1 relative" ref={settingsRef}>
-          <button
-            onClick={() => setIsRampOpen(true)}
-            className="hidden lg:flex items-center gap-1.5 px-4 h-[38px] bg-[#B1FA41]/10 hover:bg-[#B1FA41]/20 border border-[#B1FA41]/30 text-[#B1FA41] rounded-full text-xs font-bold transition-all"
-          >
-            Buy Crypto
-          </button>
-          
           <button 
             onClick={() => setIsSettingsOpen(!isSettingsOpen)}
             aria-label="Settings"
